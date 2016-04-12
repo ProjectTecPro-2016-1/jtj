@@ -101,6 +101,13 @@ void Enemy::throwBox(vector<Box*> boxes) {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClips()
+// Description: Initializes the dimensions of each picture frame and each enemy moviment.
+// Parameters: void
+// Attributes: nothing
+// Return: void
+// -------------------------------------------------------------  
 void Enemy::setSpriteClips() {
     spriteClips[0].x = 0;
     spriteClips[0].y = ENEMY_HEIGHT;
