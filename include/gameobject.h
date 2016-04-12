@@ -15,7 +15,7 @@ class GameObject {
 	// Description: Draws the game object in a specific screen position according to the box attributes.
 	// Parameters:
 	//		SDL_Surface *surface;		Pointer for the surface where the graphic component will be drawn.
-	// Atributes: nothing
+	// Attributes: nothing
 	// Return: void
 	// -------------------------------------------------------------
     virtual void drawSelf(SDL_Surface *surface) = 0;
@@ -25,7 +25,7 @@ class GameObject {
     	// Function: ~GameObject()
     	// Description: Virtual class destructor method
     	// Parameters: void
-    	// Atributes: nothing
+    	// Attributes: nothing
     	// Return: void
     	// -------------------------------------------------------------
         virtual ~GameObject();
@@ -35,7 +35,7 @@ class GameObject {
     	// Description: Method that draws a object on the screen
     	// Parameters:
     	//		SDL_Surface *surface;		Pointer for the surface where the graphic component will be drawn.
-    	// Atributes: nothing
+    	// Attributes: nothing
     	// Return: void
     	// -------------------------------------------------------------
         void draw(SDL_Surface *surface);
@@ -45,7 +45,7 @@ class GameObject {
     	// Description: Adds a element to the vector GamesObject*
     	// Parameters:
     	//		GameObject* child;		Pointer to the game object in question
-    	// Atributes: nothing
+    	// Attributes: nothing
     	// Return: void
     	// -------------------------------------------------------------
         void addChild(GameObject* child);
