@@ -24,19 +24,19 @@ class Game {
         void shutdown();
 
     private:
-        Level* level;
-        SDL_Surface *screen;
+        SDL_Surface * screen;
         SDL_Event event;
-        Jack* jack;
+
+        Jack * jack;
+        Level * level;
         Timer frameTime;
 
-        ScoreScreen* score;
-
-        InitScreen* initScreen;
-        InitScreen* wonScreen;
-        PauseScreen* pauseScreen;
-        GameOverScreen* gameOverScreen;
-        OptionsScreen* optionsScreen;
+        ScoreScreen * score;
+        InitScreen * initScreen;
+        InitScreen * wonScreen;
+        PauseScreen * pauseScreen;
+        GameOverScreen * gameOverScreen;
+        OptionsScreen * optionsScreen;
 
         Label* labelPlay;
         Label* labelOptions;
@@ -46,10 +46,9 @@ class Game {
         Label* labelLoad;
         Label* labelBack;
 
-        static const int SCREEN_WIDTH = 854;
         static const int SCREEN_HEIGHT = 480;
+        static const int SCREEN_WIDTH = 854;
         static const int SCREEN_BPP = 32;
-
         static const int SCREEN_FPS = 60;
 
         float FRAME_MILISECOND;
@@ -59,10 +58,13 @@ class Game {
         bool pauseLevel;
         bool gameOver;
         bool gameWon;
+
         int linesDeleted;
         int maxLevelLines;
         int actualLevel;
 
+        void initGUI();
+        void closeGUI();
         void wonGameScreen();
         void showOptionsScreen();
         void gameOvering();
@@ -74,20 +76,11 @@ class Game {
         void initializingScreen();
         void initScreenDraw();
         void initScreenLoop();
-        void initGUI();
-        void closeGUI();
         void loadCommonResources();
         void releaseCommonResources();
         void loadProfile();
         void saveProfile();
         void updateTimeStep();
-        int checkIfSkip();
-        void handle_event_mouse_button_up (SDL_Event& event);
-        void handle_event_mouse_button_down (SDL_Event& event);
-        void handle_event_keydown (SDL_Event& event);
-        void handle_event_keyup (SDL_Event& event);
-        void handle_event_type (SDL_Event& event);
-        void handleEvents();
         void runAI();
         void runPhysics();
         void update();
@@ -96,6 +89,16 @@ class Game {
         void draw();
         void loadLevel();
         void releaseLevel();
+        
+        void handle_event_mouse_button_up (SDL_Event& event);
+        void handle_event_mouse_button_down (SDL_Event& event);
+        void handle_event_keydown (SDL_Event& event);
+        void handle_event_keyup (SDL_Event& event);
+        void handle_event_type (SDL_Event& event);
+        void handleEvents();
+
+        int checkIfSkip();
+        
         bool isGameFinished();
         bool isLevelFinished();
 };

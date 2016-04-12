@@ -12,176 +12,196 @@
 #include "SDL/SDL_ttf.h"
 #include "scorescreen.h"
 #include <stdio.h>
+#define MAX_PLAYING_SOUNDS 10
 
 using namespace std;
-/* Structure for loaded sounds. */
-typedef struct sound_s {
-    Uint8 *samples;     /* raw PCM sample data */
-    Uint32 length;      /* size of sound data in bytes */
-} sound_t, *sound_p;
 
-/* Structure for a currently playing sound. */
-typedef struct playing_s {
-    int active;                 /* 1 if this sound should be played */
-    sound_p sound;              /* sound data to play */
-    Uint32 position;            /* current position in the sound buffer */
-} playing_t, *playing_p;
+// Structure for loaded sounds.
+typedef struct soundStruct {
+    Uint8 * samples;        // Raw PCM sample data.
+    Uint32 length;          // Size of sound data in bytes.
+} soundT, * soundPointer;
 
-/* Array for all active sound effects. */
-#define MAX_PLAYING_SOUNDS      10
-playing_t playing[MAX_PLAYING_SOUNDS];
+// Structure for a currently playing sound.
+typedef struct playingStruct {
+    int active;                 // 1 if this sound should be played.
+    soundPointer sound;         // Sound data to play.
+    Uint32 position;            // Current position in the sound buffer.
+} playingT, * playingPointer;
 
-/* The higher this is, the louder each currently playing sound will be.
-   However, high values may cause distortion if too many sounds are
-   playing. Experiment with this. */
-#define VOLUME_PER_SOUND        SDL_MIX_MAXVOLUME / 2
+// Array for all active sound effects.
+playingT playing[MAX_PLAYING_SOUNDS];
 
-/* Audio format specifications. */
+/* 
+    The higher this is, the louder each currently playing sound will be.
+    However, high values may cause distortion if too many sounds are playing. 
+    Experiment with this.
+*/
+#define VOLUME_PER_SOUND SDL_MIX_MAXVOLUME / 2
+
+// Audio format specifications.
 SDL_AudioSpec desired, obtained;
 
-/* Our loaded sounds and their formats. */
-sound_t initScreenSound;
-sound_t level_1Sound;
-sound_t level_2Sound;
-sound_t level_3Sound;
+// Our loaded sounds and their formats.
+soundT initScreenSound;
+soundT level_1Sound;
+soundT level_2Sound;
+soundT level_3Sound;
 
-void AudioCallback(void *user_data, Uint8 *audio, int length)
-{
-    int i;
+void AudioCallback(void * userData, Uint8 * audio, int length) {
+    // Avoid compiler warning.
+    // userData += 0;
+    userData = NULL;
+    if(userData == NULL) {
 
-    /* Avoid compiler warning. */
-//    user_data += 0;
-    user_data = NULL;
-    if(user_data == NULL) {}
+    } else {
 
-    /* Clear the audio buffer so we can mix samples into it. */
+    }
+
+    // Clear the audio buffer so we can mix samples into it.
     memset(audio, 0, length);
 
-    /* Mix in each sound. */
-    for (i = 0; i < MAX_PLAYING_SOUNDS; i++) {
-    if (playing[i].active) {
-        Uint8 *sound_buf;
-        Uint32 sound_len;
+    // Mix in each sound.
+    for (int i = 0; i < MAX_PLAYING_SOUNDS; i++) {
+        if (playing[i].active) {
+            Uint8 * soundBuffer;
+            Uint32 soundLength;
 
-        /* Locate this sound's current buffer position. */
-        sound_buf = playing[i].sound->samples;
-        sound_buf += playing[i].position;
+            // Locate this sound's current buffer position.
+            soundBuffer = playing[i].sound->samples;
+            soundBuffer += playing[i].position;
 
-        /* Determine the number of samples to mix. */
-        if ((playing[i].position + length) > playing[i].sound->length) {
-        sound_len = playing[i].sound->length - playing[i].position;
+            // Determine the number of samples to mix.
+            if ((playing[i].position + length) > playing[i].sound->length) {
+                soundLength = playing[i].sound->length - playing[i].position;
+            } else {
+                soundLength = length;
+            }
+
+            // Mix this sound into the stream.
+            SDL_MixAudio(audio, soundBuffer, soundLength, VOLUME_PER_SOUND);
+
+            // Update the sound buffer's position.
+            playing[i].position += length;
+
+            // Have we reached the end of the sound?
+            if (playing[i].position >= playing[i].sound->length) {
+                playing[i].active = 0;  // mark it inactive
+            } else {
+                // Nothing to do
+            }
         } else {
-        sound_len = length;
+            // Nothing to do
         }
-
-        /* Mix this sound into the stream. */
-        SDL_MixAudio(audio, sound_buf, sound_len, VOLUME_PER_SOUND);
-
-        /* Update the sound buffer's position. */
-        playing[i].position += length;
-
-        /* Have we reached the end of the sound? */
-        if (playing[i].position >= playing[i].sound->length) {
-        playing[i].active = 0;  /* mark it inactive */
-        }
-    }
     }
 }
 
 
-/* This function loads a sound with SDL_LoadWAV and converts
-   it to the specified sample format. Returns 0 on success
-   and 1 on failure. */
-int LoadAndConvertSound(char *filename, SDL_AudioSpec *spec,
-            sound_p sound)
-{
-    SDL_AudioCVT cvt;           /* audio format conversion structure */
-    SDL_AudioSpec loaded;       /* format of the loaded data */
-    Uint8 *new_buf;
+/* 
+    This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
+    Returns 0 on success and 1 on failure. 
+*/
+int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer sound) {
+    SDL_AudioCVT cvt;           // audio format conversion structure.
+    SDL_AudioSpec loaded;       // format of the loaded data.
+    Uint8 * newBuffer;
 
-    /* Load the WAV file in its original sample format. */
-    if (SDL_LoadWAV(filename,
-            &loaded, &sound->samples, &sound->length) == NULL) {
-    printf("Unable to load sound: %s\n", SDL_GetError());
-    return 1;
+    // Load the WAV file in its original sample format.
+    if (SDL_LoadWAV(filename, &loaded, &sound->samples, &sound->length) == NULL) {
+        printf("Unable to load sound: %s\n", SDL_GetError());
+        return 1;
+    } else {
+        // Nothing to do
     }
 
-    /* Build a conversion structure for converting the samples.
-       This structure contains the data SDL needs to quickly
-       convert between sample formats. */
-    if (SDL_BuildAudioCVT(&cvt, loaded.format,
-              loaded.channels,
-              loaded.freq,
-              spec->format, spec->channels, spec->freq) < 0) {
-    printf("Unable to convert sound: %s\n", SDL_GetError());
-    return 1;
+    /* 
+        Build a conversion structure for converting the samples.
+        This structure contains the data SDL needs to quickly
+        convert between sample formats. 
+    */
+    if (SDL_BuildAudioCVT(&cvt, loaded.format, 
+                          loaded.channels, loaded.freq, 
+                          spec->format, spec->channels, spec->freq) < 0) {
+        printf("Unable to convert sound: %s\n", SDL_GetError());
+        return 1;
+    } else {
+        // Nothing to do
     }
 
-    /* Since converting PCM samples can result in more data
-       (for instance, converting 8-bit mono to 16-bit stereo),
-       we need to allocate a new buffer for the converted data.
-       Fortunately SDL_BuildAudioCVT supplied the necessary
-       information. */
+    /* 
+        Since converting PCM samples can result in more data
+        (for instance, converting 8-bit mono to 16-bit stereo),
+        we need to allocate a new buffer for the converted data.
+        Fortunately SDL_BuildAudioCVT supplied the necessary
+        information. 
+    */
     cvt.len = sound->length;
-    new_buf = (Uint8 *) malloc(cvt.len * cvt.len_mult);
-    if (new_buf == NULL) {
-    printf("Memory allocation failed.\n");
-    SDL_FreeWAV(sound->samples);
-    return 1;
+    newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
+    if (newBuffer == NULL) {
+        printf("Memory allocation failed.\n");
+        SDL_FreeWAV(sound->samples);
+        return 1;
+    } else{
+        // Nothing to do
     }
 
-    /* Copy the sound samples into the new buffer. */
-    memcpy(new_buf, sound->samples, sound->length);
+    // Copy the sound samples into the new buffer.
+    memcpy(newBuffer, sound->samples, sound->length);
 
-    /* Perform the conversion on the new buffer. */
-    cvt.buf = new_buf;
+    // Perform the conversion on the new buffer.
+    cvt.buf = newBuffer;
     if (SDL_ConvertAudio(&cvt) < 0) {
-    printf("Audio conversion error: %s\n", SDL_GetError());
-    free(new_buf);
-    SDL_FreeWAV(sound->samples);
-    return 1;
+        printf("Audio conversion error: %s\n", SDL_GetError());
+        free(newBuffer);
+        SDL_FreeWAV(sound->samples);
+        return 1;
     }
 
-    /* Swap the converted data for the original. */
+    // Swap the converted data for the original.
     SDL_FreeWAV(sound->samples);
-    sound->samples = new_buf;
+    sound->samples = newBuffer;
     sound->length = sound->length * cvt.len_mult;
 
-    /* Success! */
+    // Success!
     printf("'%s' was loaded and converted successfully.\n", filename);
     return 0;
 }
 
 
-/* Removes all currently playing sounds. */
-void ClearPlayingSounds(void)
-{
-    int i;
-
-    for (i = 0; i < MAX_PLAYING_SOUNDS; i++) {
-    playing[i].active = 0;
+// Removes all currently playing sounds.
+void ClearPlayingSounds(void) {
+    for (int i = 0; i < MAX_PLAYING_SOUNDS; i++) {
+        playing[i].active = 0;
     }
 }
 
-/* Adds a sound to the list of currently playing sounds.
-   AudioCallback will start mixing this sound into the stream
-   the next time it is called (probably in a fraction of a second). */
-int PlaySound(sound_p sound)
-{
+/* 
+    Adds a sound to the list of currently playing sounds.
+    AudioCallback will start mixing this sound into the stream
+    the next time it is called (probably in a fraction of a second). 
+*/
+int PlaySound(soundPointer sound) {
     int i;
-
-    /* Find an empty slot for this sound. */
+    // Find an empty slot for this sound.
     for (i = 0; i < MAX_PLAYING_SOUNDS; i++) {
-    if (playing[i].active == 0)
-        break;
+        if (playing[i].active == 0) {
+            break;
+        } else {
+            // Nothing to do
+        }
     }
 
-    /* Report failure if there were no free slots. */
-    if (i == MAX_PLAYING_SOUNDS)
-    return 1;
+    // Report failure if there were no free slots.
+    if (i == MAX_PLAYING_SOUNDS) {
+        return 1;
+    } else {
+        // Nothing to do
+    }
 
-    /* The 'playing' structures are accessed by the audio callback,
-       so we should obtain a lock before we access them. */
+    /* 
+        The 'playing' structures are accessed by the audio callback,
+        so we should obtain a lock before we access them. 
+    */
     SDL_LockAudio();
     playing[i].active = 1;
     playing[i].sound = sound;
