@@ -155,6 +155,8 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
         free(newBuffer);
         SDL_FreeWAV(sound->samples);
         return 1;
+    } else {
+        // Nothing to do
     }
 
     // Swap the converted data for the original.
@@ -211,6 +213,63 @@ int PlaySound(soundPointer sound) {
     return 0;
 }
 
+void Game::init() {
+    initGUI();
+    loadCommonResources();
+
+    FRAME_MILISECOND = 1000 / SCREEN_FPS;
+    this->quitGame = false;
+    this->quitLevel = false;
+    this->pauseLevel = false;
+    this->gameOver = false;
+    this->actualLevel = 1;
+    this->linesDeleted = 0;
+
+
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    return;
+}
+
+void Game::loop() {
+    while(isGameFinished() == false) {
+        initializingScreen();
+
+        if (isGameFinished()) {
+            break;
+        } else {
+            // Nothing to do
+        }
+        loadLevel();
+
+        while(isLevelFinished() == false) {
+            updateTimeStep();
+            recieveNetworkData();
+            handleEvents();
+            runAI();
+            runPhysics();
+            update();
+            sendNetworkData();
+            draw();
+        }
+        wonGameScreen();
+        releaseLevel();
+    }
+    return;
+}
+
+void Game::shutdown() {
+    SDL_LockAudio();
+    free(initScreenSound.samples);
+    free(level_1Sound.samples);
+    free(level_2Sound.samples);
+    free(level_3Sound.samples);
+    SDL_UnlockAudio();
+
+    closeGUI();
+    return;
+}
+
 void Game::initGUI() {
     SDL_Init(SDL_INIT_EVERYTHING);
     TTF_Init ();
@@ -228,6 +287,161 @@ void Game::closeGUI() {
     return;
 }
 
+void Game::wonGameScreen() {
+    if (this->gameWon == false) {
+        return ;
+    } else {
+        // Nothing to do
+    }
+
+    this->actualLevel ++;
+    cout << "Level: " << actualLevel << endl;
+    wonScreen = new InitScreen("resources/backgroundwonscreen.png");
+
+    bool playButton = false;
+    bool quitButton = false;
+
+    this->quitGame = false;
+    this->quitLevel = false;
+    this->pauseLevel = false;
+    this->gameOver = false;
+
+    SDL_Delay(5);
+
+    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
+        switch (event.type) {
+            case SDL_QUIT:
+                quitButton = true;
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                switch (event.button.button) {
+                    case SDL_BUTTON_LEFT:
+                        playButton = true;
+                        break;
+                    default:
+                        // Nothing to do
+                        break;
+                }
+
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_p:
+                    case SDLK_w:
+                    case SDLK_a:
+                    case SDLK_s:
+                    case SDLK_d:
+                        playButton = true;
+                        break;
+
+                    case SDLK_q:
+                    case SDLK_ESCAPE:
+                        quitButton = true;
+                        break;
+
+                    default:
+                        // Nothing to do
+                        break;
+                }
+                break;
+
+            default:
+                // Nothing to do
+                break;
+        }
+        wonScreen->draw(this->screen);
+        SDL_Flip(this->screen);
+
+        if (quitButton) {
+            this->quitLevel = true;
+            this->quitGame = true;
+        } else {
+            // Nothing to do
+        }
+    }
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    delete wonScreen;
+
+    return;
+}
+
+void Game::showOptionsScreen() {
+
+    optionsScreen = new OptionsScreen("resources/backgroundoptionsscreen.png");
+
+    labelMute = new Label("resources/mutebutton.png", 483, 68);
+    optionsScreen->addChild(labelMute);
+
+    labelLoad = new Label("resources/loadbutton.png", 483, 191);
+    optionsScreen->addChild(labelLoad);
+
+    labelBack = new Label("resources/backbutton.png", 483, 314);
+    optionsScreen->addChild(labelBack);
+
+    bool muteButton = false;
+    bool loadButton = false;
+    bool backButton = false;
+
+    while (SDL_WaitEvent (&event) != 0 && backButton == false) {
+        switch (event.type) {
+            case SDL_QUIT:
+                backButton = true;
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    muteButton = labelMute->wasClicked(event.button.x, event.button.y);
+                    loadButton = labelLoad->wasClicked(event.button.x, event.button.y);
+                    backButton = labelQuit->wasClicked(event.button.x, event.button.y);
+                }
+                break;
+
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_q:
+                    case SDLK_ESCAPE:
+                        backButton = true;
+                        break;
+
+                    default:
+                        // Nothing to do
+                        break;
+                    }
+                break;
+
+            default:
+                // Nothing to do
+                break;
+        }
+        optionsScreen->draw(this->screen);
+        SDL_Flip(this->screen);
+
+        if (muteButton) {
+            if (SDL_GetAudioStatus() == SDL_AUDIO_PLAYING) {
+                SDL_PauseAudio(1);
+            } else {
+                SDL_PauseAudio(0);
+            }
+            muteButton = false;
+        } else {
+            // Nothing to do
+        }
+
+        if (loadButton) {
+            cout << "Não implementado, cara... Se deu mal =P" << endl;
+        } else {
+            // Nothing to do
+        }
+    }
+    
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    delete optionsScreen;
+
+    return ;
+}
+
 void Game::loadCommonResources() {
     score = new ScoreScreen();
 
@@ -241,8 +455,10 @@ void Game::loadCommonResources() {
     desired.callback = AudioCallback;
     desired.userdata = NULL;    /* we don't need this */
     if (SDL_OpenAudio(&desired, &obtained) < 0) {
-    printf("Unable to open audio device: %s\n", SDL_GetError());
-    return ;
+        printf("Unable to open audio device: %s\n", SDL_GetError());
+        return ;
+    } else {
+        // Nothing to do
     }
 
     /* Load our sound files and convert them to the sound card's format. */
@@ -254,11 +470,294 @@ void Game::loadCommonResources() {
         LoadAndConvertSound(level_1SoundName, &obtained, &level_1Sound) != 0 ||
         LoadAndConvertSound(level_2SoundName, &obtained, &level_2Sound) != 0 ||
         LoadAndConvertSound(level_3SoundName, &obtained, &level_3Sound) != 0){
-    printf("Unable to load sound.\n");
-    return ;
+        printf("Unable to load sound.\n");
+        return ;
+    } else {
+        // Nothing to do
     }
 
     return;
+}
+
+void Game::gameOvering() {
+    gameOverScreenDraw();
+    jack->popMove(3);
+    jack->popMove(-3);
+    gameOverScreenLoop();
+
+    return ;
+}
+
+void Game::gameOverScreenDraw() {
+    gameOverScreen = new GameOverScreen("resources/backgroundgameover.png");
+
+    labelPlay = new Label("resources/startbutton.png", 483, 68);
+    gameOverScreen->addChild(labelPlay);
+
+    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
+    gameOverScreen->addChild(labelOptions);
+
+    labelQuit = new Label("resources/exitbutton.png", 483, 314);
+    gameOverScreen->addChild(labelQuit);
+
+    return;
+}
+
+void Game::gameOverScreenLoop() {
+    bool playButton = false;
+    bool quitButton = false;
+    bool optionsButton = false;
+
+    this->quitGame = false;
+    this->quitLevel = true;
+
+    do {
+        while (SDL_PollEvent (&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    this->quitLevel = true;
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    switch (event.button.button) {
+                        case SDL_BUTTON_LEFT:
+                            if (labelPlay->wasClicked(event.button.x, event.button.y)) {
+                                playButton = true;
+                                this->quitGame = false;
+                            } else if (labelOptions->wasClicked(event.button.x, event.button.y)) {
+                                optionsButton = true;
+                            } else if (labelQuit->wasClicked(event.button.x, event.button.y)) {
+                                this->quitGame = true;
+                                quitButton = true;
+                            } else {
+                                // Nothing to do
+                            }
+                            break;
+
+                        default:
+                            // Nothing to do
+                            break;
+                    }
+                    break;
+
+                default:
+                    // Nothing to do
+                    break;
+            }
+        }
+
+        gameOverScreen->draw(this->screen);
+        SDL_Flip(this->screen);
+    } while (playButton == false && optionsButton == false && quitButton == false);
+
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    return ;
+}
+
+void Game::pausingLevel() {
+    pauseScreenDraw();
+    jack->popMove(3);
+    jack->popMove(-3);
+    pauseScreenLoop();
+
+    return ;
+}
+
+void Game::pauseScreenDraw() {
+    pauseScreen = new PauseScreen("resources/backgroundpausescreen.png");
+
+    labelPlay = new Label("resources/startbutton.png", 483, 68);
+    pauseScreen->addChild(labelPlay);
+
+    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
+    pauseScreen->addChild(labelOptions);
+
+    labelQuit = new Label("resources/exitbutton.png", 483, 314);
+    pauseScreen->addChild(labelQuit);
+
+    return;
+}
+
+void Game::pauseScreenLoop() {
+    bool playButton = false;
+    bool quitButton = false;
+    bool optionsButton = false;
+
+    this->quitLevel = false;
+
+    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
+        switch (event.type) {
+            case SDL_QUIT:
+                quitButton = true;
+                this->quitLevel = true;
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    playButton = labelPlay->wasClicked(event.button.x, event.button.y);
+                    optionsButton = labelOptions->wasClicked(event.button.x, event.button.y);
+                    quitButton = labelQuit->wasClicked(event.button.x, event.button.y);
+                } else {
+                    // Nothing to do
+                }
+                break;
+
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_p:
+                        this->pauseLevel = false;
+                        playButton = true;
+                        break;
+
+                    case SDLK_q:
+                    case SDLK_ESCAPE:
+                        this->quitLevel = true;
+                        quitButton = true;
+                        break;
+
+                    default:
+                        // Nothing to do
+                        break;
+                }
+                break;
+
+            default:
+                // Nothing to do
+                break;
+        }
+        pauseScreen->draw(this->screen);
+        SDL_Flip(this->screen);
+
+        if (playButton) {
+            this->pauseLevel = false;
+        } else {
+            // Nothing to do
+        }
+
+        if (quitButton) {
+            this->quitLevel = true;
+        } else {
+            // Nothing to do
+        }
+
+        if (optionsButton) {
+            showOptionsScreen();
+            optionsButton = false;
+        } else {
+            // Nothing to do
+        }
+    }
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    delete pauseScreen;
+
+    return ;
+}
+
+void Game::initializingScreen() {
+    // Clear the list of playing sounds.
+    ClearPlayingSounds();
+
+    // SDL's audio is initially paused. Start it.
+    SDL_PauseAudio(0);
+
+    PlaySound(&initScreenSound);
+    
+    initScreenDraw();
+    initScreenLoop();
+
+    SDL_PauseAudio(1);
+
+    return ;
+}
+
+void Game::initScreenDraw() {
+    initScreen = new InitScreen("resources/backgroundinitscreen.png");
+
+    labelPlay = new Label("resources/startbutton.png", 483, 68);
+    initScreen->addChild(labelPlay);
+
+    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
+    initScreen->addChild(labelOptions);
+
+    labelQuit = new Label("resources/exitbutton.png", 483, 314);
+    initScreen->addChild(labelQuit);
+
+    return;
+}
+
+void Game::initScreenLoop() {
+    bool playButton = false;
+    bool quitButton = false;
+    bool optionsButton = false;
+
+    this->quitGame = false;
+    this->quitLevel = false;
+    this->pauseLevel = false;
+    this->gameOver = false;
+
+    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
+        switch (event.type) {
+            case SDL_QUIT:
+                quitButton = true;
+                this->quitLevel = true;
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    playButton = labelPlay->wasClicked(event.button.x, event.button.y);
+                    optionsButton = labelOptions->wasClicked(event.button.x, event.button.y);
+                    quitButton = labelQuit->wasClicked(event.button.x, event.button.y);
+                } else {
+                    // Nothing to do
+                }
+                break;
+
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_p:
+                        playButton = true;
+                        break;
+
+                    case SDLK_q:
+                    case SDLK_ESCAPE:
+                        this->quitLevel = true;
+                        quitButton = true;
+                        break;
+
+                    default:
+                        // Nothing to do
+                        break;
+                }
+                break;
+
+            default:
+                // Nothing to do
+                break;
+        }
+        initScreen->draw(this->screen);
+        SDL_Flip(this->screen);
+
+        if (quitButton) {
+            this->quitLevel = true;
+            this->quitGame = true;
+        } else {
+            // Nothing to do
+        }
+
+        if (optionsButton) {
+            showOptionsScreen();
+            optionsButton = false;
+        } else {
+            // Nothing to do
+        }
+    }
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    delete initScreen;
+
+    return ;
 }
 
 void Game::releaseCommonResources() {
@@ -340,6 +839,7 @@ void Game::handle_event_keyup (SDL_Event& event) {
             break;
 
         default:
+            // Nothing to do
             break;
     }
 }
@@ -347,12 +847,13 @@ void Game::handle_event_keyup (SDL_Event& event) {
 void Game::handle_event_mouse_button_up (SDL_Event& event) {
     switch (event.button.button) {
 
-    case SDL_BUTTON_LEFT:
-//      printf("Posicao onde o botao foi liberado: (%d, %d)\n", event.button.x, event.button.y);
-        break;
+        case SDL_BUTTON_LEFT:
+    //      printf("Posicao onde o botao foi liberado: (%d, %d)\n", event.button.x, event.button.y);
+            break;
 
-    default:
-        break;
+        default:
+            // Nothing to do
+            break;
     }
 
     return;
@@ -362,45 +863,45 @@ void Game::handle_event_mouse_button_up (SDL_Event& event) {
 void Game::handle_event_mouse_button_down (SDL_Event& event) {
     switch (event.button.button) {
 
-    case SDL_BUTTON_LEFT:
-        break;
+        case SDL_BUTTON_LEFT:
+            break;
 
-    case SDL_BUTTON_RIGHT:
-        break;
+        case SDL_BUTTON_RIGHT:
+            break;
 
-    default:
-        break;
+        default:
+            // Nothing to do
+            break;
     }
 
     return;
 }
 
-void Game::handle_event_type (SDL_Event& event)
-{
-    switch (event.type)
-    {
-    case SDL_QUIT:
-        this->quitLevel = true;
-        break;
+void Game::handle_event_type (SDL_Event& event) {
+    switch (event.type) {
+        case SDL_QUIT:
+            this->quitLevel = true;
+            break;
 
-    case SDL_KEYDOWN:
-        handle_event_keydown (event);
-        break;
+        case SDL_KEYDOWN:
+            handle_event_keydown (event);
+            break;
 
-    case SDL_KEYUP:
-        handle_event_keyup (event);
-        break;
+        case SDL_KEYUP:
+            handle_event_keyup (event);
+            break;
 
-    case SDL_MOUSEBUTTONDOWN:
-        handle_event_mouse_button_down (event);
-        break;
+        case SDL_MOUSEBUTTONDOWN:
+            handle_event_mouse_button_down (event);
+            break;
 
-    case SDL_MOUSEBUTTONUP:
-        handle_event_mouse_button_up (event);
-        break;
+        case SDL_MOUSEBUTTONUP:
+            handle_event_mouse_button_up (event);
+            break;
 
-    default:
-        break;
+        default:
+            // Nothing to do
+            break;
     }
 }
 
@@ -421,8 +922,7 @@ void Game::runAI() {
 
 bool checkColision (Jack* jack, std::vector<Box*> boxes) {
 
-    for (unsigned int i = 0; i < boxes.size(); ++i)
-    {
+    for (unsigned int i = 0; i < boxes.size(); ++i) {
 //        cout << "Box " << i << "(" << boxes[i]->getPositionX() << "," << boxes[i]->getPositionY() << ")\t";
 //        cout << "(" << boxes[i]->getPositionX() + 38 << "," << boxes[i]->getPositionY() + 38 << ")" << endl;
 
@@ -437,17 +937,20 @@ bool checkColision (Jack* jack, std::vector<Box*> boxes) {
 
 		if((jackRight==boxRight && jackLeft==boxLeft)&&((jackTop<=boxBottom)&&(boxBottom<jackBottom))) {
 			return true;
-		}
+		} else {
+            // Nothing to do
+        }
 
 		if(((boxLeft < jackLeft && jackLeft < boxRight) && (boxTop < jackTop && jackTop < boxBottom)) ||
-				((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom)))
-		 {
+				((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom))) {
 
 //			cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
 //			cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
 
 			return true;
-		}
+		} else {
+            // Nothing to do
+        }
     }
 
     return false;
@@ -458,6 +961,8 @@ void Game::runPhysics() {
 //	cout << "Checando colisão" << endl;
     if (checkColision (jack, level->boxes)) {
         jack->die();
+    } else {
+        // Nothing to do
     }
 //	cout << "Colisão checada." << endl;
 
@@ -772,461 +1277,3 @@ bool Game::isGameFinished() {
 bool Game::isLevelFinished() {
     return this->quitLevel;
 }
-
-void Game::initScreenDraw() {
-    initScreen = new InitScreen("resources/backgroundinitscreen.png");
-
-    labelPlay = new Label("resources/startbutton.png", 483, 68);
-    initScreen->addChild(labelPlay);
-
-    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
-    initScreen->addChild(labelOptions);
-
-    labelQuit = new Label("resources/exitbutton.png", 483, 314);
-    initScreen->addChild(labelQuit);
-
-    return;
-}
-
-void Game::pauseScreenDraw() {
-	pauseScreen = new PauseScreen("resources/backgroundpausescreen.png");
-
-    labelPlay = new Label("resources/startbutton.png", 483, 68);
-    pauseScreen->addChild(labelPlay);
-
-    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
-    pauseScreen->addChild(labelOptions);
-
-    labelQuit = new Label("resources/exitbutton.png", 483, 314);
-    pauseScreen->addChild(labelQuit);
-
-    return;
-}
-
-void Game::showOptionsScreen() {
-
-    optionsScreen = new OptionsScreen("resources/backgroundoptionsscreen.png");
-
-    labelMute = new Label("resources/mutebutton.png", 483, 68);
-    optionsScreen->addChild(labelMute);
-
-    labelLoad = new Label("resources/loadbutton.png", 483, 191);
-    optionsScreen->addChild(labelLoad);
-
-    labelBack = new Label("resources/backbutton.png", 483, 314);
-    optionsScreen->addChild(labelBack);
-
-    bool muteButton = false;
-    bool loadButton = false;
-    bool backButton = false;
-
-    while (SDL_WaitEvent (&event) != 0 && backButton == false) {
-        switch (event.type) {
-        case SDL_QUIT:
-            backButton = true;
-            break;
-
-        case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_LEFT)
-            {
-                muteButton = labelMute->wasClicked(event.button.x, event.button.y);
-                loadButton = labelLoad->wasClicked(event.button.x, event.button.y);
-                backButton = labelQuit->wasClicked(event.button.x, event.button.y);
-            }
-            break;
-
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym) {
-            case SDLK_q:
-            case SDLK_ESCAPE:
-                backButton = true;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
-        default:
-            break;
-        }
-        optionsScreen->draw(this->screen);
-        SDL_Flip(this->screen);
-
-        if (muteButton)
-        {
-            if (SDL_GetAudioStatus() == SDL_AUDIO_PLAYING)
-            {
-                SDL_PauseAudio(1);
-            }
-            else
-            {
-                SDL_PauseAudio(0);
-            }
-            muteButton = false;
-        }
-        if (loadButton)
-        {
-            cout << "Não implementado, cara... Se deu mal =P" << endl;
-        }
-    }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    delete optionsScreen;
-
-    return ;
-}
-
-void Game::pauseScreenLoop() {
-    bool playButton = false;
-    bool quitButton = false;
-    bool optionsButton = false;
-    this->quitLevel = false;
-
-    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
-        switch (event.type) {
-        case SDL_QUIT:
-            quitButton = true;
-            this->quitLevel = true;
-            break;
-
-        case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_LEFT)
-            {
-                playButton = labelPlay->wasClicked(event.button.x, event.button.y);
-                optionsButton = labelOptions->wasClicked(event.button.x, event.button.y);
-                quitButton = labelQuit->wasClicked(event.button.x, event.button.y);
-            }
-            break;
-
-        case SDL_KEYDOWN:
-    	    switch (event.key.keysym.sym) {
-			case (SDLK_p):
-				this->pauseLevel = false;
-                playButton = true;
-			    break;
-
-            case SDLK_q:
-            case SDLK_ESCAPE:
-                this->quitLevel = true;
-                quitButton = true;
-                break;
-
-			default:
-				break;
-			}
-			break;
-
-        default:
-            break;
-        }
-        pauseScreen->draw(this->screen);
-        SDL_Flip(this->screen);
-
-        if (playButton)
-        {
-            this->pauseLevel = false;
-        }
-        if (quitButton)
-        {
-            this->quitLevel = true;
-        }
-        if (optionsButton)
-        {
-            showOptionsScreen();
-            optionsButton = false;
-        }
-    }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    delete pauseScreen;
-
-    return ;
-}
-
-void Game::initScreenLoop() {
-    bool playButton = false;
-    bool quitButton = false;
-    bool optionsButton = false;
-    this->quitGame = false;
-    this->quitLevel = false;
-    this->pauseLevel = false;
-    this->gameOver = false;
-
-    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
-        switch (event.type) {
-        case SDL_QUIT:
-            quitButton = true;
-            this->quitLevel = true;
-            break;
-
-        case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_LEFT)
-            {
-                playButton = labelPlay->wasClicked(event.button.x, event.button.y);
-                optionsButton = labelOptions->wasClicked(event.button.x, event.button.y);
-                quitButton = labelQuit->wasClicked(event.button.x, event.button.y);
-            }
-            break;
-
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym) {
-            case (SDLK_p):
-                playButton = true;
-                break;
-
-            case SDLK_q:
-            case SDLK_ESCAPE:
-                this->quitLevel = true;
-                quitButton = true;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
-        default:
-            break;
-        }
-        initScreen->draw(this->screen);
-        SDL_Flip(this->screen);
-
-        if (quitButton)
-        {
-            this->quitLevel = true;
-            this->quitGame = true;
-        }
-        if (optionsButton)
-        {
-            showOptionsScreen();
-            optionsButton = false;
-        }
-    }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    delete initScreen;
-
-    return ;
-}
-
-void Game::init() {
-    initGUI();
-    loadCommonResources();
-
-    FRAME_MILISECOND = 1000 / SCREEN_FPS;
-    this->quitGame = false;
-    this->quitLevel = false;
-	this->pauseLevel = false;
-	this->gameOver = false;
-    this->actualLevel = 1;
-    this->linesDeleted = 0;
-
-
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    return;
-}
-
-void Game::pausingLevel() {
-	pauseScreenDraw();
-    jack->popMove(3);
-    jack->popMove(-3);
-	pauseScreenLoop();
-
-	return ;
-}
-
-void Game::initializingScreen() {
-    /* Clear the list of playing sounds. */
-    ClearPlayingSounds();
-
-    /* SDL's audio is initially paused. Start it. */
-    SDL_PauseAudio(0);
-
-    PlaySound(&initScreenSound);
-    
-    initScreenDraw();
-    initScreenLoop();
-
-    SDL_PauseAudio(1);
-
-    return ;
-}
-void Game::gameOverScreenDraw() {
-	gameOverScreen = new GameOverScreen("resources/backgroundgameover.png");
-
-    labelPlay = new Label("resources/startbutton.png", 483, 68);
-    gameOverScreen->addChild(labelPlay);
-
-    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
-    gameOverScreen->addChild(labelOptions);
-
-    labelQuit = new Label("resources/exitbutton.png", 483, 314);
-    gameOverScreen->addChild(labelQuit);
-
-    return;
-}
-
-void Game::gameOverScreenLoop() {
-    bool playButton = false;
-    bool quitButton = false;
-    bool optionsButton = false;
-    this->quitGame = false;
-    this->quitLevel = true;
-
-    do {
-        while (SDL_PollEvent (&event)) {
-            switch (event.type) {
-            case SDL_QUIT:
-                this->quitLevel = true;
-                break;
-
-            case SDL_MOUSEBUTTONDOWN:
-                switch (event.button.button) {
-                case SDL_BUTTON_LEFT:
-                    if (labelPlay->wasClicked(event.button.x, event.button.y)) {
-                        playButton = true;
-                        this->quitGame = false;
-                    } else if (labelOptions->wasClicked(event.button.x, event.button.y)) {
-                        optionsButton = true;
-                    } else if (labelQuit->wasClicked(event.button.x, event.button.y)) {
-                        this->quitGame = true;
-                        quitButton = true;
-                    }
-                    break;
-
-                default:
-                    break;
-                }
-                break;
-
-            default:
-                break;
-            }
-        }
-        gameOverScreen->draw(this->screen);
-        SDL_Flip(this->screen);
-    } while (playButton == false && optionsButton == false && quitButton == false);
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    return ;
-}
-
-void Game::gameOvering() {
-    gameOverScreenDraw();
-    jack->popMove(3);
-    jack->popMove(-3);
-    gameOverScreenLoop();
-
-    return ;
-}
-
-void Game::shutdown() {
-    SDL_LockAudio();
-
-    free(initScreenSound.samples);
-    free(level_1Sound.samples);
-    free(level_2Sound.samples);
-    free(level_3Sound.samples);
-    SDL_UnlockAudio();
-    closeGUI();
-    return;
-}
-
-void Game::wonGameScreen()
-{
-    if (this->gameWon == false)
-    {
-        return ;
-    }
-    this->actualLevel ++;
-    cout << "Level: " << actualLevel << endl;
-    wonScreen = new InitScreen("resources/backgroundwonscreen.png");
-
-    bool playButton = false;
-    bool quitButton = false;
-
-    this->quitGame = false;
-    this->quitLevel = false;
-    this->pauseLevel = false;
-    this->gameOver = false;
-
-    SDL_Delay(5);
-
-    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
-        switch (event.type) {
-        case SDL_QUIT:
-            quitButton = true;
-            break;
-
-        case SDL_MOUSEBUTTONDOWN:
-            switch (event.button.button) {
-            case SDL_BUTTON_LEFT:
-                playButton = true;
-                break;
-            }
-
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym) {
-            case SDLK_p:
-            case SDLK_w:
-            case SDLK_a:
-            case SDLK_s:
-            case SDLK_d:
-                playButton = true;
-                break;
-
-            case SDLK_q:
-            case SDLK_ESCAPE:
-                quitButton = true;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
-        default:
-            break;
-        }
-        wonScreen->draw(this->screen);
-        SDL_Flip(this->screen);
-
-        if (quitButton)
-        {
-            this->quitLevel = true;
-            this->quitGame = true;
-        }
-    }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    delete wonScreen;
-
-    return ;
-
-}
-
-void Game::loop() {
-    while(isGameFinished() == false) {
-        initializingScreen();
-
-        if (isGameFinished())
-            break;
-        loadLevel();
-        while(isLevelFinished() == false) {
-            updateTimeStep();
-            recieveNetworkData();
-            handleEvents();
-            runAI();
-            runPhysics();
-            update();
-            sendNetworkData();
-            draw();
-        }
-        wonGameScreen();
-        releaseLevel();
-    }
-    return;
-}
-

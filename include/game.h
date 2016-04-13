@@ -65,19 +65,25 @@ class Game {
 
         void initGUI();
         void closeGUI();
+
         void wonGameScreen();
         void showOptionsScreen();
+
         void gameOvering();
         void gameOverScreenDraw();
         void gameOverScreenLoop();
+
         void pausingLevel();
         void pauseScreenDraw();
         void pauseScreenLoop();
+
         void initializingScreen();
         void initScreenDraw();
         void initScreenLoop();
+
         void loadCommonResources();
         void releaseCommonResources();
+
         void loadProfile();
         void saveProfile();
         void updateTimeStep();
@@ -87,6 +93,7 @@ class Game {
         void recieveNetworkData();
         void sendNetworkData();
         void draw();
+        
         void loadLevel();
         void releaseLevel();
         
