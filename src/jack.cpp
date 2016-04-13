@@ -34,7 +34,7 @@ bool Jack::isDead() {
     return this->dead;
 }
 
-int setLimit(int value, int limit1, int range) {
+int Jack::setLimit(int value, int limit1, int range) {
     int limit2 = limit1 + range;
     int valueForReturn = 0;
     if (value<limit1) {
