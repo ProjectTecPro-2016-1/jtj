@@ -21,9 +21,9 @@ class Box : public GameObject {
     static const int MAX_SPEED = 3;   // Keep the information about the maximum speed that the box can achieve.
 
     public:
-    		bool lyingDown;   // Contain information if the box is falling or not.
-    		static const int BOX_WIDTH = 38;    // All boxes pixel width.
-    		static const int BOX_HEIGHT = 38;   // All boxes pixel height.
+		bool lyingDown;   // Contain information if the box is falling or not.
+		static const int BOX_WIDTH = 38;    // All boxes pixel width.
+		static const int BOX_HEIGHT = 38;   // All boxes pixel height.
         int x_position;     // Keep the actual position of the box on axis X.
         int y_position;     // Keep the actual position of the box on axis Y.
         bool used;      // Contain information if the box is already in the game or not.
@@ -104,7 +104,7 @@ class Box : public GameObject {
       	// Attributes: nothing
       	// Return: void
       	// -------------------------------------------------------------
-    		void fall(vector<Box*>grid[12]);
+		void fall(vector<Box*>grid[12]);
 };
 
 #endif
