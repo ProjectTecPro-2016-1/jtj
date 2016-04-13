@@ -12,8 +12,8 @@ Jack::Jack(string filename) {
     this->dead = false;
     verticalSpeed = 0;
     jumping = false;
-	lastMove=0;
-	lastButOneMove=0;
+	lastMove = 0;
+	lastButOneMove = 0;
 	strength = 0;
     frame = 0;
 }
@@ -21,66 +21,75 @@ Jack::Jack(string filename) {
 Jack::~Jack() {
     if(jack != NULL) {
         SDL_FreeSurface(jack);
+    } else {
+        // Nothing to do
     }
 }
 
-void
-Jack::die()
-{
+void Jack::die() {
     this->dead = true;
 }
 
-bool
-Jack::isDead()
-{
+bool Jack::isDead() {
     return this->dead;
 }
 
 int setLimit(int value, int limit1, int range) {
-    int limit2=limit1+range;
-    if(value<limit1)
-        return limit1;
-    if(value>=limit2)
-        return (limit2);
-    return value;
+    int limit2 = limit1 + range;
+    int valueForReturn = 0;
+    if (value<limit1) {
+        valueForReturn = limit1;
+    } else if (value >= limit2) {
+        valueForReturn = limit2;
+    } else {
+        valueForReturn = value;
+    }
+    return valueForReturn;
 }
 
 void Jack::drawSelf(SDL_Surface *surface) {
-
     if(jumping == true) {
         if(speed >= 0) {
             frame = 7;
-        }
-        else {
+        } else {
             frame = 8;
         }
-    }
-    else if(speed > 0) {
+    } else if (speed > 0) {
         frame ++;
-        if(frame > 3) {
+
+        if (frame > 3) {
             frame = 1;
+        } else {
+            // Nothing to do
         }
-    }
-    else if(speed < 0) {
+    } else if (speed < 0) {
         frame++;
-        if(frame < 4) {
+
+        if (frame < 4) {
             frame = 4;
+        } else {
+            // Nothing to do
         }
-        if(frame > 6) {
+
+        if (frame > 6) {
             frame = 4;
+        } else {
+            // Nothing to do
         }
-    }
-    else {
+    } else {
         frame = 0;
     }
+
     SDLUtil::applySurface(this->x_position, this->y_position, this->jack, surface, &spriteClips[frame]);
     return;
 }
 
 void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
     x_position += speed;
+
     this->x_position = setLimit(x_position, xBegin, xRange-JACK_WIDTH);
     this->y_position = setLimit(y_position, yBegin, yRange-JACK_HEIGHT - 38);
+
     return;
 }
 
@@ -90,56 +99,59 @@ void Jack::jump(Level* level) {
 
     if(jumping == true) {
         if ((y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38))) || (y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38)))) {
-        jumping = false;
-        verticalSpeed = 1;
+            jumping = false;
+            verticalSpeed = 1;
+        } else {
+            // Nothing to do
         }
+    } else {
+        // Nothing to do
     }
 
     //these next two if's handles boxes superior colision.
-    if(y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38))) {
+    if (y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38))) {
         y_position = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38));
         verticalSpeed = 1;
         //verticalSpeed -= ACCELERATION;
-    }
-    else if(y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38))) {
+    } else if (y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38))) {
         y_position = Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38);
         verticalSpeed = 1;
         //verticalSpeed -= ACCELERATION;
-    }
-    //this avoids double jumping while falling from a box
-    else {
+    } else { //this avoids double jumping while falling from a box
         jumping = true;
     }
     //verticalSpeed++;
+
     return;
 }
 
 void Jack::pushMove(int v) {
-		if(lastMove==0) {
-			speed=v;
-			lastMove=v;
-		}
-	else if (lastButOneMove==0) {
-			speed=v;
-			lastButOneMove=v;
-		}
-	return;
+	if (lastMove == 0) {
+		speed = v;
+		lastMove = v;
+	} else if (lastButOneMove == 0) {
+		speed = v;
+		lastButOneMove = v;
+	} else {
+        // Nothing to do
+    }
+
+    return;
 }
 
 void Jack::popMove(int v) {
-	if(lastButOneMove==v) {
-		lastButOneMove=0;
-		speed=lastMove;
-	}
-	else if(lastMove==v) {
-		if(lastButOneMove!=0) {
-			speed=lastButOneMove;
-			lastMove=lastButOneMove;
-			lastButOneMove=0;
+	if (lastButOneMove == v) {
+		lastButOneMove = 0;
+		speed = lastMove;
+	} else if (lastMove == v) {
+		if (lastButOneMove != 0) {
+			speed = lastButOneMove;
+			lastMove = lastButOneMove;
+			lastButOneMove = 0;
 		}
 		else {
-			lastMove=0;
-			speed=0;
+			lastMove = 0;
+			speed = 0;
 			/*
 			int rest = x_position%Box::BOX_WIDTH;
 			if(rest<10) {
@@ -151,11 +163,15 @@ void Jack::popMove(int v) {
 			*/
 
 		}
-	}
+	} else {
+        // Nothing to do
+    }
 }
+
 int Jack::getXPosition() {
 	return this->x_position;
 }
+
 int Jack::getYPosition() {
 	return this->y_position;
 }
