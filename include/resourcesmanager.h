@@ -15,10 +15,10 @@ class ResourcesManager {
 	// Observation: Without implementation.
 	// -------------------------------------------------------------
     ResourcesManager();
-    static ResourcesManager* instance = NULL;   // Pointer to instance resources.
+    static ResourcesManager * instance = NULL;   // Pointer to instance resources.
 
     class ResourcesInfo { // Contain information of resources.
-        Resource* resource;
+        Resource * resource;
         int references;
         public:
             ResourcesInfo() {
@@ -30,7 +30,7 @@ class ResourcesManager {
     vector<ResourcesInfo*> resources;   // Vector that contains information of resources.
 
     public:
-        static ResourcesManager *getInstance();
+        static ResourcesManager * getInstance();
 
         // -------------------------------------------------------------
     	// Function: getImage()
@@ -41,7 +41,7 @@ class ResourcesManager {
     	// Return: RawImage *
     	// Observation: Without implementation.
     	// -------------------------------------------------------------
-        RawImage* getImage(const string &name);
+        RawImage * getImage(const string &name);
 
         // -------------------------------------------------------------
     	// Function: release()
@@ -52,7 +52,7 @@ class ResourcesManager {
     	// Return: void
     	// Observation: Without implementation.
     	// -------------------------------------------------------------
-        void release(RawImage* image);
+        void release(RawImage * image);
 
         // -------------------------------------------------------------
     	// Function: load()
@@ -65,4 +65,5 @@ class ResourcesManager {
     	// -------------------------------------------------------------
         void load(const string &resourcesDescription);
 };
+
 #endif
