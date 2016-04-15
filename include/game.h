@@ -38,13 +38,13 @@ class Game {
         GameOverScreen * gameOverScreen;
         OptionsScreen * optionsScreen;
 
-        Label* labelPlay;
-        Label* labelOptions;
-        Label* labelQuit;
+        Label * labelPlay;
+        Label * labelOptions;
+        Label * labelQuit;
 
-        Label* labelMute;
-        Label* labelLoad;
-        Label* labelBack;
+        Label * labelMute;
+        Label * labelLoad;
+        Label * labelBack;
 
         static const int SCREEN_HEIGHT = 480;
         static const int SCREEN_WIDTH = 854;
@@ -86,26 +86,30 @@ class Game {
 
         void loadProfile();
         void saveProfile();
-        void updateTimeStep();
-        void runAI();
-        void runPhysics();
-        void update();
-        void recieveNetworkData();
-        void sendNetworkData();
-        void draw();
-        
+
         void loadLevel();
         void releaseLevel();
+
+        void updateTimeStep();
+        void update();
+        void draw();
+
+        void runAI();
+        void runPhysics();
         
-        void handle_event_mouse_button_up (SDL_Event& event);
-        void handle_event_mouse_button_down (SDL_Event& event);
-        void handle_event_keydown (SDL_Event& event);
-        void handle_event_keyup (SDL_Event& event);
-        void handle_event_type (SDL_Event& event);
+        void recieveNetworkData();
+        void sendNetworkData();
+        
+        void handleEventMouseButtonUp(SDL_Event & event);
+        void handleEventMouseButtonDown(SDL_Event & event);
+        void handleEventKeyDown(SDL_Event & event);
+        void handleEventKeyUp(SDL_Event & event);
+        void handleEventType(SDL_Event & event);
         void handleEvents();
 
         int checkIfSkip();
-        
+
+        bool checkColision(Jack * jack, std::vector<Box*> boxes);
         bool isGameFinished();
         bool isLevelFinished();
 };

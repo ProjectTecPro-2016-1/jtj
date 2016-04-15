@@ -52,7 +52,7 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
     // Avoid compiler warning.
     // userData += 0;
     userData = NULL;
-    if(userData == NULL) {
+    if (userData == NULL) {
 
     } else {
 
@@ -94,6 +94,7 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
             // Nothing to do
         }
     }
+    return;
 }
 
 
@@ -141,7 +142,7 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
         printf("Memory allocation failed.\n");
         SDL_FreeWAV(sound->samples);
         return 1;
-    } else{
+    } else {
         // Nothing to do
     }
 
@@ -232,7 +233,7 @@ void Game::init() {
 }
 
 void Game::loop() {
-    while(isGameFinished() == false) {
+    while (isGameFinished() == false) {
         initializingScreen();
 
         if (isGameFinished()) {
@@ -242,7 +243,7 @@ void Game::loop() {
         }
         loadLevel();
 
-        while(isLevelFinished() == false) {
+        while (isLevelFinished() == false) {
             updateTimeStep();
             recieveNetworkData();
             handleEvents();
@@ -289,12 +290,12 @@ void Game::closeGUI() {
 
 void Game::wonGameScreen() {
     if (this->gameWon == false) {
-        return ;
+        return;
     } else {
         // Nothing to do
     }
 
-    this->actualLevel ++;
+    this->actualLevel++;
     cout << "Level: " << actualLevel << endl;
     wonScreen = new InitScreen("resources/backgroundwonscreen.png");
 
@@ -308,7 +309,7 @@ void Game::wonGameScreen() {
 
     SDL_Delay(5);
 
-    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
+    while (SDL_WaitEvent(&event) != 0 && playButton == false && quitButton == false) {
         switch (event.type) {
             case SDL_QUIT:
                 quitButton = true;
@@ -383,7 +384,7 @@ void Game::showOptionsScreen() {
     bool loadButton = false;
     bool backButton = false;
 
-    while (SDL_WaitEvent (&event) != 0 && backButton == false) {
+    while (SDL_WaitEvent(&event) != 0 && backButton == false) {
         switch (event.type) {
             case SDL_QUIT:
                 backButton = true;
@@ -439,43 +440,6 @@ void Game::showOptionsScreen() {
 
     delete optionsScreen;
 
-    return ;
-}
-
-void Game::loadCommonResources() {
-    score = new ScoreScreen();
-
-    /* Open the audio device. The sound driver will try to give us
-    the requested format, but it might not succeed. The 'obtained'
-    structure will be filled in with the actual format data. */
-    desired.freq = 44100;   /* desired output sample rate */
-    desired.format = AUDIO_S16; /* request signed 16-bit samples */
-    desired.samples = 4096; /* this is more or less discretionary */
-    desired.channels = 2;   /* ask for stereo */
-    desired.callback = AudioCallback;
-    desired.userdata = NULL;    /* we don't need this */
-    if (SDL_OpenAudio(&desired, &obtained) < 0) {
-        printf("Unable to open audio device: %s\n", SDL_GetError());
-        return ;
-    } else {
-        // Nothing to do
-    }
-
-    /* Load our sound files and convert them to the sound card's format. */
-    char initScreenSoundName[26] = "resources/init_screen.wav";
-    char level_1SoundName[26] = "resources/level_1.wav";
-    char level_2SoundName[26] = "resources/level_2.wav";
-    char level_3SoundName[26] = "resources/level_3.wav";
-    if (LoadAndConvertSound(initScreenSoundName, &obtained, &initScreenSound) != 0 ||
-        LoadAndConvertSound(level_1SoundName, &obtained, &level_1Sound) != 0 ||
-        LoadAndConvertSound(level_2SoundName, &obtained, &level_2Sound) != 0 ||
-        LoadAndConvertSound(level_3SoundName, &obtained, &level_3Sound) != 0){
-        printf("Unable to load sound.\n");
-        return ;
-    } else {
-        // Nothing to do
-    }
-
     return;
 }
 
@@ -485,7 +449,7 @@ void Game::gameOvering() {
     jack->popMove(-3);
     gameOverScreenLoop();
 
-    return ;
+    return;
 }
 
 void Game::gameOverScreenDraw() {
@@ -512,7 +476,7 @@ void Game::gameOverScreenLoop() {
     this->quitLevel = true;
 
     do {
-        while (SDL_PollEvent (&event)) {
+        while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
                     this->quitLevel = true;
@@ -552,7 +516,7 @@ void Game::gameOverScreenLoop() {
 
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
-    return ;
+    return;
 }
 
 void Game::pausingLevel() {
@@ -561,7 +525,7 @@ void Game::pausingLevel() {
     jack->popMove(-3);
     pauseScreenLoop();
 
-    return ;
+    return;
 }
 
 void Game::pauseScreenDraw() {
@@ -586,7 +550,7 @@ void Game::pauseScreenLoop() {
 
     this->quitLevel = false;
 
-    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
+    while (SDL_WaitEvent(&event) != 0 && playButton == false && quitButton == false) {
         switch (event.type) {
             case SDL_QUIT:
                 quitButton = true;
@@ -652,7 +616,7 @@ void Game::pauseScreenLoop() {
 
     delete pauseScreen;
 
-    return ;
+    return;
 }
 
 void Game::initializingScreen() {
@@ -669,7 +633,7 @@ void Game::initializingScreen() {
 
     SDL_PauseAudio(1);
 
-    return ;
+    return;
 }
 
 void Game::initScreenDraw() {
@@ -697,7 +661,7 @@ void Game::initScreenLoop() {
     this->pauseLevel = false;
     this->gameOver = false;
 
-    while (SDL_WaitEvent (&event) != 0 && playButton == false && quitButton == false) {
+    while (SDL_WaitEvent(&event) != 0 && playButton == false && quitButton == false) {
         switch (event.type) {
             case SDL_QUIT:
                 quitButton = true;
@@ -757,7 +721,47 @@ void Game::initScreenLoop() {
 
     delete initScreen;
 
-    return ;
+    return;
+}
+
+void Game::loadCommonResources() {
+    score = new ScoreScreen();
+
+    /* 
+        Open the audio device. The sound driver will try to give us
+        the requested format, but it might not succeed. The 'obtained'
+        structure will be filled in with the actual format data. 
+    */
+    desired.freq = 44100;               // desired output sample rate
+    desired.format = AUDIO_S16;         // request signed 16-bit samples
+    desired.samples = 4096;             // this is more or less discretionary
+    desired.channels = 2;               // ask for stereo
+    desired.callback = AudioCallback;
+    desired.userdata = NULL;            // we don't need this
+
+    if (SDL_OpenAudio(&desired, &obtained) < 0) {
+        printf("Unable to open audio device: %s\n", SDL_GetError());
+        return;
+    } else {
+        // Nothing to do
+    }
+
+    // Load our sound files and convert them to the sound card's format.
+    char initScreenSoundName[26] = "resources/init_screen.wav";
+    char level_1SoundName[26] = "resources/level_1.wav";
+    char level_2SoundName[26] = "resources/level_2.wav";
+    char level_3SoundName[26] = "resources/level_3.wav";
+    if (LoadAndConvertSound(initScreenSoundName, &obtained, &initScreenSound) != 0 ||
+        LoadAndConvertSound(level_1SoundName, &obtained, &level_1Sound) != 0 ||
+        LoadAndConvertSound(level_2SoundName, &obtained, &level_2Sound) != 0 ||
+        LoadAndConvertSound(level_3SoundName, &obtained, &level_3Sound) != 0){
+        printf("Unable to load sound.\n");
+        return;
+    } else {
+        // Nothing to do
+    }
+
+    return;
 }
 
 void Game::releaseCommonResources() {
@@ -772,12 +776,416 @@ void Game::saveProfile() {
     return;
 }
 
+void Game::loadLevel() {
+
+    ClearPlayingSounds();
+    string level_1_file = "resources/level_1.png";
+    string level_2_file = "resources/level_2.png";
+    string level_3_file = "resources/level_3.png";
+    string level_1_spec = "resources/level_1";
+    string level_2_spec = "resources/level_2";
+    string level_3_spec = "resources/level_3";
+    string currentLevelFile;
+    string currentLevelSpec;
+    if (this->actualLevel > 3) {
+        this->actualLevel = 1;
+    } else {
+        // Nothing to do
+    }
+
+    switch (this->actualLevel) {
+        case 1:
+            currentLevelFile = level_1_file;
+            currentLevelSpec = level_1_spec;
+            PlaySound(&level_1Sound);
+            SDL_PauseAudio(0);
+            break;
+        case 2:
+            currentLevelFile = level_2_file;
+            currentLevelSpec = level_2_spec;
+            PlaySound(&level_2Sound);
+            SDL_PauseAudio(0);
+            break;
+        case 3:
+            currentLevelFile = level_3_file;
+            currentLevelSpec = level_3_spec;
+            PlaySound(&level_3Sound);
+            SDL_PauseAudio(0);
+            break;
+        default:
+            cout << "could not load level file";
+            return;
+    }
+
+    ifstream levelFile;
+    string numberOfLevel;
+    string numberOfBoxes;
+    string numberOfEnemies;
+    string maxLines;
+
+    level = new Level(currentLevelFile);
+    levelFile.open(currentLevelSpec.c_str());
+    getline(levelFile, numberOfLevel);
+    getline(levelFile, numberOfBoxes);
+    getline(levelFile, numberOfEnemies);
+    getline(levelFile, maxLines);
+    levelFile.close();
+
+    int nrBoxes = atoi(numberOfBoxes.c_str());
+
+    for (int i = 0; i < nrBoxes; i++) {
+        Box * box = new Box("resources/box.png");
+        level->boxes.push_back(box);
+        level->addChild(box);
+    }
+
+    int nrEnemies = atoi(numberOfEnemies.c_str());
+
+    for (int i = 0; i < nrEnemies; i++) {
+        Enemy * enemy = new Enemy("resources/enemy_sprites.png");
+        enemy->setSpriteClips();
+        level->enemies.push_back(enemy);
+        level->addChild(enemy);
+    }
+
+    this->maxLevelLines = atoi(maxLines.c_str());
+    score->lines(this->maxLevelLines);
+    score->scoring(0);
+    this->linesDeleted = 0;
+    this->gameWon = false;
+
+    jack = new Jack("resources/jack_sprites.png");
+    jack->setSpriteClips();
+    level->addChild(jack);
+
+    cout << "Level\t" << this->actualLevel << endl;
+    cout << "Number of Boxes: " << nrBoxes << endl;
+    cout << "Number of Enemies: " << nrEnemies << endl;
+    cout << "Max Leve Lines: " << maxLevelLines << endl;
+
+    return;
+}
+
+void Game::releaseLevel() {
+    if (level) {
+        delete level;
+    } else {
+        // Nothing to do
+    }
+    return;
+}
+
 void Game::updateTimeStep() {
     frameTime.start();
     return;
 }
 
-void Game::handle_event_keydown (SDL_Event& event) {
+void Game::update() {
+    if (linesDeleted >= maxLevelLines) {
+        this->gameWon = true;
+    } else {
+        // Nothing to do
+    }
+
+    if (jack->isDead()) {
+        gameOvering();
+    } else {
+        // Nothing to do
+    }
+
+    if (score->getLine() < 0) {
+        gameOver = true;
+    } else {
+        // Nothing to do
+    }
+
+    if (score->getScorePoints() > 99999) {
+        gameOver = true;
+    } else {
+        // Nothing to do
+    }
+
+    if (pauseLevel == true) {
+        pausingLevel();
+    } else {
+        // Nothing to do
+    }
+
+    if (isGameFinished()) {
+        gameOvering();
+    } else {
+        // Nothing to do
+    }
+
+    if (this->gameWon == true) {
+        this->quitLevel = true;
+    } else {
+        // Nothing to do
+    }
+
+    return;
+}
+
+void Game::draw() {
+    if (checkIfSkip() == 0) {
+        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+        level->draw(this->screen);
+        score->drawSelf(this->screen);
+        SDL_Flip(this->screen);
+    } else {
+        // Nothing to do
+    }
+    return;
+}
+
+void Game::runAI() {
+    for (unsigned int i = 0; i < level->enemies.size(); i++) {
+        level->enemies[i]->throwBox(level->boxes);
+        level->enemies[i]->move();
+    }
+    return;
+}
+
+void Game::runPhysics() {
+
+//  cout << "Checando colisão" << endl;
+    if (checkColision(jack, level->boxes)) {
+        jack->die();
+    } else {
+        // Nothing to do
+    }
+//  cout << "Colisão checada." << endl;
+
+//    cout << "Jogador (" << jack->getXPosition() << "," << jack->getYPosition() << ")" << endl;
+    //notice that when the game restarts, another box is pushed into the array
+//  cout << "Derrubando caixas" << endl;
+    for (unsigned int i = 0; i < level->boxes.size(); i++) {
+        if (level->boxes[i]->used == true) {
+            level->boxes[i]->fall(level->grid);
+        } else {
+            // Nothing to do
+        }
+    }
+
+    int xinit = Level::LEVEL_X_OFFSET;
+    //int yinit=Level::LEVEL_Y_OFFSET;
+    int xrange = Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET;
+    //int yfinal=Level::LEVEL_HEIGHT-Level::LEVEL_Y_OFFSET;
+    int jackposx = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / 38;
+    int jackposy = (jack->getYPosition() - Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT + 19) / 38;
+
+    //Looking for the first box before Jack
+//  cout << "Procurando pela caixa móvel antes do Jack" << endl;
+    int boxMobileBeforeJack = -1;
+    int boxMobileAfterJack = -1;
+    for (int i = jackposx; i >= 0; i--) {
+        if ((level->grid[i].size() + jackposy) >= 12) {
+            xinit=Level::LEVEL_X_OFFSET + (i + 1) * 38;
+            if ((level->grid[i].size() + jackposy) == 12) {
+                if (i > 0) {
+                    if (level->grid[i-1].size() >= level->grid[i].size()) {
+                        break;
+                    } else {
+                        boxMobileBeforeJack = i;
+                    }
+                } else {
+                    // Nothing to do
+                }
+            } else {
+                // Nothing to do
+            }
+            break;
+        } else {
+            // Nothing to do
+        }
+    }
+
+//  cout << "Procurando pela caixa móvel depois do Jack" << endl;
+    //Looking for the first box after Jack
+    for (int i = jackposx; i < 12; i++) {
+        if ((level->grid[i].size() + jackposy) >= 12) {
+            xrange = Level::LEVEL_X_OFFSET + (i) * 38 - xinit;
+            if ((level->grid[i].size() + jackposy) == 12) {
+                if (i<11){
+                    if (level->grid[i+1].size() >= level->grid[i].size()) {
+                       break;
+                    } else {
+                        boxMobileAfterJack = i;
+                    }
+                } else {
+                    // Nothing to do
+                }
+            } else {
+                // Nothing to do
+            }
+            break;
+        } else {
+            // Nothing to do
+        }
+    }
+
+    for (int i = 0; i < 12; ++i) {
+//        cout << i << " " << level->grid[i] << endl;
+        if (level->grid[i].size() > 7) {
+            this->quitGame = true;
+        } else {
+            // Nothing to do
+        }
+    }
+
+
+    int quantidadeDeCaixas = 0;
+    for (int i = 0; i < 12; ++i) {
+        if (level->grid[i].size() > 0) {
+            quantidadeDeCaixas++;
+        } else {
+            // Nothing to do
+        }
+    }
+
+    if (quantidadeDeCaixas == 12) {
+        score->increaseScore(1000);
+        score->popLine();
+        linesDeleted++;
+        if (jack->jumping != true) {
+            jack->verticalSpeed = -10;
+            jack->jumping = true;
+        } else {
+            // Nothing to do
+        }
+        for (int i = 0; i < 12; ++i) {
+            Box * boxToDelete = level->grid[i].back();
+            for (vector<Box*>::iterator it = level->boxes.begin(); it != level->boxes.end(); it++) {
+                if (*it == boxToDelete) {
+                    //delete level->boxes.it;
+                    Box * myBox = *it;
+                    level->boxes.erase(it);
+                    myBox->used = false;
+                    break;
+                } else {
+                    // Nothing to do
+                }
+            }
+            level->grid[i].pop_back();
+        }
+    } else {
+        // Nothing to do
+    }
+
+    if (xinit < Level::LEVEL_X_OFFSET) {
+        xinit = Level::LEVEL_X_OFFSET;
+    } else {
+        // Nothing to do
+    }
+
+    if (xrange + xinit > (Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET)) {
+        xrange = (Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET) - xinit;
+    } else {
+        // Nothing to do
+    }
+
+    if (boxMobileBeforeJack != -1) {
+//        cout << "Primeira caixa móvel antes de jack: " << boxMobileBeforeJack << endl;
+        if (jack->getXPosition() == (((boxMobileBeforeJack + 1) * Box::BOX_WIDTH) + Level::LEVEL_X_OFFSET)) {
+//          cout << "Colidiu com uma caixa a esquerda!!! forca: " << jack->strength << endl;
+            if (jack->strength < 10){
+                jack->strength++;
+            } else {
+                // Nothing to do
+            }
+
+            if ((jack->strength >= 10) && (jack->speed < 0)) {
+                Box * boxTransition = level->grid[boxMobileBeforeJack].back();
+                boxTransition->x_position -= Box::BOX_WIDTH;
+                level->grid[boxMobileBeforeJack].pop_back();
+                boxTransition->lyingDown = false;
+                boxTransition->fall(level->grid);
+            } else {
+                // Nothing to do
+            }
+            //level->grid[boxMobileBeforeJack-1].push_back(boxTransition);
+        } else {
+            // Nothing to do
+        }
+    } else {
+        // Nothing to do
+    }
+
+    if (boxMobileAfterJack != -1) {
+  //      cout << "Primeira caixa móvel depois de jack: " << boxMobileAfterJack << endl;
+        if ((jack->getXPosition() + Jack::JACK_WIDTH) == (xrange + xinit)) {
+//          cout << "Colidiu com uma caixa a direta!!!" << endl;
+            if (jack->strength < 10){
+                jack->strength++;
+            } else {
+                // Nothing to do
+            }
+            if ((jack->strength >= 10) && (jack->speed > 0)) {
+                Box * boxTransitionRight = level->grid[boxMobileAfterJack].back();
+                boxTransitionRight->x_position += Box::BOX_WIDTH;
+                level->grid[boxMobileAfterJack].pop_back();
+                boxTransitionRight->lyingDown = false;
+                boxTransitionRight->fall(level->grid);
+            } else {
+                // Nothing to do
+            }
+        } else {
+            // Nothing to do
+        }
+    } else {
+        // Nothing to do
+    }
+
+    if (jack->speed == 0){
+            jack->strength = 0;
+    } else {
+        // Nothing to do
+    }
+//    cout << "Limite a direita do jack: " << xrange+xinit << endl;
+//    cout << "Limite a esquerda do jack: " << xinit << endl;
+    jack->move(xinit, xrange, Level::LEVEL_Y_OFFSET, Level::LEVEL_HEIGHT);
+    //cout << "Jack moveu" << endl;
+    jack->jump(level);
+    return;
+}
+
+void Game::recieveNetworkData() {
+    return;
+}
+
+void Game::sendNetworkData() {
+    return;
+}
+
+void Game::handleEventMouseButtonUp(SDL_Event & event) {
+    switch (event.button.button) {
+        case SDL_BUTTON_LEFT:
+    //      printf("Posicao onde o botao foi liberado: (%d, %d)\n", event.button.x, event.button.y);
+            break;
+        default:
+            // Nothing to do
+            break;
+    }
+
+    return;
+}
+
+
+void Game::handleEventMouseButtonDown(SDL_Event & event) {
+    switch (event.button.button) {
+        case SDL_BUTTON_LEFT:
+            break;
+        case SDL_BUTTON_RIGHT:
+            break;
+        default:
+            // Nothing to do
+            break;
+    }
+
+    return;
+}
+
+void Game::handleEventKeyDown(SDL_Event & event) {
     switch (event.key.keysym.sym) {
         case (SDLK_ESCAPE):
             this->quitLevel = true;
@@ -788,6 +1196,8 @@ void Game::handle_event_keydown (SDL_Event& event) {
         case (SDLK_SPACE):
             if(jack->jumping == true) {
                 break;
+            } else {
+                // Nothing to do
             }
             jack->verticalSpeed = -10;
             jack->jumping = true;
@@ -826,7 +1236,7 @@ void Game::handle_event_keydown (SDL_Event& event) {
     }
 }
 
-void Game::handle_event_keyup (SDL_Event& event) {
+void Game::handleEventKeyUp(SDL_Event & event) {
     switch (event.key.keysym.sym) {
         case (SDLK_a):
         case (276):
@@ -844,59 +1254,26 @@ void Game::handle_event_keyup (SDL_Event& event) {
     }
 }
 
-void Game::handle_event_mouse_button_up (SDL_Event& event) {
-    switch (event.button.button) {
-
-        case SDL_BUTTON_LEFT:
-    //      printf("Posicao onde o botao foi liberado: (%d, %d)\n", event.button.x, event.button.y);
-            break;
-
-        default:
-            // Nothing to do
-            break;
-    }
-
-    return;
-}
-
-
-void Game::handle_event_mouse_button_down (SDL_Event& event) {
-    switch (event.button.button) {
-
-        case SDL_BUTTON_LEFT:
-            break;
-
-        case SDL_BUTTON_RIGHT:
-            break;
-
-        default:
-            // Nothing to do
-            break;
-    }
-
-    return;
-}
-
-void Game::handle_event_type (SDL_Event& event) {
+void Game::handleEventType(SDL_Event & event) {
     switch (event.type) {
         case SDL_QUIT:
             this->quitLevel = true;
             break;
 
         case SDL_KEYDOWN:
-            handle_event_keydown (event);
+            handleEventKeyDown(event);
             break;
 
         case SDL_KEYUP:
-            handle_event_keyup (event);
+            handleEventKeyUp(event);
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            handle_event_mouse_button_down (event);
+            handleEventMouseButtonDown(event);
             break;
 
         case SDL_MOUSEBUTTONUP:
-            handle_event_mouse_button_up (event);
+            handleEventMouseButtonUp(event);
             break;
 
         default:
@@ -907,250 +1284,8 @@ void Game::handle_event_type (SDL_Event& event) {
 
 void Game::handleEvents() {
     while (SDL_PollEvent (&event)) {
-        handle_event_type (event);
+        handleEventType(event);
     }
-    return;
-}
-
-void Game::runAI() {
-    for(unsigned int i = 0; i < level->enemies.size(); i++) {
-        level->enemies[i]->throwBox(level->boxes);
-        level->enemies[i]->move();
-    }
-    return;
-}
-
-bool checkColision (Jack* jack, std::vector<Box*> boxes) {
-
-    for (unsigned int i = 0; i < boxes.size(); ++i) {
-//        cout << "Box " << i << "(" << boxes[i]->getPositionX() << "," << boxes[i]->getPositionY() << ")\t";
-//        cout << "(" << boxes[i]->getPositionX() + 38 << "," << boxes[i]->getPositionY() + 38 << ")" << endl;
-
-		int jackRight = jack->getXPosition() + Box::BOX_WIDTH;
-		int jackLeft = jack->getXPosition();
-		int jackTop = jack->getYPosition();
-		int jackBottom = jack->getYPosition()+Jack::JACK_HEIGHT;
-		int boxRight =boxes[i]->getPositionX() + Box::BOX_HEIGHT;
-		int boxLeft = boxes[i]->getPositionX();
-		int boxTop = boxes[i]->getPositionY();
-		int boxBottom = boxes[i]->getPositionY()+Box::BOX_HEIGHT;
-
-		if((jackRight==boxRight && jackLeft==boxLeft)&&((jackTop<=boxBottom)&&(boxBottom<jackBottom))) {
-			return true;
-		} else {
-            // Nothing to do
-        }
-
-		if(((boxLeft < jackLeft && jackLeft < boxRight) && (boxTop < jackTop && jackTop < boxBottom)) ||
-				((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom))) {
-
-//			cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
-//			cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
-
-			return true;
-		} else {
-            // Nothing to do
-        }
-    }
-
-    return false;
-}
-
-void Game::runPhysics() {
-
-//	cout << "Checando colisão" << endl;
-    if (checkColision (jack, level->boxes)) {
-        jack->die();
-    } else {
-        // Nothing to do
-    }
-//	cout << "Colisão checada." << endl;
-
-//    cout << "Jogador (" << jack->getXPosition() << "," << jack->getYPosition() << ")" << endl;
-    //notice that when the game restarts, another box is pushed into the array
-//	cout << "Derrubando caixas" << endl;
-    for(unsigned int i = 0; i < level->boxes.size(); i++) {
-        if(level->boxes[i]->used == true) {
-            level->boxes[i]->fall(level->grid);
-        }
-    }
-
-    int xinit = Level::LEVEL_X_OFFSET;
-    //int yinit=Level::LEVEL_Y_OFFSET;
-    int xrange=Level::LEVEL_WIDTH+Level::LEVEL_X_OFFSET;
-    //int yfinal=Level::LEVEL_HEIGHT-Level::LEVEL_Y_OFFSET;
-    int jackposx = (jack->getXPosition()-Level::LEVEL_X_OFFSET)/38;
-    int jackposy = (jack->getYPosition()-Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT+19)/38;
-
-    //Looking for the first box before Jack
-//	cout << "Procurando pela caixa móvel antes do Jack" << endl;
-    int boxMobileBeforeJack=-1;
-    int boxMobileAfterJack=-1;
-    for(int i=jackposx;i>=0;i--) {
-		if((level->grid[i].size()+jackposy)>=12) {
-            xinit=Level::LEVEL_X_OFFSET+ (i+1)*38;
-            if((level->grid[i].size()+jackposy)==12) {
-                if(i>0){
-                    if(level->grid[i-1].size()>=level->grid[i].size())
-						break;
-					else
-						boxMobileBeforeJack = i;
-                }
-            }
-            break;
-        }
-    }
-
-//	cout << "Procurando pela caixa móvel depois do Jack" << endl;
-    //Looking for the first box after Jack
-    for(int i=jackposx;i<12;i++) {
-		if((level->grid[i].size()+jackposy)>=12) {
-            xrange=Level::LEVEL_X_OFFSET+ (i)*38-xinit;
-            if((level->grid[i].size()+jackposy)==12) {
-                if(i<11){
-                    if(level->grid[i+1].size()>=level->grid[i].size())
-                       break;
-					else
-						boxMobileAfterJack = i;
-                }
-            }
-            break;
-        }
-    }
-
-    for (int i = 0; i < 12; ++i)
-    {
-//        cout << i << " " << level->grid[i] << endl;
-        if (level->grid[i].size() > 7)
-        {
-            this->quitGame = true;
-        }
-    }
-
-
-    int quantidadeDeCaixas = 0;
-    for (int i = 0; i < 12; ++i)
-    {
-        if (level->grid[i].size() > 0)
-        {
-            quantidadeDeCaixas++;
-        }
-    }
-
-    if (quantidadeDeCaixas == 12)
-    {
-        score->increaseScore(1000);
-        score->popLine();
-        linesDeleted ++;
-        if(jack->jumping != true) {
-            jack->verticalSpeed = -10;
-            jack->jumping = true;
-        }
-        for (int i = 0; i < 12; ++i)
-        {
-            Box* boxToDelete = level->grid[i].back();
-            for(vector<Box*>::iterator it=level->boxes.begin();it!=level->boxes.end();it++) {
-                if(*it==boxToDelete) {
-                    //delete level->boxes.it;
-                    Box* myBox = *it;
-                    level->boxes.erase(it);
-                    myBox->used = false;
-                    break;
-                }
-            }
-            level->grid[i].pop_back();
-        }
-    }
-
-    if(xinit<Level::LEVEL_X_OFFSET)
-        xinit=Level::LEVEL_X_OFFSET;
-    if(xrange+xinit>(Level::LEVEL_WIDTH+Level::LEVEL_X_OFFSET))
-        xrange = (Level::LEVEL_WIDTH+Level::LEVEL_X_OFFSET) -xinit;
-
-	if(boxMobileBeforeJack!=-1) {
-//        cout << "Primeira caixa móvel antes de jack: " << boxMobileBeforeJack << endl;
-		if(jack->getXPosition()==(((boxMobileBeforeJack+1)*Box::BOX_WIDTH)+Level::LEVEL_X_OFFSET)) {
-//			cout << "Colidiu com uma caixa a esquerda!!! forca: " << jack->strength << endl;
-			if(jack->strength<10){
-				jack->strength++;
-			}
-			if((jack->strength>=10)&&(jack->speed<0)) {
-				Box* boxTransition = level->grid[boxMobileBeforeJack].back();
-				boxTransition->x_position -= Box::BOX_WIDTH;
-				level->grid[boxMobileBeforeJack].pop_back();
-				boxTransition->lyingDown=false;
-				boxTransition->fall(level->grid);
-			}
-			//level->grid[boxMobileBeforeJack-1].push_back(boxTransition);
-		}
-	}
-	if(boxMobileAfterJack!=-1) {
-  //      cout << "Primeira caixa móvel depois de jack: " << boxMobileAfterJack << endl;
-		if((jack->getXPosition()+Jack::JACK_WIDTH)==(xrange+xinit)) {
-//			cout << "Colidiu com uma caixa a direta!!!" << endl;
-			if(jack->strength<10){
-				jack->strength++;
-			}
-			if((jack->strength>=10)&&(jack->speed>0)) {
-				Box* boxTransitionRight = level->grid[boxMobileAfterJack].back();
-				boxTransitionRight->x_position += Box::BOX_WIDTH;
-				level->grid[boxMobileAfterJack].pop_back();
-				boxTransitionRight->lyingDown=false;
-				boxTransitionRight->fall(level->grid);
-			}
-		}
-	}
-	if(jack->speed==0){
-			jack->strength=0;
-	}
-//    cout << "Limite a direita do jack: " << xrange+xinit << endl;
-//    cout << "Limite a esquerda do jack: " << xinit << endl;
-    jack->move(xinit, xrange, Level::LEVEL_Y_OFFSET, Level::LEVEL_HEIGHT);
-    //cout << "Jack moveu" << endl;
-    jack->jump(level);
-    return;
-}
-
-void Game::update() {
-
-    if (linesDeleted >= maxLevelLines)
-    {
-        this->gameWon = true;
-    }
-
-    if (jack->isDead())
-    {
-        gameOvering();
-    }
-    if (score->getLine() < 0)
-    {
-        gameOver = true;
-    }
-
-    if (score->getScorePoints() > 99999)
-    {
-        gameOver = true;
-    }
-
-    if (pauseLevel == true) {
-        pausingLevel();
-    }
-    if (isGameFinished())
-    {
-        gameOvering();
-    }
-    if (this->gameWon == true)
-    {
-        this->quitLevel = true;
-    }
-    return;
-}
-
-void Game::recieveNetworkData() {
-    return;
-}
-
-void Game::sendNetworkData() {
     return;
 }
 
@@ -1164,110 +1299,40 @@ int Game::checkIfSkip() {
     }
 }
 
-void Game::draw() {
-    if(checkIfSkip() == 0) {
-        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-        level->draw(this->screen);
-        score->drawSelf(this->screen);
-        SDL_Flip(this->screen);
-    }
-    return;
-}
+bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
 
-void Game::loadLevel() {
+    for (unsigned int i = 0; i < boxes.size(); ++i) {
+//        cout << "Box " << i << "(" << boxes[i]->getPositionX() << "," << boxes[i]->getPositionY() << ")\t";
+//        cout << "(" << boxes[i]->getPositionX() + 38 << "," << boxes[i]->getPositionY() + 38 << ")" << endl;
 
-    ClearPlayingSounds();
-    string level_1_file = "resources/level_1.png";
-    string level_2_file = "resources/level_2.png";
-    string level_3_file = "resources/level_3.png";
-    string level_1_spec = "resources/level_1";
-    string level_2_spec = "resources/level_2";
-    string level_3_spec = "resources/level_3";
-    string currentLevelFile;
-    string currentLevelSpec;
-    if(this->actualLevel > 3) {
-        this->actualLevel = 1;
-    }
+        int jackRight = jack->getXPosition() + Box::BOX_WIDTH;
+        int jackLeft = jack->getXPosition();
+        int jackTop = jack->getYPosition();
+        int jackBottom = jack->getYPosition() + Jack::JACK_HEIGHT;
+        int boxRight = boxes[i]->getPositionX() + Box::BOX_HEIGHT;
+        int boxLeft = boxes[i]->getPositionX();
+        int boxTop = boxes[i]->getPositionY();
+        int boxBottom = boxes[i]->getPositionY() + Box::BOX_HEIGHT;
 
-    switch(this->actualLevel) {
-        case 1:
-            currentLevelFile = level_1_file;
-            currentLevelSpec = level_1_spec;
-            PlaySound(&level_1Sound);
-            SDL_PauseAudio(0);
-            break;
-        case 2:
-            currentLevelFile = level_2_file;
-            currentLevelSpec = level_2_spec;
-            PlaySound(&level_2Sound);
-            SDL_PauseAudio(0);
-            break;
-        case 3:
-            currentLevelFile = level_3_file;
-            currentLevelSpec = level_3_spec;
-            PlaySound(&level_3Sound);
-            SDL_PauseAudio(0);
-            break;
-        default:
-            cout << "could not load level file";
-            return;
+        if ((jackRight == boxRight && jackLeft == boxLeft) && ((jackTop <= boxBottom) && (boxBottom < jackBottom))) {
+            return true;
+        } else {
+            // Nothing to do
+        }
+
+        if (((boxLeft < jackLeft && jackLeft < boxRight) && (boxTop < jackTop && jackTop < boxBottom)) ||
+            ((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom))) {
+
+//          cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
+//          cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
+
+            return true;
+        } else {
+            // Nothing to do
+        }
     }
 
-
-    ifstream levelFile;
-    string numberOfLevel;
-    string numberOfBoxes;
-    string numberOfEnemies;
-    string maxLines;
-
-    level = new Level(currentLevelFile);
-    levelFile.open(currentLevelSpec.c_str());
-    getline(levelFile, numberOfLevel);
-    getline(levelFile, numberOfBoxes);
-    getline(levelFile, numberOfEnemies);
-    getline(levelFile, maxLines);
-    levelFile.close();
-
-    int nrBoxes = atoi(numberOfBoxes.c_str());
-
-    for(int i = 0; i < nrBoxes; i++) {
-        Box* box = new Box("resources/box.png");
-        level->boxes.push_back(box);
-        level->addChild(box);
-    }
-
-    int nrEnemies = atoi(numberOfEnemies.c_str());
-
-    for(int i = 0; i < nrEnemies; i++) {
-        Enemy* enemy = new Enemy("resources/enemy_sprites.png");
-        enemy->setSpriteClips();
-        level->enemies.push_back(enemy);
-        level->addChild(enemy);
-    }
-
-    this->maxLevelLines = atoi(maxLines.c_str());
-    score->lines(this->maxLevelLines);
-    score->scoring(0);
-    this->linesDeleted = 0;
-    this->gameWon = false;
-
-    jack = new Jack("resources/jack_sprites.png");
-    jack->setSpriteClips();
-    level->addChild(jack);
-
-    cout << "Level\t" << this->actualLevel << endl;
-    cout << "Number of Boxes: " << nrBoxes << endl;
-    cout << "Number of Enemies: " << nrEnemies << endl;
-    cout << "Max Leve Lines: " << maxLevelLines << endl;
-
-    return;
-}
-
-void Game::releaseLevel() {
-    if(level) {
-        delete level;
-    }
-    return;
+    return false;
 }
 
 bool Game::isGameFinished() {
