@@ -6,108 +6,39 @@
 
 using namespace std;
 
-Enemy::Enemy(string filename) {
-    this->enemy = SDLUtil::loadImage(filename);
-    this->x_position = Level::LEVEL_X_OFFSET + 38;
-    this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - Enemy::ENEMY_HEIGHT - 38*8 - 1;
-    movesLeft = 0;
-    moveDirection = 0;
-    srand((unsigned)time(0));
-    frame = 0;
-}
-
-Enemy::~Enemy() {
-    if(enemy != NULL) {
-        SDL_FreeSurface(enemy);
-    }
-}
-
-void Enemy::drawSelf(SDL_Surface *surface) {
+void Enemy::drawSelf(SDL_Surface * surface) {
     //SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface);
-    if(moveDirection%2 == 0 && movesLeft > 0) {
+    if (moveDirection%2 == 0 && movesLeft > 0) {
         frame ++;
-        if(frame > 3) {
+
+        if (frame > 3) {
             frame = 1;
+        } else {
+            // Nothing to do
         }
-    }
-    else if(moveDirection%2 == 1 && movesLeft > 0) {
+    } else if (moveDirection%2 == 1 && movesLeft > 0) {
         frame++;
-        if(frame < 4) {
+
+        if (frame < 4) {
             frame = 4;
+        } else {
+            // Nothing to do
         }
-        if(frame > 6) {
+
+        if (frame > 6) {
             frame = 4;
+        } else {
+            // Nothing to do
         }
-    }
-    else if(movesLeft == 0 && moveDirection > 30 && moveDirection < 40) {
+    } else if (movesLeft == 0 && moveDirection > 30 && moveDirection < 40) {
         frame = 7;
-    }
-    else {
+    } else {
         frame = 0;
     }
     SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface, &spriteClips[frame]);
     return;
 }
 
-void Enemy::move() {
-    if(movesLeft > 0 && moveDirection%2 == 0) {
-        x_position+= 2;
-        movesLeft-=2;
-    }
-    else if(movesLeft > 0 && moveDirection%2 == 1) {
-        x_position-=2;
-        movesLeft-=2;
-    }
-    if(x_position <= Level::LEVEL_X_OFFSET) {
-        x_position+= 2;
-        movesLeft = 36;
-        moveDirection = 2;
-    }
-    if(x_position >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
-        x_position-=2;
-        movesLeft = 36;
-        moveDirection = 1;
-    }
-
-
-    if(movesLeft <= 0) {
-        //delay
-        if(moveDirection > 0) {
-            moveDirection--;
-            return;
-        }
-
-        else {
-            //gen  movesLeft and moveDirection
-            movesLeft = (rand()%6)*38;
-            moveDirection = (rand()%120);
-            }
-    }
-    return;
-}
-
-void Enemy::throwBox(vector<Box*> boxes) {
-    if((x_position-Level::LEVEL_X_OFFSET)%38 == 0) {
-    if(movesLeft == 0 && moveDirection == 30) {
-        for(unsigned int i = 0; i < boxes.size(); i++) {
-            if(boxes.at(i)->used == false) {
-                boxes.at(i)->used = true;
-                boxes.at(i)->setPosition(x_position, y_position - Enemy::ENEMY_HEIGHT + Box::BOX_HEIGHT);
-                return;
-            }
-        }
-    }
-    }
-    return;
-}
-
-// -------------------------------------------------------------
-// Function: setSpriteClips()
-// Description: Initializes the dimensions of each picture frame and each enemy moviment.
-// Parameters: void
-// Attributes: nothing
-// Return: void
-// -------------------------------------------------------------  
 void Enemy::setSpriteClips() {
     spriteClips[0].x = 0;
     spriteClips[0].y = ENEMY_HEIGHT;
@@ -148,4 +79,89 @@ void Enemy::setSpriteClips() {
     spriteClips[7].y = ENEMY_HEIGHT;
     spriteClips[7].w = ENEMY_WIDTH;
     spriteClips[7].h = ENEMY_HEIGHT;
+}
+
+Enemy::Enemy(string filename) {
+    this->enemy = SDLUtil::loadImage(filename);
+    this->x_position = Level::LEVEL_X_OFFSET + 38;
+    this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - Enemy::ENEMY_HEIGHT - 38 * 8 - 1;
+    movesLeft = 0;
+    moveDirection = 0;
+    srand((unsigned)time(0));
+    frame = 0;
+}
+
+Enemy::~Enemy() {
+    if (enemy != NULL) {
+        SDL_FreeSurface(enemy);
+    } else {
+        // Nothing to do
+    }
+}
+
+void Enemy::move() {
+    if (movesLeft > 0 && moveDirection%2 == 0) {
+        x_position += 2;
+        movesLeft -= 2;
+    } else if(movesLeft > 0 && moveDirection % 2 == 1) {
+        x_position -= 2;
+        movesLeft -= 2;
+    } else {
+        // Nothing to do
+    }
+
+    if (x_position <= Level::LEVEL_X_OFFSET) {
+        x_position += 2;
+        movesLeft = 36;
+        moveDirection = 2;
+    } else {
+        // Nothing to do
+    }
+
+    if (x_position >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
+        x_position -= 2;
+        movesLeft = 36;
+        moveDirection = 1;
+    } else {
+        // Nothing to do
+    }
+
+
+    if (movesLeft <= 0) {
+        //delay
+        if (moveDirection > 0) {
+            moveDirection--;
+            // descomentar em caso de erro return;
+        } else {
+            //gen  movesLeft and moveDirection
+            movesLeft = (rand() % 6) * 38;
+            moveDirection = (rand() % 120);
+        }
+    } else {
+        // Nothing to do
+    }
+
+    return;
+}
+
+void Enemy::throwBox(vector<Box*> boxes) {
+    if ((x_position-Level::LEVEL_X_OFFSET) % 38 == 0) {
+        if (movesLeft == 0 && moveDirection == 30) {
+            for (unsigned int i = 0; i < boxes.size(); i++) {
+                if (boxes.at(i)->used == false) {
+                    boxes.at(i)->used = true;
+                    boxes.at(i)->setPosition(x_position, y_position - Enemy::ENEMY_HEIGHT + Box::BOX_HEIGHT);
+                    break;// descomentar em caso de erro return;
+                } else {
+                    // Nothing to do
+                }
+            }
+        } else {
+            // Nothing to do
+        }
+    } else {
+        // Nothing to do
+    }
+
+    return;
 }

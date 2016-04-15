@@ -38,3 +38,7 @@ stamp-h1
 
 #game screenshot
 screenshot.bmp
+
+#Folders created when compiling game
+bin/
+obj/
