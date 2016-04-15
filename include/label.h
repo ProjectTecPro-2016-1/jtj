@@ -5,7 +5,7 @@
 #include <string>
 
 class Label : public GameObject {
-	SDL_Surface *label;
+	SDL_Surface * label;
 	void drawSelf(SDL_Surface * surface);
 	int xPosition;
 	int yPosition;
