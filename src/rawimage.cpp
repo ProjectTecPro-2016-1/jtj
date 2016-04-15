@@ -10,36 +10,38 @@ RawImage::RawImage() {
 }
 
 RawImage::~RawImage() {
-    if(_pixels != NULL) {
+    if (_pixels != NULL) {
         SDL_FreeSurface(_pixels);
+    } else {
+        // Nothing to do
     }
 }
 
 void RawImage::load(const string& name) {
-    SDL_Surface *image = IMG_Load(name.c_str());
+    SDL_Surface * image = IMG_Load(name.c_str());
 
-    if(image != NULL) {
+    if (image != NULL) {
         _pixels = SDL_DisplayFormatAlpha(image);
         SDL_FreeSurface(image);
+    } else {
+        // Nothing to do
     }
 }
 int RawImage::width() const {
-    if(_pixels != NULL) {
+    if (_pixels != NULL) {
         return _pixels->w;
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
 int RawImage::height() const {
-    if(_pixels != NULL) {
+    if (_pixels != NULL) {
         return _pixels->h;
-    }
-    else {
+    } else {
         return 0;
     }
 }
-SDL_Surface* RawImage::pixels() const {
+SDL_Surface * RawImage::pixels() const {
     return _pixels;
 }

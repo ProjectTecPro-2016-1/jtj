@@ -7,13 +7,14 @@
 using namespace std;
 
 class RawImage : public Resource {
-    SDL_Surface *_pixels;
+    SDL_Surface * _pixels;
     public:
         RawImage();
         ~RawImage();
         void load(const string& name);
         int width() const;
         int height() const;
-        SDL_Surface *pixels() const;
+        SDL_Surface * pixels() const;
 };
+
 #endif

@@ -11,13 +11,15 @@ Level::Level(string filename) {
 }
 
 Level::~Level() {
-    if(level != NULL) {
+    if (level != NULL) {
         SDL_FreeSurface(level);
+    } else {
+        // Nothing to do
     }
 }
 
 //draws the level on the specified surface
-void Level::drawSelf(SDL_Surface *surface) {
+void Level::drawSelf(SDL_Surface * surface) {
     SDLUtil::applySurface(Level::LEVEL_X_OFFSET, Level::LEVEL_Y_OFFSET, this->level, surface);
     return;
 }

@@ -8,7 +8,7 @@
 #include <vector>
 
 class Level : public GameObject {
-    SDL_Surface *level;
+    SDL_Surface * level;
     void drawSelf(SDL_Surface *surface);
     //this stack shall handle the colision logic.
     public:
