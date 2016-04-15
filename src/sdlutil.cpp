@@ -4,9 +4,9 @@
 
 using namespace std;
 
-SDL_Surface *SDLUtil::loadImage(string filename) {
-    SDL_Surface* loadedImage = NULL;
-    SDL_Surface* optimizedImage = NULL;
+SDL_Surface * SDLUtil::loadImage(string filename) {
+    SDL_Surface * loadedImage = NULL;
+    SDL_Surface * optimizedImage = NULL;
 
     loadedImage = IMG_Load(filename.c_str());
     if (loadedImage != NULL) {
@@ -26,7 +26,7 @@ SDL_Surface *SDLUtil::loadImage(string filename) {
     return optimizedImage;
 }
 
-void SDLUtil::applySurface(int x, int y, SDL_Surface *source, SDL_Surface* destination, SDL_Rect* clip) {
+void SDLUtil::applySurface(int x, int y, SDL_Surface * source, SDL_Surface * destination, SDL_Rect * clip) {
     SDL_Rect offset;
     offset.x = x;
     offset.y = y;

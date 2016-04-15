@@ -15,7 +15,7 @@ class SDLUtil {
 	// Attributes: nothing
 	// Return: void
 	// -------------------------------------------------------------
-    static SDL_Surface *loadImage(std::string filename);
+    static SDL_Surface * loadImage(std::string filename);
 
     // -------------------------------------------------------------
 	// Function: applySurface()
@@ -29,7 +29,7 @@ class SDLUtil {
 	// Attributes: nothing
 	// Return: void
 	// ------------------------------------------------------------- 
-    static void applySurface(int x, int y, SDL_Surface *source, SDL_Surface *destination, SDL_Rect* clip = NULL);
+    static void applySurface(int x, int y, SDL_Surface * source, SDL_Surface * destination, SDL_Rect * clip = NULL);
 };
 
 #endif
