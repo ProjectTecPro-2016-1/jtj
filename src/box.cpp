@@ -81,8 +81,10 @@ int Box::getSpeed() {
 // Function: setPosition()
 // Description: Return the speed which the box is moving at the right moment.
 // Parameters:
-//		int x;			Insert the value of axis X of the box on the attribute that keeps the information
-//		int y;  		Insert the value of axis Y of the box on the attribute that keeps the information
+//		int x;			Insert the value of axis X of the box on the attribute that keeps the
+//                      information
+//		int y;  		Insert the value of axis Y of the box on the attribute that keeps the
+//                      information
 // Return: void
 // -------------------------------------------------------------
 void Box::setPosition(int x, int y) {
@@ -106,7 +108,7 @@ void Box::accelerate() {
 // Parameters:
 //		int vector<Box*> grid[12];			Vector that contain the box positions in the platform.
 // Return: void
-// -------------------------------------------------------------  
+// -------------------------------------------------------------
 void Box::fall(vector<Box*>grid[12]) {
     if (lyingDown == false) {
         speed += ACCELERATION;
@@ -117,12 +119,18 @@ void Box::fall(vector<Box*>grid[12]) {
             // Nothing to do
         }
 
+        int newYPosition = (int)(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
+                                (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38)));
+
         y_position += speed;
-        if (y_position >= (int)(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 - (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38))) {
+        if (y_position >= newYPosition) {
             speed = 0;
             lyingDown = true;
-            y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 - (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size() * 38);
-			grid[(x_position - Level::LEVEL_X_OFFSET)/38].push_back(this);
+
+            y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
+                        (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size() * 38);
+
+            grid[(x_position - Level::LEVEL_X_OFFSET)/38].push_back(this);
             //grid[(x_position - Level::LEVEL_X_OFFSET)/38]++;
         } else {
             // Nothing to do
