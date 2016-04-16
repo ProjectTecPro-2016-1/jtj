@@ -44,7 +44,8 @@ SDL_Surface * SDLUtil::loadImage(string filename) {
 //		SDL_Rect * clip;					Null pointer passed as parameter to a graphical function.
 // Return: void
 // -------------------------------------------------------------
-void SDLUtil::applySurface(int x, int y, SDL_Surface * source, SDL_Surface * destination, SDL_Rect * clip) {
+void SDLUtil::applySurface(int x, int y, SDL_Surface * source, SDL_Surface * destination,
+                           SDL_Rect * clip) {
     SDL_Rect offset;
     offset.x = x;
     offset.y = y;
