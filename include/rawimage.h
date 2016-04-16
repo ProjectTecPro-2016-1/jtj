@@ -7,7 +7,7 @@
 using namespace std;
 
 class RawImage : public Resource {
-    SDL_Surface * _pixels;
+    SDL_Surface * _pixels;      // Pointer for pixels graphic elements.
     public:
         RawImage();
         ~RawImage();
