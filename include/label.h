@@ -5,13 +5,13 @@
 #include <string>
 
 class Label : public GameObject {
-	SDL_Surface * label;
+	SDL_Surface * label;        // Pointer for label graphic elements.
 	void drawSelf(SDL_Surface * surface);
-	int xPosition;
-	int yPosition;
+	int xPosition;      // Where the label is localizated in axis X.
+	int yPosition;      // Where the label is localizated in axis Y.
 	public:
-		static const int LABEL_WIDTH = 178;
-		static const int LABEL_HEIGHT = 100;
+		static const int LABEL_WIDTH = 178;     // All label pixel width.
+		static const int LABEL_HEIGHT = 100;    // All label pixel heigth.
 
 		bool wasClicked(int xMouse, int yMouse);
 
@@ -20,3 +20,4 @@ class Label : public GameObject {
 };
 
 #endif
+ 
