@@ -6,6 +6,15 @@
 
 using namespace std;
 
+// -------------------------------------------------------------
+// Function: drawSelf()
+// Description: Selects the current motion frame and draws the enemies image in specific position
+//				on the screen according to the enemy attributes.
+// Parameters:
+//		SDL_Surface * surface;  		Pointer for surface where the graphic component will be
+//                                      drawn.
+// Return: void
+// -------------------------------------------------------------
 void Enemy::drawSelf(SDL_Surface * surface) {
     //SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface);
     if (moveDirection%2 == 0 && movesLeft > 0) {
@@ -35,10 +44,17 @@ void Enemy::drawSelf(SDL_Surface * surface) {
     } else {
         frame = 0;
     }
-    SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface, &spriteClips[frame]);
+
+    SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface,
+                         &spriteClips[frame]);
     return;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClips()
+// Description: Initializes the dimensions of each picture frame and each enemy moviment.
+// Return: void
+// -------------------------------------------------------------
 void Enemy::setSpriteClips() {
     spriteClips[0].x = 0;
     spriteClips[0].y = ENEMY_HEIGHT;
@@ -81,16 +97,29 @@ void Enemy::setSpriteClips() {
     spriteClips[7].h = ENEMY_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: Enemy()
+// Description: Enemy class builder where the initializations of the variables happen.
+// Parameters:
+//		string fileName;  		Enemy landscape file name.
+// Return: void
+// -------------------------------------------------------------
 Enemy::Enemy(string filename) {
     this->enemy = SDLUtil::loadImage(filename);
     this->x_position = Level::LEVEL_X_OFFSET + 38;
-    this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - Enemy::ENEMY_HEIGHT - 38 * 8 - 1;
+    this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET -
+                        Enemy::ENEMY_HEIGHT - 38 * 8 - 1;
     movesLeft = 0;
     moveDirection = 0;
     srand((unsigned)time(0));
     frame = 0;
 }
 
+// -------------------------------------------------------------
+// Function: ~Enemy()
+// Description: Enemy class destructor where the landscape image files free themselves.
+// Return: void
+// -------------------------------------------------------------
 Enemy::~Enemy() {
     if (enemy != NULL) {
         SDL_FreeSurface(enemy);
@@ -99,6 +128,11 @@ Enemy::~Enemy() {
     }
 }
 
+// -------------------------------------------------------------
+// Function: move()
+// Description: Moves the enemy horizontally according to level dimensions.
+// Return: void
+// -------------------------------------------------------------
 void Enemy::move() {
     if (movesLeft > 0 && moveDirection%2 == 0) {
         x_position += 2;
@@ -144,13 +178,21 @@ void Enemy::move() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: throwBox()
+// Description: Controls the enemies freedom box when the right position is achieved.
+// Parameters:
+//		int vector<Box*> boxes;			Vector that contains boxes it´s positions.
+// Return: void
+// -------------------------------------------------------------
 void Enemy::throwBox(vector<Box*> boxes) {
     if ((x_position-Level::LEVEL_X_OFFSET) % 38 == 0) {
         if (movesLeft == 0 && moveDirection == 30) {
             for (unsigned int i = 0; i < boxes.size(); i++) {
                 if (boxes.at(i)->used == false) {
                     boxes.at(i)->used = true;
-                    boxes.at(i)->setPosition(x_position, y_position - Enemy::ENEMY_HEIGHT + Box::BOX_HEIGHT);
+                    boxes.at(i)->setPosition(x_position, y_position - Enemy::ENEMY_HEIGHT +
+                                            Box::BOX_HEIGHT);
                     break;// descomentar em caso de erro return;
                 } else {
                     // Nothing to do
