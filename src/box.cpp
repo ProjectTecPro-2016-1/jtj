@@ -119,7 +119,7 @@ void Box::fall(vector<Box*>grid[12]) {
             // Nothing to do
         }
 
-        int newYPosition = (int)(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
+        int newYPosition = ((int)(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
                                 (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38)));
 
         y_position += speed;
