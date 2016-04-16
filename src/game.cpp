@@ -4,6 +4,7 @@
 #include <vector>
 #include <time.h>
 #include <unistd.h>
+#include <cassert>
 #include "game.h"
 #include "enemy.h"
 #include "box.h"
@@ -12,6 +13,7 @@
 #include "SDL/SDL_ttf.h"
 #include "scorescreen.h"
 #include <stdio.h>
+
 #define MAX_PLAYING_SOUNDS 10
 
 using namespace std;
@@ -96,7 +98,6 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
     }
     return;
 }
-
 
 /* 
     This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
@@ -226,8 +227,9 @@ void Game::init() {
     this->actualLevel = 1;
     this->linesDeleted = 0;
 
-
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    int result_SDL_FillRect = 0;
+    result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    assert(result_SDL_FillRect >= 0 && "Problem to show a rect of main screen.");
 
     return;
 }
@@ -272,18 +274,26 @@ void Game::shutdown() {
 }
 
 void Game::initGUI() {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    TTF_Init ();
+    int result_SDL_Init = 0;
+    result_SDL_Init = SDL_Init(SDL_INIT_EVERYTHING);
+    assert(result_SDL_Init >= 0 && "Problem to init SDL. Impossible play the game.");
+
+    int result_TTF_Init = 0;
+    result_TTF_Init = TTF_Init();
+    assert(result_TTF_Init >= 0 && "Problem to init TTF. Can't show the font of the game.");
 
     SDL_WM_SetCaption("Jack, The Janitor", NULL);
     SDL_WM_SetIcon(IMG_Load("resources/Logo_WareHouse_64x64.png"), NULL);
+
     this->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    assert(this->screen != NULL && "Problem to set a video mode. Can't show the screen of the game.");
+        
     return;
 }
 
 void Game::closeGUI() {
-    SDL_CloseAudio ();
-    TTF_Quit ();
+    SDL_CloseAudio();
+    TTF_Quit();
     SDL_Quit();
     return;
 }
