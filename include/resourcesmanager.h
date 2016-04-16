@@ -9,12 +9,12 @@ class ResourcesManager {
     // -------------------------------------------------------------
 	// Function: ResourcesManager()
 	// Description: ResourcesManager class builder.
-	// Parameters: void
-	// Attributes: nothing
 	// Return: void
-	// Observation: Without implementation.
+	// Observation:
+	//		Without implementation.
 	// -------------------------------------------------------------
     ResourcesManager();
+
     static ResourcesManager * instance = NULL;   // Pointer to instance resources.
 
     class ResourcesInfo { // Contain information of resources.
@@ -30,16 +30,24 @@ class ResourcesManager {
     vector<ResourcesInfo*> resources;   // Vector that contains information of resources.
 
     public:
+
+        // -------------------------------------------------------------
+        // Function: getInstance()
+        // Description: Keep instance of a pointer resource.
+        // Return: static ResourcesManager *
+        // Observation:
+        //		Without implementation.
+        // -------------------------------------------------------------
         static ResourcesManager * getInstance();
 
         // -------------------------------------------------------------
     	// Function: getImage()
     	// Description:
     	// Parameters:
-    	// 		const string &name;
-    	// Attributes: nothing
+    	// 		const string & name;
     	// Return: RawImage *
-    	// Observation: Without implementation.
+    	// Observation:
+    	//		Without implementation.
     	// -------------------------------------------------------------
         RawImage * getImage(const string &name);
 
@@ -47,10 +55,10 @@ class ResourcesManager {
     	// Function: release()
     	// Description:
     	// Parameters:
-    	// 		RawImage *image;
-    	// Attributes: nothing
+    	// 		RawImage * image;
     	// Return: void
-    	// Observation: Without implementation.
+    	// Observation:
+    	//		Without implementation.
     	// -------------------------------------------------------------
         void release(RawImage * image);
 
@@ -58,10 +66,10 @@ class ResourcesManager {
     	// Function: load()
     	// Description:
     	// Parameters:
-    	// 		const string &resourcesDescription;
-    	// Attributes: nothing
+    	// 		const string & resourcesDescription;
     	// Return: void
-    	// Observation: Without implementation.
+    	// Observation:
+    	//		Without implementation.
     	// -------------------------------------------------------------
         void load(const string &resourcesDescription);
 };
