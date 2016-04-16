@@ -19,7 +19,6 @@ SDL_Surface * SDLUtil::loadImage(string filename) {
     loadedImage = IMG_Load(filename.c_str());
     if (loadedImage != NULL) {
         optimizedImage = SDL_DisplayFormat(loadedImage);
-        assert
 
         SDL_FreeSurface(loadedImage);
 
