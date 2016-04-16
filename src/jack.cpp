@@ -70,6 +70,7 @@ bool Jack::isDead() {
 int Jack::setLimit(int value, int limit1, int range) {
     int limit2 = limit1 + range;
     int valueForReturn = 0;
+
     if (value<limit1) {
         valueForReturn = limit1;
     } else if (value >= limit2) {
@@ -77,6 +78,7 @@ int Jack::setLimit(int value, int limit1, int range) {
     } else {
         valueForReturn = value;
     }
+
     return valueForReturn;
 }
 
@@ -156,8 +158,13 @@ void Jack::jump(Level* level) {
     y_position += verticalSpeed;
     verticalSpeed += ACCELERATION;
 
+    int maxJumpHeightLeft = ((int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 -
+                            (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38)));
+    int maxJumpHeightRight = ((int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 -
+                             (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38)));
+
     if(jumping == true) {
-        if ((y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38))) || (y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38)))) {
+        if ((y_position >= maxJumpHeightLeft) || (y_position >= maxJumpHeightLeft)) {
             jumping = false;
             verticalSpeed = 1;
         } else {
@@ -168,12 +175,12 @@ void Jack::jump(Level* level) {
     }
 
     //these next two if's handles boxes superior colision.
-    if (y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38))) {
-        y_position = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38));
+    if (y_position >= maxJumpHeightLeft) {
+        y_position = maxJumpHeightLeft;
         verticalSpeed = 1;
         //verticalSpeed -= ACCELERATION;
-    } else if (y_position >= (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38))) {
-        y_position = Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 - (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38);
+    } else if (y_position >= maxJumpHeightRight) {
+        y_position = maxJumpHeightRight;
         verticalSpeed = 1;
         //verticalSpeed -= ACCELERATION;
     } else { //this avoids double jumping while falling from a box
@@ -234,7 +241,6 @@ void Jack::popMove(int v) {
 				x_position +=Box::BOX_WIDTH-rest-1;
 			}
 			*/
-
 		}
 	} else {
         // Nothing to do
