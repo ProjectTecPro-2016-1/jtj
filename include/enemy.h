@@ -18,8 +18,10 @@ class Enemy : public GameObject {
     	int y_position;	                        // Axis Y position where the enemy is localizated.
     	int movesLeft;	                        // Controls the enemy movements to the right.
     	int moveDirection;                      // Controls the movements direction horizontally.
-        static const int ENEMY_WIDTH = 38;      // Contains the enemies width from each position occupied on screen.
-    	static const int ENEMY_HEIGHT = 57;	    // Contains the enemies height from each position occupied on screen.
+        static const int ENEMY_WIDTH = 38;      // Contains the enemies width from each position
+                                                // occupied on screen.
+    	static const int ENEMY_HEIGHT = 57;	    // Contains the enemies height from each position
+                                                // occupied on screen.
 
         Enemy(std::string filename);
         ~Enemy();
