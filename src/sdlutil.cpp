@@ -4,6 +4,13 @@
 
 using namespace std;
 
+// -------------------------------------------------------------
+// Function: loadImage()
+// Description: Load image of some element to draw on screen.
+// Parameters:
+//		string filename;			Name of image file that will be drwan in element.
+// Return: SDL_Surface *
+// -------------------------------------------------------------
 SDL_Surface * SDLUtil::loadImage(string filename) {
     SDL_Surface * loadedImage = NULL;
     SDL_Surface * optimizedImage = NULL;
@@ -26,6 +33,17 @@ SDL_Surface * SDLUtil::loadImage(string filename) {
     return optimizedImage;
 }
 
+// -------------------------------------------------------------
+// Function: applySurface()
+// Description: Applies the surface according to graphic components.
+// Parameters:
+//		int x;								X axis position where the element will be drawn.
+//		int y;								Y axis position where the element will be drawn.
+//		SDL_Surface * source;				Pointer to the element that will contain the draw.
+//		SDL_Surface * destination;			Pointer to the location where the element is arranged.
+//		SDL_Rect * clip;					Null pointer passed as parameter to a graphical function.
+// Return: void
+// -------------------------------------------------------------
 void SDLUtil::applySurface(int x, int y, SDL_Surface * source, SDL_Surface * destination, SDL_Rect * clip) {
     SDL_Rect offset;
     offset.x = x;
