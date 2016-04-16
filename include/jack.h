@@ -12,8 +12,10 @@ class Jack : public GameObject {
     int x_position;				// Variable that store Jack's position in X axis.
 	int y_position;				// Variable that store Jack's position in Y axis.
 	bool dead;					// Stores the information whether Jack is dead or not.
-	int lastMove;				// Stores Jack's last move. Used to stop Jack or make him walk again.
-	int lastButOneMove;			// Stores Jack's last but one move. Used to stop Jack or make him walk again.
+	int lastMove;				// Stores Jack's last move. Used to stop Jack or make him walk
+                                // again.
+	int lastButOneMove;			// Stores Jack's last but one move. Used to stop Jack or make him
+                                // walk again.
 	int frame; 					// Variable for animation in drawSelf() method.
 
     SDL_Rect spriteClips[9];
