@@ -9,7 +9,6 @@ using namespace std;
 // Description: Jack class builder where the initializations of the variables happen.
 // Parameters:
 //		string filename;	Name of the file from which will be loaded Jack's image.
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 Jack::Jack(string filename) {
@@ -29,8 +28,6 @@ Jack::Jack(string filename) {
 // -------------------------------------------------------------
 // Function: ~Jack()
 // Description: Jack class destructor in which images files free themselves.
-// Parameters: void
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 Jack::~Jack() {
@@ -44,8 +41,6 @@ Jack::~Jack() {
 // -------------------------------------------------------------
 // Function: die()
 // Description:	Gives the true value to the boolean variable "dead".
-// Parameters: void
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::die() {
@@ -55,8 +50,6 @@ void Jack::die() {
 // -------------------------------------------------------------
 // Function: isDead()
 // Description:	Return the boolean variable indicating whether Jack is dead or not.
-// Parameters: void
-// Attributes: nothing
 // Return: bool
 // -------------------------------------------------------------
 bool Jack::isDead() {
@@ -93,7 +86,6 @@ int Jack::setLimit(int value, int limit1, int range) {
 //				on the screen according to it's attributes.
 // Parameters:
 //		SDL_Surface * surface;	Pointer for surface in which graphic components will be drawn
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::drawSelf(SDL_Surface *surface) {
@@ -141,7 +133,6 @@ void Jack::drawSelf(SDL_Surface *surface) {
 //		int xRange;		Range in X axis.
 //		int yBegin;		Limit in some of Jack's directions in Y axis.
 //		int yRange;		Range in Y axis.
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
@@ -159,7 +150,6 @@ void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
 //				height and possible collisions with some box.
 // Parameters:
 //		Level * level;		Pointer to access level class.
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::jump(Level* level) {
@@ -199,7 +189,6 @@ void Jack::jump(Level* level) {
 // Description: Method that makes Jack move again after pausing.
 // Parameters:
 //		int v;		Variable that will make Jack walk again.
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::pushMove(int v) {
@@ -221,7 +210,6 @@ void Jack::pushMove(int v) {
 // Description:	Method that stops Jack when pausing.
 // Parameters:
 //		int v;		Variable that will stop Jack's movement.
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::popMove(int v) {
@@ -256,8 +244,6 @@ void Jack::popMove(int v) {
 // -------------------------------------------------------------
 // Function: getXPosition()
 // Description:	Returns the current Jack's position on the X axis.
-// Parameters: void
-// Attributes: nothing
 // Return: int
 // -------------------------------------------------------------
 int Jack::getXPosition() {
@@ -267,8 +253,6 @@ int Jack::getXPosition() {
 // -------------------------------------------------------------
 // Function: getYPosition()
 // Description:	Returns the current Jack's position on the Y axis.
-// Parameters: void
-// Attributes: nothing
 // Return: int
 // -------------------------------------------------------------
 int Jack::getYPosition() {
@@ -277,10 +261,10 @@ int Jack::getYPosition() {
 
 // -------------------------------------------------------------
 // Function: pushBox()
-// Description: Does nothing.
-// Parameters: void
-// Attributes: nothing
+// Description:
 // Return: void
+// Observations:
+// 		Funtion not implemented
 // -------------------------------------------------------------
 void Jack::pushBox() {
 }
@@ -288,8 +272,6 @@ void Jack::pushBox() {
 // -------------------------------------------------------------
 // Function: setSpriteClips()
 // Description: Initializes the dimensions of each picture frame and each Jack's moviment.
-// Parameters: void
-// Attributes: nothing
 // Return: void
 // -------------------------------------------------------------
 void Jack::setSpriteClips() {
