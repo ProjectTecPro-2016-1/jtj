@@ -5,10 +5,20 @@
 
 using namespace std;
 
+// -------------------------------------------------------------  
+// Function: RawImage()  
+// Description: Image class builder where the initialization of the class variable happen.
+// Return: void  
+// -------------------------------------------------------------
 RawImage::RawImage() {
     _pixels = NULL;
 }
 
+// -------------------------------------------------------------  
+// Function: ~RawImage()  
+// Description: Image class destructor where the image files free themselves.
+// Return: void  
+// -------------------------------------------------------------
 RawImage::~RawImage() {
     if (_pixels != NULL) {
         SDL_FreeSurface(_pixels);
@@ -17,6 +27,13 @@ RawImage::~RawImage() {
     }
 }
 
+// -------------------------------------------------------------  
+// Function: load()  
+// Description: Load the images on surface if its not empty.
+// Parameters:
+// 		const string &name;			File name.
+// Return: void  
+// -------------------------------------------------------------
 void RawImage::load(const string& name) {
     SDL_Surface * image = IMG_Load(name.c_str());
 
@@ -27,6 +44,12 @@ void RawImage::load(const string& name) {
         // Nothing to do
     }
 }
+
+// -------------------------------------------------------------  
+// Function: width()  
+// Description: Keep image width.
+// Return: int
+// -------------------------------------------------------------
 int RawImage::width() const {
     if (_pixels != NULL) {
         return _pixels->w;
@@ -35,6 +58,11 @@ int RawImage::width() const {
     }
 }
 
+// -------------------------------------------------------------  
+// Function: height()  
+// Description: Keep image height.
+// Return: int
+// -------------------------------------------------------------
 int RawImage::height() const {
     if (_pixels != NULL) {
         return _pixels->h;
@@ -42,6 +70,12 @@ int RawImage::height() const {
         return 0;
     }
 }
+
+// -------------------------------------------------------------  
+// Function: pixels()  
+// Description: Return surface.
+// Return: SDL_Surface *	
+// -------------------------------------------------------------
 SDL_Surface * RawImage::pixels() const {
     return _pixels;
 }
