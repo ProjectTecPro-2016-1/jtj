@@ -19,14 +19,13 @@ SDL_Surface * SDLUtil::loadImage(string filename) {
     loadedImage = IMG_Load(filename.c_str());
     if (loadedImage != NULL) {
         optimizedImage = SDL_DisplayFormat(loadedImage);
-        assert
 
         SDL_FreeSurface(loadedImage);
 
         if (optimizedImage != NULL) {
             Uint32 colorkey = SDL_MapRGB(optimizedImage->format, 255, 0, 255);
-            int result_SDL_SetColorKey = SDL_SetColorKey(optimizedImage, SDL_SRCCOLORKEY, colorkey);
 
+            int result_SDL_SetColorKey = SDL_SetColorKey(optimizedImage, SDL_SRCCOLORKEY, colorkey);
             assert(result_SDL_SetColorKey >= 0 && "Error setting colors");
 
         } else {
@@ -55,8 +54,8 @@ void SDLUtil::applySurface(int x, int y, SDL_Surface * source, SDL_Surface * des
     SDL_Rect offset;
     offset.x = x;
     offset.y = y;
-    int result_SDL_BlitSurface = SDL_BlitSurface(source, clip, destination, &offset);
 
+    int result_SDL_BlitSurface = SDL_BlitSurface(source, clip, destination, &offset);
     assert(result_SDL_BlitSurface >= 0 && "Error performing the blit");
 
     return;
