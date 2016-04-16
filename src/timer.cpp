@@ -9,6 +9,7 @@
 Timer::Timer() {
     startTicks = 0;
     pausedTicks = 0;
+
     paused = false;
     started = false;
 }
@@ -32,6 +33,7 @@ void Timer::waitDiff(float ratioFPS) {
 void Timer::start() {
     started = true;
     paused = false;
+
     startTicks = SDL_GetTicks();
 }
 
@@ -83,10 +85,10 @@ int Timer::get_ticks() {
     int valueForReturn = 0;
 
     if (started == true) {
-        if (paused == true) {
-            valueForReturn = pausedTicks;
-        } else {
+        if (paused == false) {
             valueForReturn = SDL_GetTicks() - startTicks;
+        } else {
+            valueForReturn = pausedTicks;
         }
     } else {
         // Nothing to do
