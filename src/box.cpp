@@ -135,6 +135,8 @@ void Box::fall(vector<Box*>grid[12]) {
         } else {
             // Nothing to do
         }
+    } else {
+	// Nothing to do
     }
 
     return;
