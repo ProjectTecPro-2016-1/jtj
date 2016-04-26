@@ -5,16 +5,20 @@
 #include <time.h>
 #include <unistd.h>
 #include <cassert>
+#include <cstdlib>
+#include <stdio.h>
+#include "SDL/SDL_ttf.h"
+#include "sdlutil.h"
 #include "game.h"
 #include "enemy.h"
 #include "box.h"
-#include "sdlutil.h"
-#include <cstdlib>
-#include "SDL/SDL_ttf.h"
 #include "scorescreen.h"
-#include <stdio.h>
 
 #define MAX_PLAYING_SOUNDS 10
+// The higher this is, the louder each currently playing sound will be.
+// However, high values may cause distortion if too many sounds are playing. 
+// Experiment with this.
+#define VOLUME_PER_SOUND SDL_MIX_MAXVOLUME / 2
 
 using namespace std;
 
@@ -33,13 +37,6 @@ typedef struct playingStruct {
 
 // Array for all active sound effects.
 playingT playing[MAX_PLAYING_SOUNDS];
-
-/* 
-    The higher this is, the louder each currently playing sound will be.
-    However, high values may cause distortion if too many sounds are playing. 
-    Experiment with this.
-*/
-#define VOLUME_PER_SOUND SDL_MIX_MAXVOLUME / 2
 
 // Audio format specifications.
 SDL_AudioSpec desired, obtained;
@@ -99,10 +96,8 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
     return;
 }
 
-/* 
-    This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
-    Returns 0 on success and 1 on failure. 
-*/
+// This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
+// Returns 0 on success and 1 on failure. 
 int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer sound) {
     SDL_AudioCVT cvt;           // audio format conversion structure.
     SDL_AudioSpec loaded;       // format of the loaded data.
@@ -116,11 +111,9 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
         // Nothing to do
     }
 
-    /* 
-        Build a conversion structure for converting the samples.
-        This structure contains the data SDL needs to quickly
-        convert between sample formats. 
-    */
+    // Build a conversion structure for converting the samples.
+    // This structure contains the data SDL needs to quickly
+    // convert between sample formats. 
     if (SDL_BuildAudioCVT(&cvt, loaded.format, 
                           loaded.channels, loaded.freq, 
                           spec->format, spec->channels, spec->freq) < 0) {
@@ -130,13 +123,10 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
         // Nothing to do
     }
 
-    /* 
-        Since converting PCM samples can result in more data
-        (for instance, converting 8-bit mono to 16-bit stereo),
-        we need to allocate a new buffer for the converted data.
-        Fortunately SDL_BuildAudioCVT supplied the necessary
-        information. 
-    */
+    // Since converting PCM samples can result in more data
+    // (for instance, converting 8-bit mono to 16-bit stereo),
+    // we need to allocate a new buffer for the converted data.
+    // Fortunately SDL_BuildAudioCVT supplied the necessary information. 
     cvt.len = sound->length;
     newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
     if (newBuffer == NULL) {
@@ -179,11 +169,9 @@ void ClearPlayingSounds(void) {
     }
 }
 
-/* 
-    Adds a sound to the list of currently playing sounds.
-    AudioCallback will start mixing this sound into the stream
-    the next time it is called (probably in a fraction of a second). 
-*/
+// Adds a sound to the list of currently playing sounds.
+// AudioCallback will start mixing this sound into the stream
+// the next time it is called (probably in a fraction of a second). 
 int PlaySound(soundPointer sound) {
     int i;
     // Find an empty slot for this sound.
@@ -202,10 +190,8 @@ int PlaySound(soundPointer sound) {
         // Nothing to do
     }
 
-    /* 
-        The 'playing' structures are accessed by the audio callback,
-        so we should obtain a lock before we access them. 
-    */
+    // The 'playing' structures are accessed by the audio callback,
+    // so we should obtain a lock before we access them. 
     SDL_LockAudio();
     playing[i].active = 1;
     playing[i].sound = sound;
@@ -230,6 +216,12 @@ void Game::init() {
     int result_SDL_FillRect = 0;
     result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     assert(result_SDL_FillRect >= 0 && "Problem to show a rect of main screen.");
+
+    if (true) {
+
+    } else {
+
+    }
 
     return;
 }
@@ -299,80 +291,84 @@ void Game::closeGUI() {
 }
 
 void Game::wonGameScreen() {
-    if (this->gameWon == false) {
-        return;
-    } else {
-        // Nothing to do
-    }
+    if (this->gameWon == true) {
 
-    this->actualLevel++;
-    cout << "Level: " << actualLevel << endl;
-    wonScreen = new InitScreen("resources/backgroundwonscreen.png");
+        this->actualLevel++;
 
-    bool playButton = false;
-    bool quitButton = false;
+        cout << "Level: " << actualLevel << endl;
 
-    this->quitGame = false;
-    this->quitLevel = false;
-    this->pauseLevel = false;
-    this->gameOver = false;
+        wonScreen = new InitScreen("resources/backgroundwonscreen.png");
 
-    SDL_Delay(5);
+        bool playButton = false;
+        bool quitButton = false;
 
-    while (SDL_WaitEvent(&event) != 0 && playButton == false && quitButton == false) {
-        switch (event.type) {
-            case SDL_QUIT:
-                quitButton = true;
-                break;
+        this->quitGame = false;
+        this->quitLevel = false;
+        this->pauseLevel = false;
+        this->gameOver = false;
 
-            case SDL_MOUSEBUTTONDOWN:
-                switch (event.button.button) {
-                    case SDL_BUTTON_LEFT:
+        SDL_Delay(5);
+
+        while (SDL_WaitEvent(&event) != 0 && playButton == false && quitButton == false) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    quitButton = true;
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
                         playButton = true;
-                        break;
-                    default:
+                    } else {
                         // Nothing to do
-                        break;
-                }
+                    }
+                    break;
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.sym) {
+                        case SDLK_p:
+                        case SDLK_w:
+                        case SDLK_a:
+                        case SDLK_s:
+                        case SDLK_d:
+                            playButton = true;
+                            break;
 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym) {
-                    case SDLK_p:
-                    case SDLK_w:
-                    case SDLK_a:
-                    case SDLK_s:
-                    case SDLK_d:
-                        playButton = true;
-                        break;
+                        case SDLK_q:
+                        case SDLK_ESCAPE:
+                            quitButton = true;
+                            break;
 
-                    case SDLK_q:
-                    case SDLK_ESCAPE:
-                        quitButton = true;
-                        break;
+                        default:
+                            // Nothing to do
+                            break;
+                    }
+                    break;
 
-                    default:
-                        // Nothing to do
-                        break;
-                }
-                break;
+                default:
+                    // Nothing to do
+                    break;
+            }
+            wonScreen->draw(this->screen);
 
-            default:
+            int result_SDL_Flip = 0;
+            result_SDL_Flip = SDL_Flip(this->screen);
+            assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for game won screen, and impossible to continue the game.");
+
+            if (quitButton) {
+                this->quitLevel = true;
+                this->quitGame = true;
+            } else {
                 // Nothing to do
-                break;
+            }
         }
-        wonScreen->draw(this->screen);
-        SDL_Flip(this->screen);
+        
+        int result_SDL_FillRect = 0;
+        result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+        assert(result_SDL_FillRect >= 0 && "Problem to show a rect of game won screen.");
 
-        if (quitButton) {
-            this->quitLevel = true;
-            this->quitGame = true;
-        } else {
-            // Nothing to do
-        }
+        delete wonScreen;
+    } else {
+        return;
     }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-
-    delete wonScreen;
 
     return;
 }
@@ -426,9 +422,12 @@ void Game::showOptionsScreen() {
                 break;
         }
         optionsScreen->draw(this->screen);
-        SDL_Flip(this->screen);
 
-        if (muteButton) {
+        int result_SDL_Flip = 0;
+        result_SDL_Flip = SDL_Flip(this->screen);
+        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for option screen, and impossible to continue the game.");
+
+        if (muteButton == true) {
             if (SDL_GetAudioStatus() == SDL_AUDIO_PLAYING) {
                 SDL_PauseAudio(1);
             } else {
@@ -439,14 +438,16 @@ void Game::showOptionsScreen() {
             // Nothing to do
         }
 
-        if (loadButton) {
+        if (loadButton == true) {
             cout << "Não implementado, cara... Se deu mal =P" << endl;
         } else {
             // Nothing to do
         }
     }
-    
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    int result_SDL_FillRect = 0;
+    result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    assert(result_SDL_FillRect >= 0 && "Problem to show a rect of option screen.");
 
     delete optionsScreen;
 
@@ -493,24 +494,20 @@ void Game::gameOverScreenLoop() {
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    switch (event.button.button) {
-                        case SDL_BUTTON_LEFT:
-                            if (labelPlay->wasClicked(event.button.x, event.button.y)) {
-                                playButton = true;
-                                this->quitGame = false;
-                            } else if (labelOptions->wasClicked(event.button.x, event.button.y)) {
-                                optionsButton = true;
-                            } else if (labelQuit->wasClicked(event.button.x, event.button.y)) {
-                                this->quitGame = true;
-                                quitButton = true;
-                            } else {
-                                // Nothing to do
-                            }
-                            break;
-
-                        default:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        if (labelPlay->wasClicked(event.button.x, event.button.y)) {
+                            playButton = true;
+                            this->quitGame = false;
+                        } else if (labelOptions->wasClicked(event.button.x, event.button.y)) {
+                            optionsButton = true;
+                        } else if (labelQuit->wasClicked(event.button.x, event.button.y)) {
+                            this->quitGame = true;
+                            quitButton = true;
+                        } else {
                             // Nothing to do
-                            break;
+                        }
+                    } else {
+                        // Nothing to do
                     }
                     break;
 
@@ -521,10 +518,17 @@ void Game::gameOverScreenLoop() {
         }
 
         gameOverScreen->draw(this->screen);
-        SDL_Flip(this->screen);
+
+        int result_SDL_Flip = 0;
+        result_SDL_Flip = SDL_Flip(this->screen);
+        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for gameover screen, and impossible to continue the game.");
+
     } while (playButton == false && optionsButton == false && quitButton == false);
 
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    
+    int result_SDL_FillRect = 0;
+    result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    assert(result_SDL_FillRect >= 0 && "Problem to show a rect of option screen.");
 
     return;
 }
@@ -601,15 +605,18 @@ void Game::pauseScreenLoop() {
                 break;
         }
         pauseScreen->draw(this->screen);
-        SDL_Flip(this->screen);
 
-        if (playButton) {
+        int result_SDL_Flip = 0;
+        result_SDL_Flip = SDL_Flip(this->screen);
+        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for pause screen, and impossible to continue the game.");
+
+        if (playButton == true) {
             this->pauseLevel = false;
         } else {
             // Nothing to do
         }
 
-        if (quitButton) {
+        if (quitButton == true) {
             this->quitLevel = true;
         } else {
             // Nothing to do
@@ -622,7 +629,10 @@ void Game::pauseScreenLoop() {
             // Nothing to do
         }
     }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    int result_SDL_FillRect = 0;
+    result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    assert(result_SDL_FillRect >= 0 && "Problem to show a rect of pause screen.");
 
     delete pauseScreen;
 
@@ -711,7 +721,10 @@ void Game::initScreenLoop() {
                 break;
         }
         initScreen->draw(this->screen);
-        SDL_Flip(this->screen);
+
+        int result_SDL_Flip = 0;
+        result_SDL_Flip = SDL_Flip(this->screen);
+        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for initial screen, and impossible to continue the game.");
 
         if (quitButton) {
             this->quitLevel = true;
@@ -727,7 +740,10 @@ void Game::initScreenLoop() {
             // Nothing to do
         }
     }
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+    int result_SDL_FillRect = 0;
+    result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    assert(result_SDL_FillRect >= 0 && "Problem to show a rect of init screen.");
 
     delete initScreen;
 
@@ -737,11 +753,9 @@ void Game::initScreenLoop() {
 void Game::loadCommonResources() {
     score = new ScoreScreen();
 
-    /* 
-        Open the audio device. The sound driver will try to give us
-        the requested format, but it might not succeed. The 'obtained'
-        structure will be filled in with the actual format data. 
-    */
+    // Open the audio device. The sound driver will try to give us
+    // the requested format, but it might not succeed. The 'obtained'
+    // structure will be filled in with the actual format data. 
     desired.freq = 44100;               // desired output sample rate
     desired.format = AUDIO_S16;         // request signed 16-bit samples
     desired.samples = 4096;             // this is more or less discretionary
@@ -749,26 +763,42 @@ void Game::loadCommonResources() {
     desired.callback = AudioCallback;
     desired.userdata = NULL;            // we don't need this
 
-    if (SDL_OpenAudio(&desired, &obtained) < 0) {
-        printf("Unable to open audio device: %s\n", SDL_GetError());
-        return;
-    } else {
-        // Nothing to do
-    }
+    int result_SDL_OpenAudio = SDL_OpenAudio(&desired, &obtained);
+    if (result_SDL_OpenAudio >= 0) {
+        // Load our sound files and convert them to the sound card's format.
+        char initScreenSoundName[26] = "resources/init_screen.wav";
+        char level_1SoundName[26] = "resources/level_1.wav";
+        char level_2SoundName[26] = "resources/level_2.wav";
+        char level_3SoundName[26] = "resources/level_3.wav";
+        
+        int result_LoadAndConverSoundInitScreen = 0;
+        int result_LoadAndConverSoundLevel1 = 0;
+        int result_LoadAndConverSoundLevel2 = 0;
+        int result_LoadAndConverSoundLevel3 = 0;
+        result_LoadAndConverSoundInitScreen = LoadAndConvertSound(initScreenSoundName, &obtained, 
+                                                                  &initScreenSound);
+        result_LoadAndConverSoundLevel1 = LoadAndConvertSound(level_1SoundName, &obtained, 
+                                                              &level_1Sound);
+        result_LoadAndConverSoundLevel2 = LoadAndConvertSound(level_2SoundName, &obtained, 
+                                                              &level_2Sound);
+        result_LoadAndConverSoundLevel3 = LoadAndConvertSound(level_3SoundName, &obtained, 
+                                                              &level_3Sound);
 
-    // Load our sound files and convert them to the sound card's format.
-    char initScreenSoundName[26] = "resources/init_screen.wav";
-    char level_1SoundName[26] = "resources/level_1.wav";
-    char level_2SoundName[26] = "resources/level_2.wav";
-    char level_3SoundName[26] = "resources/level_3.wav";
-    if (LoadAndConvertSound(initScreenSoundName, &obtained, &initScreenSound) != 0 ||
-        LoadAndConvertSound(level_1SoundName, &obtained, &level_1Sound) != 0 ||
-        LoadAndConvertSound(level_2SoundName, &obtained, &level_2Sound) != 0 ||
-        LoadAndConvertSound(level_3SoundName, &obtained, &level_3Sound) != 0){
-        printf("Unable to load sound.\n");
-        return;
+        bool validateLoadAndConvertSound = true;
+        validateLoadAndConvertSound = result_LoadAndConverSoundInitScreen == 0 &&
+                                      result_LoadAndConverSoundLevel1 == 0 &&
+                                      result_LoadAndConverSoundLevel2 == 0 &&
+                                      result_LoadAndConverSoundLevel3 == 0;
+
+        if (validateLoadAndConvertSound == false){
+            cout << "Unable to load sound." << endl;
+            return;
+        } else {
+            // Nothing to do
+        }
     } else {
-        // Nothing to do
+        cout << "Unable to open audio device: " << SDL_GetError() << endl;
+        return;
     }
 
     return;
@@ -823,15 +853,15 @@ void Game::loadLevel() {
             SDL_PauseAudio(0);
             break;
         default:
-            cout << "could not load level file";
+            cout << "could not load level file" << endl;
             return;
     }
 
     ifstream levelFile;
-    string numberOfLevel;
-    string numberOfBoxes;
-    string numberOfEnemies;
-    string maxLines;
+    string numberOfLevel = '';
+    string numberOfBoxes = '';
+    string numberOfEnemies = '';
+    string maxLines = '';
 
     level = new Level(currentLevelFile);
     levelFile.open(currentLevelSpec.c_str());
@@ -840,6 +870,15 @@ void Game::loadLevel() {
     getline(levelFile, numberOfEnemies);
     getline(levelFile, maxLines);
     levelFile.close();
+
+    assert(numberOfLevel != '' && 
+          "Impossible to read the number of level, can't continue the game.");
+    assert(numberOfBoxes != '' && 
+          "Impossible to read the number of box in level, can't continue the game.");
+    assert(numberOfEnemies != '' && 
+          "Impossible to read the number of enemies in the level, can't continue the game.");
+    assert(maxLines != '' && 
+          "Impossible to read the number of lines to completo the level, can't continue the game.");
 
     int nrBoxes = atoi(numberOfBoxes.c_str());
 
@@ -938,13 +977,21 @@ void Game::update() {
 
 void Game::draw() {
     if (checkIfSkip() == 0) {
-        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+        int result_SDL_FillRect = 0;
+        result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+        assert(result_SDL_FillRect >= 0 && "Problem to show a rect of screen.");
+
         level->draw(this->screen);
         score->drawSelf(this->screen);
-        SDL_Flip(this->screen);
+        
+        int result_SDL_Flip = 0;
+        result_SDL_Flip = SDL_Flip(this->screen);
+        assert(result_SDL_Flip >= 0 && "Problem to call the SDL_Flip function. Finally the game.");
     } else {
         // Nothing to do
     }
+    
     return;
 }
 
@@ -958,17 +1005,19 @@ void Game::runAI() {
 
 void Game::runPhysics() {
 
-//  cout << "Checando colisão" << endl;
-    if (checkColision(jack, level->boxes)) {
+    // cout << "Checando colisão" << endl;
+    bool checkColisionExist = false;
+    checkColisionExist = checkColision(jack, level->boxes);
+    if (checkColisionExist == true) {
         jack->die();
     } else {
         // Nothing to do
     }
-//  cout << "Colisão checada." << endl;
+    // cout << "Colisão checada." << endl;
 
-//    cout << "Jogador (" << jack->getXPosition() << "," << jack->getYPosition() << ")" << endl;
-    //notice that when the game restarts, another box is pushed into the array
-//  cout << "Derrubando caixas" << endl;
+    // cout << "Jogador (" << jack->getXPosition() << "," << jack->getYPosition() << ")" << endl;
+    // Notice that when the game restarts, another box is pushed into the array
+    // cout << "Derrubando caixas" << endl;
     for (unsigned int i = 0; i < level->boxes.size(); i++) {
         if (level->boxes[i]->used == true) {
             level->boxes[i]->fall(level->grid);
@@ -977,21 +1026,22 @@ void Game::runPhysics() {
         }
     }
 
-    int xinit = Level::LEVEL_X_OFFSET;
-    //int yinit=Level::LEVEL_Y_OFFSET;
-    int xrange = Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET;
-    //int yfinal=Level::LEVEL_HEIGHT-Level::LEVEL_Y_OFFSET;
-    int jackposx = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / 38;
-    int jackposy = (jack->getYPosition() - Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT + 19) / 38;
+    int xInitialLevel = Level::LEVEL_X_OFFSET;
+    int xRangeLevel = Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET;
 
-    //Looking for the first box before Jack
-//  cout << "Procurando pela caixa móvel antes do Jack" << endl;
+    // int yinit=Level::LEVEL_Y_OFFSET;
+    // int yfinal=Level::LEVEL_HEIGHT-Level::LEVEL_Y_OFFSET;
+    
+    int jackPositionX = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / Jack::JACK_WIDTH;
+    int jackPositionY = (jack->getYPosition() - Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT + 19) / 38;
+
+    // Looking for the first box before Jack
+    // cout << "Procurando pela caixa móvel antes do Jack" << endl;
     int boxMobileBeforeJack = -1;
-    int boxMobileAfterJack = -1;
-    for (int i = jackposx; i >= 0; i--) {
-        if ((level->grid[i].size() + jackposy) >= 12) {
-            xinit=Level::LEVEL_X_OFFSET + (i + 1) * 38;
-            if ((level->grid[i].size() + jackposy) == 12) {
+    for (int i = jackPositionX; i >= 0; i--) {
+        if ((level->grid[i].size() + jackPositionY) >= 12) {
+            xInitialLevel = Level::LEVEL_X_OFFSET + (i + 1) * Box::BOX_WIDTH;
+            if ((level->grid[i].size() + jackPositionY) == 12) {
                 if (i > 0) {
                     if (level->grid[i-1].size() >= level->grid[i].size()) {
                         break;
@@ -1010,12 +1060,13 @@ void Game::runPhysics() {
         }
     }
 
-//  cout << "Procurando pela caixa móvel depois do Jack" << endl;
-    //Looking for the first box after Jack
-    for (int i = jackposx; i < 12; i++) {
-        if ((level->grid[i].size() + jackposy) >= 12) {
-            xrange = Level::LEVEL_X_OFFSET + (i) * 38 - xinit;
-            if ((level->grid[i].size() + jackposy) == 12) {
+    // cout << "Procurando pela caixa móvel depois do Jack" << endl;
+    // Looking for the first box after Jack
+    int boxMobileAfterJack = -1;
+    for (int i = jackPositionX; i < 12; i++) {
+        if ((level->grid[i].size() + jackPositionY) >= 12) {
+            xRangeLevel = Level::LEVEL_X_OFFSET + (i) * 38 - xInitialLevel;
+            if ((level->grid[i].size() + jackPositionY) == 12) {
                 if (i<11){
                     if (level->grid[i+1].size() >= level->grid[i].size()) {
                        break;
@@ -1035,7 +1086,7 @@ void Game::runPhysics() {
     }
 
     for (int i = 0; i < 12; ++i) {
-//        cout << i << " " << level->grid[i] << endl;
+        // cout << i << " " << level->grid[i] << endl;
         if (level->grid[i].size() > 7) {
             this->quitGame = true;
         } else {
@@ -1067,7 +1118,7 @@ void Game::runPhysics() {
             Box * boxToDelete = level->grid[i].back();
             for (vector<Box*>::iterator it = level->boxes.begin(); it != level->boxes.end(); it++) {
                 if (*it == boxToDelete) {
-                    //delete level->boxes.it;
+                    // delete level->boxes.it;
                     Box * myBox = *it;
                     level->boxes.erase(it);
                     myBox->used = false;
@@ -1082,22 +1133,22 @@ void Game::runPhysics() {
         // Nothing to do
     }
 
-    if (xinit < Level::LEVEL_X_OFFSET) {
-        xinit = Level::LEVEL_X_OFFSET;
+    if (xInitialLevel < Level::LEVEL_X_OFFSET) {
+        xInitialLevel = Level::LEVEL_X_OFFSET;
     } else {
         // Nothing to do
     }
 
-    if (xrange + xinit > (Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET)) {
-        xrange = (Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET) - xinit;
+    if (xRangeLevel + xInitialLevel > (Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET)) {
+        xRangeLevel = (Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET) - xInitialLevel;
     } else {
         // Nothing to do
     }
 
     if (boxMobileBeforeJack != -1) {
-//        cout << "Primeira caixa móvel antes de jack: " << boxMobileBeforeJack << endl;
+        // cout << "Primeira caixa móvel antes de jack: " << boxMobileBeforeJack << endl;
         if (jack->getXPosition() == (((boxMobileBeforeJack + 1) * Box::BOX_WIDTH) + Level::LEVEL_X_OFFSET)) {
-//          cout << "Colidiu com uma caixa a esquerda!!! forca: " << jack->strength << endl;
+            // cout << "Colidiu com uma caixa a esquerda!!! forca: " << jack->strength << endl;
             if (jack->strength < 10){
                 jack->strength++;
             } else {
@@ -1113,7 +1164,7 @@ void Game::runPhysics() {
             } else {
                 // Nothing to do
             }
-            //level->grid[boxMobileBeforeJack-1].push_back(boxTransition);
+            // level->grid[boxMobileBeforeJack-1].push_back(boxTransition);
         } else {
             // Nothing to do
         }
@@ -1122,9 +1173,9 @@ void Game::runPhysics() {
     }
 
     if (boxMobileAfterJack != -1) {
-  //      cout << "Primeira caixa móvel depois de jack: " << boxMobileAfterJack << endl;
-        if ((jack->getXPosition() + Jack::JACK_WIDTH) == (xrange + xinit)) {
-//          cout << "Colidiu com uma caixa a direta!!!" << endl;
+        // cout << "Primeira caixa móvel depois de jack: " << boxMobileAfterJack << endl;
+        if ((jack->getXPosition() + Jack::JACK_WIDTH) == (xRangeLevel + xInitialLevel)) {
+            // cout << "Colidiu com uma caixa a direta!!!" << endl;
             if (jack->strength < 10){
                 jack->strength++;
             } else {
@@ -1151,10 +1202,11 @@ void Game::runPhysics() {
     } else {
         // Nothing to do
     }
-//    cout << "Limite a direita do jack: " << xrange+xinit << endl;
-//    cout << "Limite a esquerda do jack: " << xinit << endl;
-    jack->move(xinit, xrange, Level::LEVEL_Y_OFFSET, Level::LEVEL_HEIGHT);
-    //cout << "Jack moveu" << endl;
+    // cout << "Limite a direita do jack: " << xRangeLevel+xInitialLevel << endl;
+    // cout << "Limite a esquerda do jack: " << xInitialLevel << endl;
+    jack->move(xInitialLevel, xRangeLevel, Level::LEVEL_Y_OFFSET, Level::LEVEL_HEIGHT);
+
+    // cout << "Jack moveu" << endl;
     jack->jump(level);
     return;
 }
@@ -1170,7 +1222,7 @@ void Game::sendNetworkData() {
 void Game::handleEventMouseButtonUp(SDL_Event & event) {
     switch (event.button.button) {
         case SDL_BUTTON_LEFT:
-    //      printf("Posicao onde o botao foi liberado: (%d, %d)\n", event.button.x, event.button.y);
+            // printf("Posicao onde o botao foi liberado: (%d, %d)\n", event.button.x, event.button.y);
             break;
         default:
             // Nothing to do
@@ -1184,8 +1236,10 @@ void Game::handleEventMouseButtonUp(SDL_Event & event) {
 void Game::handleEventMouseButtonDown(SDL_Event & event) {
     switch (event.button.button) {
         case SDL_BUTTON_LEFT:
+            // Nothing to do
             break;
         case SDL_BUTTON_RIGHT:
+            // Nothing to do
             break;
         default:
             // Nothing to do
