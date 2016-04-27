@@ -31,7 +31,7 @@ Jack::Jack(string filename) {
 // Return: void
 // -------------------------------------------------------------
 Jack::~Jack() {
-    if(jack != NULL) {
+    if (jack != NULL) {
         SDL_FreeSurface(jack);
     } else {
         // Nothing to do
@@ -71,7 +71,7 @@ int Jack::setLimit(int value, int limit1, int range) {
     int limit2 = limit1 + range;
     int valueForReturn = 0;
 
-    if (value<limit1) {
+    if (value < limit1) {
         valueForReturn = limit1;
     } else if (value >= limit2) {
         valueForReturn = limit2;
@@ -91,7 +91,7 @@ int Jack::setLimit(int value, int limit1, int range) {
 // Return: void
 // -------------------------------------------------------------
 void Jack::drawSelf(SDL_Surface *surface) {
-    if(jumping == true) {
+    if (jumping == true) {
         if(speed >= 0) {
             frame = 7;
         } else {
@@ -140,8 +140,8 @@ void Jack::drawSelf(SDL_Surface *surface) {
 void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
     x_position += speed;
 
-    this->x_position = setLimit(x_position, xBegin, xRange-JACK_WIDTH);
-    this->y_position = setLimit(y_position, yBegin, yRange-JACK_HEIGHT - 38);
+    this->x_position = setLimit(x_position, xBegin, xRange - JACK_WIDTH);
+    this->y_position = setLimit(y_position, yBegin, yRange - JACK_HEIGHT - 38);
 
     return;
 }
@@ -155,16 +155,20 @@ void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
 // Return: void
 // -------------------------------------------------------------
 void Jack::jump(Level* level) {
+
     y_position += verticalSpeed;
     verticalSpeed += ACCELERATION;
 
-    int maxJumpHeightLeft = ((int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 -
-                            (level->grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38)));
-    int maxJumpHeightRight = ((int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 -38 -
-                             (level->grid[(x_position+37 - Level::LEVEL_X_OFFSET)/38].size()*38)));
+    int maxJumpHeightLeft = 0;
+    maxJumpHeightLeft = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 - 
+                             (level->grid[(x_position - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+    
+    int maxJumpHeightRight = 0;
+    maxJumpHeightRight = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 - 
+                              (level->grid[(x_position + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
 
-    if(jumping == true) {
-        if ((y_position >= maxJumpHeightLeft) || (y_position >= maxJumpHeightLeft)) {
+    if (jumping == true) {
+        if ((y_position >= maxJumpHeightLeft) || (y_position >= maxJumpHeightRight)) {
             jumping = false;
             verticalSpeed = 1;
         } else {
