@@ -1,6 +1,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <string>
+#include <stdlib.h>
 #include <sdlutil.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -12,9 +14,7 @@
 #include "initscreen.h"
 #include "pausescreen.h"
 #include "gameoverscreen.h"
-#include <string>
 #include "scorescreen.h"
-#include <stdlib.h>
 #include "optionsscreen.h"
 
 class Game {
@@ -24,45 +24,6 @@ class Game {
         void shutdown();
 
     private:
-        SDL_Surface * screen;
-        SDL_Event event;
-
-        Jack * jack;
-        Level * level;
-        Timer frameTime;
-
-        ScoreScreen * score;
-        InitScreen * initScreen;
-        InitScreen * wonScreen;
-        PauseScreen * pauseScreen;
-        GameOverScreen * gameOverScreen;
-        OptionsScreen * optionsScreen;
-
-        Label * labelPlay;
-        Label * labelOptions;
-        Label * labelQuit;
-
-        Label * labelMute;
-        Label * labelLoad;
-        Label * labelBack;
-
-        static const int SCREEN_HEIGHT = 480;
-        static const int SCREEN_WIDTH = 854;
-        static const int SCREEN_BPP = 32;
-        static const int SCREEN_FPS = 60;
-
-        float FRAME_MILISECOND;
-
-        bool quitGame;
-        bool quitLevel;
-        bool pauseLevel;
-        bool gameOver;
-        bool gameWon;
-
-        int linesDeleted;
-        int maxLevelLines;
-        int actualLevel;
-
         void initGUI();
         void closeGUI();
 
@@ -112,6 +73,44 @@ class Game {
         bool checkColision(Jack * jack, std::vector<Box*> boxes);
         bool isGameFinished();
         bool isLevelFinished();
+
+        SDL_Surface * screen;
+        SDL_Event event;
+
+        Jack * jack;
+        Level * level;
+        Timer frameTime;
+
+        ScoreScreen * score;
+        InitScreen * initScreen;
+        InitScreen * wonScreen;
+        PauseScreen * pauseScreen;
+        GameOverScreen * gameOverScreen;
+        OptionsScreen * optionsScreen;
+
+        Label * labelPlay;
+        Label * labelOptions;
+        Label * labelQuit;
+        Label * labelMute;
+        Label * labelLoad;
+        Label * labelBack;
+
+        float FRAME_MILISECOND;
+
+        bool quitGame;
+        bool quitLevel;
+        bool pauseLevel;
+        bool gameOver;
+        bool gameWon;
+
+        int linesDeleted;
+        int maxLevelLines;
+        int actualLevel;
+
+        static const int SCREEN_HEIGHT = 480;
+        static const int SCREEN_WIDTH = 854;
+        static const int SCREEN_BPP = 32;
+        static const int SCREEN_FPS = 60;
 };
 
 #endif

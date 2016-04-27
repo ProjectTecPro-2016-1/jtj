@@ -22,35 +22,56 @@
 
 using namespace std;
 
-// Structure for loaded sounds.
+// -------------------------------------------------------------  
+//  Struct: soundStruct -> soundT, * soundPointer
+//  Description: Structure for loaded sounds.
+//  Atributes:  
+//      Uint8 * samples;        Raw PCM sample data.
+//      Uint32 length;          Size of sound data in bytes.
+// -------------------------------------------------------------  
 typedef struct soundStruct {
-    Uint8 * samples;        // Raw PCM sample data.
-    Uint32 length;          // Size of sound data in bytes.
+    Uint8 * samples;
+    Uint32 length;
 } soundT, * soundPointer;
 
-// Structure for a currently playing sound.
+// -------------------------------------------------------------  
+//  Struct: playingStruct -> playingT, * playingPointer  
+//  Description: Structure for a currently playing sound.  
+//  Atributes:  
+//      int active;                 1 if this sound should be played.
+//      soundPointer sound;         Sound data to play.
+//      Uint32 position;            Current position in the sound buffer. 
+// -------------------------------------------------------------  
 typedef struct playingStruct {
-    int active;                 // 1 if this sound should be played.
-    soundPointer sound;         // Sound data to play.
-    Uint32 position;            // Current position in the sound buffer.
+    int active;
+    soundPointer sound;
+    Uint32 position;
 } playingT, * playingPointer;
 
-// Array for all active sound effects.
-playingT playing[MAX_PLAYING_SOUNDS];
+playingT playing[MAX_PLAYING_SOUNDS];       // Array for all active sound effects.
+SDL_AudioSpec desired, obtained;            // Audio format specifications.
 
-// Audio format specifications.
-SDL_AudioSpec desired, obtained;
-
-// Our loaded sounds and their formats.
 soundT initScreenSound;
 soundT level_1Sound;
 soundT level_2Sound;
 soundT level_3Sound;
 
+// -------------------------------------------------------------
+// Function: AudioCallback()
+// Description: Controls the sound that are active and playing in the moment.
+// Parameters:
+//      void * userData;
+//      Uint8 * audio;          Sound that playing.
+//      int length;             Length of sound playing.
+// Atributes:  
+//      Uint8 * soundBuffer;    Buffer of new sound.
+//      Uint32 soundLength;     Length of new sound.
+// Return: void
+// -------------------------------------------------------------
 void AudioCallback(void * userData, Uint8 * audio, int length) {
     // Avoid compiler warning.
     // userData += 0;
-    userData = NULL;
+    // userData = NULL;
     if (userData == NULL) {
 
     } else {
@@ -93,87 +114,110 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
             // Nothing to do
         }
     }
+
     return;
 }
 
-// This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
-// Returns 0 on success and 1 on failure. 
+// -------------------------------------------------------------
+// Function: LoadAndConvertSound()
+// Description: This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
+// Parameters:
+//      char * filename;            Filename of the sound that will be load.
+//      SDL_AudioSpec * spec;       
+//      soundPointer sound;         Pointer to control the sound in play at moment.
+//  Atributes:  
+//      SDL_AudioCVT cvt;           Audio format conversion structure.
+//      SDL_AudioSpec loaded;       Format of the loaded data.
+//      Uint8 * newBuffer;          New buffer to keep a sound.
+// Return: void
+// Observation: Returns 0 on success and 1 on failure. 
+// -------------------------------------------------------------
 int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer sound) {
-    SDL_AudioCVT cvt;           // audio format conversion structure.
-    SDL_AudioSpec loaded;       // format of the loaded data.
+    SDL_AudioCVT cvt;
+    SDL_AudioSpec loaded;
     Uint8 * newBuffer;
 
     // Load the WAV file in its original sample format.
-    if (SDL_LoadWAV(filename, &loaded, &sound->samples, &sound->length) == NULL) {
-        printf("Unable to load sound: %s\n", SDL_GetError());
-        return 1;
+    if (SDL_LoadWAV(filename, &loaded, &sound->samples, &sound->length) != NULL) {
+        // Build a conversion structure for converting the samples.
+        // This structure contains the data SDL needs to quickly
+        // convert between sample formats. 
+        int result_SDL_BuildAudioCVT = 0;
+        result_SDL_BuildAudioCVT = SDL_BuildAudioCVT(&cvt, loaded.format, loaded.channels, 
+                                                     loaded.freq, spec->format, spec->channels, 
+                                                     spec->freq);
+
+        if (result_SDL_BuildAudioCVT >= 0) {
+            // Since converting PCM samples can result in more data
+            // (for instance, converting 8-bit mono to 16-bit stereo),
+            // we need to allocate a new buffer for the converted data.
+            // Fortunately SDL_BuildAudioCVT supplied the necessary information. 
+            cvt.len = sound->length;
+
+            newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
+            if (newBuffer != NULL) {
+                // Copy the sound samples into the new buffer.
+                memcpy(newBuffer, sound->samples, sound->length);
+
+                // Perform the conversion on the new buffer.
+                cvt.buf = newBuffer;
+
+                int result_SDL_ConvertAudio = 0;
+                result_SDL_ConvertAudio = SDL_ConvertAudio(&cvt);
+                
+                if (result_SDL_ConvertAudio >= 0) {
+                    // Swap the converted data for the original.
+                    SDL_FreeWAV(sound->samples);
+                    sound->samples = newBuffer;
+                    sound->length = sound->length * cvt.len_mult;
+
+                    cout << filename << " was loaded and converted successfully." << endl;
+                } else {
+                    cout << "Audio conversion error: " << SDL_GetError() << endl;
+                    free(newBuffer);
+                    SDL_FreeWAV(sound->samples);
+                    return 1;
+                }
+            } else {
+                cout << "Memory allocation failed." << endl;
+                SDL_FreeWAV(sound->samples);
+                return 1;
+            }
+        } else {
+            cout << "Unable to convert sound: " << SDL_GetError() << endl;
+            return 1;
+        }
     } else {
-        // Nothing to do
+        cout << "Unable to load sound: " << SDL_GetError() << endl;
+        return 1;
     }
 
-    // Build a conversion structure for converting the samples.
-    // This structure contains the data SDL needs to quickly
-    // convert between sample formats. 
-    if (SDL_BuildAudioCVT(&cvt, loaded.format, 
-                          loaded.channels, loaded.freq, 
-                          spec->format, spec->channels, spec->freq) < 0) {
-        printf("Unable to convert sound: %s\n", SDL_GetError());
-        return 1;
-    } else {
-        // Nothing to do
-    }
-
-    // Since converting PCM samples can result in more data
-    // (for instance, converting 8-bit mono to 16-bit stereo),
-    // we need to allocate a new buffer for the converted data.
-    // Fortunately SDL_BuildAudioCVT supplied the necessary information. 
-    cvt.len = sound->length;
-    newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
-    if (newBuffer == NULL) {
-        printf("Memory allocation failed.\n");
-        SDL_FreeWAV(sound->samples);
-        return 1;
-    } else {
-        // Nothing to do
-    }
-
-    // Copy the sound samples into the new buffer.
-    memcpy(newBuffer, sound->samples, sound->length);
-
-    // Perform the conversion on the new buffer.
-    cvt.buf = newBuffer;
-    if (SDL_ConvertAudio(&cvt) < 0) {
-        printf("Audio conversion error: %s\n", SDL_GetError());
-        free(newBuffer);
-        SDL_FreeWAV(sound->samples);
-        return 1;
-    } else {
-        // Nothing to do
-    }
-
-    // Swap the converted data for the original.
-    SDL_FreeWAV(sound->samples);
-    sound->samples = newBuffer;
-    sound->length = sound->length * cvt.len_mult;
-
-    // Success!
-    printf("'%s' was loaded and converted successfully.\n", filename);
     return 0;
 }
 
-
-// Removes all currently playing sounds.
-void ClearPlayingSounds(void) {
+// -------------------------------------------------------------
+// Function: ClearPlayingSounds()
+// Description: Removes all currently playing sounds.
+// Return: void
+// -------------------------------------------------------------
+void ClearPlayingSounds() {
     for (int i = 0; i < MAX_PLAYING_SOUNDS; i++) {
         playing[i].active = 0;
     }
 }
 
-// Adds a sound to the list of currently playing sounds.
-// AudioCallback will start mixing this sound into the stream
-// the next time it is called (probably in a fraction of a second). 
+// -------------------------------------------------------------
+// Function: LoadAndConvertSound()
+// Description: Adds a sound to the list of currently playing sounds. AudioCallback will start 
+//              mixing this sound into the stream the next time it is called 
+//              (probably in a fraction of a second).
+// Parameters:
+//      soundPointer sound;     Sound that will play in some level.
+// Return: void
+// -------------------------------------------------------------
 int PlaySound(soundPointer sound) {
     int i;
+
     // Find an empty slot for this sound.
     for (i = 0; i < MAX_PLAYING_SOUNDS; i++) {
         if (playing[i].active == 0) {
@@ -183,20 +227,18 @@ int PlaySound(soundPointer sound) {
         }
     }
 
-    // Report failure if there were no free slots.
-    if (i == MAX_PLAYING_SOUNDS) {
-        return 1;
+    if (i != MAX_PLAYING_SOUNDS) {
+        // The 'playing' structures are accessed by the audio callback,
+        // so we should obtain a lock before we access them. 
+        SDL_LockAudio();
+        playing[i].active = 1;
+        playing[i].sound = sound;
+        playing[i].position = 0;
+        SDL_UnlockAudio();
     } else {
-        // Nothing to do
+        // Don't have free slots to play sound.
+        return 1;
     }
-
-    // The 'playing' structures are accessed by the audio callback,
-    // so we should obtain a lock before we access them. 
-    SDL_LockAudio();
-    playing[i].active = 1;
-    playing[i].sound = sound;
-    playing[i].position = 0;
-    SDL_UnlockAudio();
 
     return 0;
 }
@@ -217,12 +259,6 @@ void Game::init() {
     result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     assert(result_SDL_FillRect >= 0 && "Problem to show a rect of main screen.");
 
-    if (true) {
-
-    } else {
-
-    }
-
     return;
 }
 
@@ -230,25 +266,24 @@ void Game::loop() {
     while (isGameFinished() == false) {
         initializingScreen();
 
-        if (isGameFinished()) {
-            break;
-        } else {
-            // Nothing to do
-        }
-        loadLevel();
+        if (!isGameFinished()) {
+            loadLevel();
 
-        while (isLevelFinished() == false) {
-            updateTimeStep();
-            recieveNetworkData();
-            handleEvents();
-            runAI();
-            runPhysics();
-            update();
-            sendNetworkData();
-            draw();
+            while (isLevelFinished() == false) {
+                updateTimeStep();
+                recieveNetworkData();
+                handleEvents();
+                runAI();
+                runPhysics();
+                update();
+                sendNetworkData();
+                draw();
+            }
+            wonGameScreen();
+            releaseLevel();
+        } else {
+            break;
         }
-        wonGameScreen();
-        releaseLevel();
     }
     return;
 }
@@ -401,6 +436,8 @@ void Game::showOptionsScreen() {
                     muteButton = labelMute->wasClicked(event.button.x, event.button.y);
                     loadButton = labelLoad->wasClicked(event.button.x, event.button.y);
                     backButton = labelQuit->wasClicked(event.button.x, event.button.y);
+                } else {
+                    // Nothing to do
                 }
                 break;
 
@@ -414,7 +451,7 @@ void Game::showOptionsScreen() {
                     default:
                         // Nothing to do
                         break;
-                    }
+                }
                 break;
 
             default:
@@ -772,15 +809,15 @@ void Game::loadCommonResources() {
         char level_3SoundName[26] = "resources/level_3.wav";
         
         int result_LoadAndConverSoundInitScreen = 0;
-        int result_LoadAndConverSoundLevel1 = 0;
-        int result_LoadAndConverSoundLevel2 = 0;
-        int result_LoadAndConverSoundLevel3 = 0;
         result_LoadAndConverSoundInitScreen = LoadAndConvertSound(initScreenSoundName, &obtained, 
                                                                   &initScreenSound);
+        int result_LoadAndConverSoundLevel1 = 0;
         result_LoadAndConverSoundLevel1 = LoadAndConvertSound(level_1SoundName, &obtained, 
                                                               &level_1Sound);
+        int result_LoadAndConverSoundLevel2 = 0;
         result_LoadAndConverSoundLevel2 = LoadAndConvertSound(level_2SoundName, &obtained, 
                                                               &level_2Sound);
+        int result_LoadAndConverSoundLevel3 = 0;
         result_LoadAndConverSoundLevel3 = LoadAndConvertSound(level_3SoundName, &obtained, 
                                                               &level_3Sound);
 
@@ -1032,7 +1069,7 @@ void Game::runPhysics() {
     // int yinit=Level::LEVEL_Y_OFFSET;
     // int yfinal=Level::LEVEL_HEIGHT-Level::LEVEL_Y_OFFSET;
     
-    int jackPositionX = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / Jack::JACK_WIDTH;
+    int jackPositionX = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / 38;
     int jackPositionY = (jack->getYPosition() - Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT + 19) / 38;
 
     // Looking for the first box before Jack
@@ -1040,7 +1077,7 @@ void Game::runPhysics() {
     int boxMobileBeforeJack = -1;
     for (int i = jackPositionX; i >= 0; i--) {
         if ((level->grid[i].size() + jackPositionY) >= 12) {
-            xInitialLevel = Level::LEVEL_X_OFFSET + (i + 1) * Box::BOX_WIDTH;
+            xInitialLevel = Level::LEVEL_X_OFFSET + (i + 1) * 38;
             if ((level->grid[i].size() + jackPositionY) == 12) {
                 if (i > 0) {
                     if (level->grid[i-1].size() >= level->grid[i].size()) {
@@ -1059,6 +1096,7 @@ void Game::runPhysics() {
             // Nothing to do
         }
     }
+
 
     // cout << "Procurando pela caixa móvel depois do Jack" << endl;
     // Looking for the first box after Jack
