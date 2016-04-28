@@ -11,10 +11,12 @@ using namespace std;
 // Return: void  
 // -------------------------------------------------------------  
 Level::Level(string filename) {
-    this->level = SDLUtil::loadImage(filename);
-    //for(unsigned int i = 0; i < sizeof(grid)/sizeof(int); i++) {
-    //    grid[i] = 0;
-    //}
+	assert(filename != NULL && "Impossible to loadImage, because the image filename of level is NULL");
+	assert(filename != '' && "Impossible to loadImage, because the image filename of level is empty");    
+	this->level = SDLUtil::loadImage(filename);
+	//for(unsigned int i = 0; i < sizeof(grid)/sizeof(int); i++) {
+	//    grid[i] = 0;
+    	//}
 }
 
 // -------------------------------------------------------------  
@@ -23,11 +25,11 @@ Level::Level(string filename) {
 // Return: void  
 // -------------------------------------------------------------  
 Level::~Level() {
-    if (level != NULL) {
-        SDL_FreeSurface(level);
-    } else {
-        // Nothing to do
-    }
+    	if (level != NULL) {
+    	    SDL_FreeSurface(level);
+    	} else {
+    	    // Nothing to do
+    	}
 }
 
 // -------------------------------------------------------------  
@@ -38,8 +40,8 @@ Level::~Level() {
 // Return: void  
 // -------------------------------------------------------------
 void Level::drawSelf(SDL_Surface * surface) {
-    SDLUtil::applySurface(Level::LEVEL_X_OFFSET, Level::LEVEL_Y_OFFSET, this->level, surface);
-    return;
+    	SDLUtil::applySurface(Level::LEVEL_X_OFFSET, Level::LEVEL_Y_OFFSET, this->level, surface);
+    	return;
 }
 
 // -------------------------------------------------------------  
