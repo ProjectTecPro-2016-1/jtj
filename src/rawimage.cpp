@@ -11,7 +11,7 @@ using namespace std;
 // Return: void  
 // -------------------------------------------------------------
 RawImage::RawImage() {
-    _pixels = NULL;
+	_pixels = NULL;
 }
 
 // -------------------------------------------------------------  
@@ -20,11 +20,11 @@ RawImage::RawImage() {
 // Return: void  
 // -------------------------------------------------------------
 RawImage::~RawImage() {
-    if (_pixels != NULL) {
-        SDL_FreeSurface(_pixels);
-    } else {
-        // Nothing to do
-    }
+    	if (_pixels != NULL) {
+		SDL_FreeSurface(_pixels);
+	} else {
+        	// Nothing to do
+    	}
 }
 
 // -------------------------------------------------------------  
@@ -35,14 +35,14 @@ RawImage::~RawImage() {
 // Return: void  
 // -------------------------------------------------------------
 void RawImage::load(const string& name) {
-    SDL_Surface * image = IMG_Load(name.c_str());
+    	SDL_Surface * image = IMG_Load(name.c_str());
 
-    if (image != NULL) {
-        _pixels = SDL_DisplayFormatAlpha(image);
-        SDL_FreeSurface(image);
-    } else {
-        // Nothing to do
-    }
+    	if (image != NULL) {
+        	_pixels = SDL_DisplayFormatAlpha(image);
+        	SDL_FreeSurface(image);
+    	} else {
+        	// Nothing to do
+    	}
 }
 
 // -------------------------------------------------------------  
@@ -51,11 +51,11 @@ void RawImage::load(const string& name) {
 // Return: int
 // -------------------------------------------------------------
 int RawImage::width() const {
-    if (_pixels != NULL) {
-        return _pixels->w;
-    } else {
-        return 0;
-    }
+    	if (_pixels != NULL) {
+        	return _pixels->w;
+    	} else {
+        	return 0;
+    	}
 }
 
 // -------------------------------------------------------------  
@@ -64,11 +64,11 @@ int RawImage::width() const {
 // Return: int
 // -------------------------------------------------------------
 int RawImage::height() const {
-    if (_pixels != NULL) {
-        return _pixels->h;
-    } else {
-        return 0;
-    }
+    	if (_pixels != NULL) {
+        	return _pixels->h;
+    	} else {
+        	return 0;
+    	}
 }
 
 // -------------------------------------------------------------  
@@ -77,5 +77,5 @@ int RawImage::height() const {
 // Return: SDL_Surface *	
 // -------------------------------------------------------------
 SDL_Surface * RawImage::pixels() const {
-    return _pixels;
+    	return _pixels;
 }
