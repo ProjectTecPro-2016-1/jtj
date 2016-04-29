@@ -1,3 +1,4 @@
+#include <cassert>
 #include "level.h"
 #include "sdlutil.h"
 
@@ -11,8 +12,7 @@ using namespace std;
 // Return: void  
 // -------------------------------------------------------------  
 Level::Level(string filename) {
-	assert(filename != NULL && "Impossible to loadImage, because the image filename of level is NULL");
-	assert(filename != '' && "Impossible to loadImage, because the image filename of level is empty");    
+	assert(filename != "" && "Impossible to loadImage, because the image filename of level is empty");    
 	this->level = SDLUtil::loadImage(filename);
 	//for(unsigned int i = 0; i < sizeof(grid)/sizeof(int); i++) {
 	//    grid[i] = 0;
