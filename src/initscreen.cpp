@@ -1,5 +1,6 @@
 #include "initscreen.h"
 #include "sdlutil.h"
+#include <cassert>
 
 using namespace std;
 	
@@ -23,6 +24,7 @@ void InitScreen::drawSelf(SDL_Surface *surface) {
 // Return: void  
 // -------------------------------------------------------------
 InitScreen::InitScreen(string filename) {
+    assert(filename != "" && "Fail to load image because image filename is empty.");
     this->initScreen = SDLUtil::loadImage(filename);
 }
 

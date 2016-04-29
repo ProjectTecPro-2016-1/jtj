@@ -1,5 +1,6 @@
 #include "gameoverscreen.h"
 #include "sdlutil.h"
+#include <cassert>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ void GameOverScreen::drawSelf(SDL_Surface * surface) {
 // Return: void  
 // -------------------------------------------------------------  
 GameOverScreen::GameOverScreen(string filename) {
+    assert(filename != "" && "Fail to load image because image filename is empty.");
     this->gameOverScreen = SDLUtil::loadImage(filename);
 }
 

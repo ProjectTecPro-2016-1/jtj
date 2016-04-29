@@ -5,6 +5,7 @@
 #include "SDL/SDL_ttf.h"
 #include <string>
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 
@@ -19,14 +20,18 @@ ScoreScreen::ScoreScreen() {
     this->scoreTextColor.g = 255;
     this->scoreTextColor.b = 255;
     this->scoreFont = TTF_OpenFont ("resources/HanaleiRegular.ttf", 40);
+    assert(this->scoreFont != NULL && "It is not possible open ScoreFont");
 
 	this->scorePoints = 0;
     sprintf(this->scoreString, "Score: %5d", this->scorePoints);
     this->scoreMessage = TTF_RenderText_Solid (this->scoreFont, this->scoreString, this->scoreTextColor);
+    assert(this->scoreMessage != NULL && "It is not possible render scoreMessage scoreString in solid black");
 
     this->lineLeft = 99;
     sprintf(this->lineString, "Lines left: %d", this->lineLeft);
     this->scoreMessage = TTF_RenderText_Solid (this->scoreFont, this->lineString, this->scoreTextColor);
+    assert(this->scoreMessage != NULL && "It is not possible render scoreMessage lineString in solid black");
+
 }
 
 // -------------------------------------------------------------  
@@ -110,10 +115,11 @@ void ScoreScreen::increaseScore(int value) {
 void ScoreScreen::updateSelf() {
     sprintf(this->scoreString, "Score: %6d", this->scorePoints);
     this->scoreMessage = TTF_RenderText_Solid (this->scoreFont, this->scoreString, this->scoreTextColor);
-
+    assert(this->scoreMessage != NULL && "It is not possible render scoreMessage scoreString in solid black");
+    
     sprintf(this->lineString, "Line left: %2d", this->lineLeft);
     this->boxMessage = TTF_RenderText_Solid (this->scoreFont, this->lineString, this->scoreTextColor);
-
+    assert(this->boxMessage != NULL && "It is not possible render boxMessage lineString in solid black");
     return ;
 }
 
