@@ -120,7 +120,8 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
 
 // -------------------------------------------------------------
 // Function: LoadAndConvertSound()
-// Description: This function loads a sound with SDL_LoadWAV and converts it to the specified sample format. 
+// Description: This function loads a sound with SDL_LoadWAV and converts it to the specified 
+//              sample format. 
 // Parameters:
 //      char * filename;            Filename of the sound that will be load.
 //      SDL_AudioSpec * spec;       
@@ -336,8 +337,10 @@ void Game::initGUI() {
     SDL_WM_SetCaption("Jack, The Janitor", NULL);
     SDL_WM_SetIcon(IMG_Load("resources/Logo_WareHouse_64x64.png"), NULL);
 
-    this->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF);
-    assert(this->screen != NULL && "Problem to set a video mode. Can't show the screen of the game.");
+    this->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, 
+                                    SDL_HWSURFACE | SDL_DOUBLEBUF);
+    assert(this->screen != NULL && 
+           "Problem to set a video mode. Can't show the screen of the game.");
         
     return;
 }
@@ -427,7 +430,8 @@ void Game::wonGameScreen() {
 
             int result_SDL_Flip = 0;
             result_SDL_Flip = SDL_Flip(this->screen);
-            assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for game won screen, and impossible to continue the game.");
+            assert(result_SDL_Flip >= 0 && 
+                   "Fail to call SDL_Flip for game won screen, and impossible to continue the game.");
 
             if (quitButton) {
                 this->quitLevel = true;
@@ -515,7 +519,8 @@ void Game::showOptionsScreen() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for option screen, and impossible to continue the game.");
+        assert(result_SDL_Flip >= 0 && 
+               "Fail to call SDL_Flip for option screen, and impossible to continue the game.");
 
         if (muteButton == true) {
             if (SDL_GetAudioStatus() == SDL_AUDIO_PLAYING) {
@@ -634,7 +639,8 @@ void Game::gameOverScreenLoop() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for gameover screen, and impossible to continue the game.");
+        assert(result_SDL_Flip >= 0 && 
+               "Fail to call SDL_Flip for gameover screen, and impossible to continue the game.");
 
     } while (playButton == false && optionsButton == false && quitButton == false);
 
@@ -743,7 +749,8 @@ void Game::pauseScreenLoop() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for pause screen, and impossible to continue the game.");
+        assert(result_SDL_Flip >= 0 && 
+               "Fail to call SDL_Flip for pause screen, and impossible to continue the game.");
 
         if (playButton == true) {
             this->pauseLevel = false;
@@ -881,7 +888,8 @@ void Game::initScreenLoop() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && "Fail to call SDL_Flip for initial screen, and impossible to continue the game.");
+        assert(result_SDL_Flip >= 0 && 
+               "Fail to call SDL_Flip for initial screen, and impossible to continue the game.");
 
         if (quitButton) {
             this->quitLevel = true;
@@ -1020,10 +1028,8 @@ void Game::saveProfile() {
 //                                  level will have.
 //      string maxLines;            Read on levelFile, contains the necessary number of lines 
 //                                  filled with boxes pass the level.
-//      int nrBoxes;                Contais a integer number stemmed from numberOfBoxes 
-//                                  variable.
-//      int nrEnemies;              Contais a integer value stemmed from numberOfEnemies 
-//                                  varible.
+//      int nrBoxes;                Contais a integer number stemmed from numberOfBoxes variable.
+//      int nrEnemies;              Contais a integer value stemmed from numberOfEnemies varible.
 // Return: void
 // -------------------------------------------------------------
 void Game::loadLevel() {
@@ -1713,11 +1719,14 @@ bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
         int boxTop = boxes[i]->getPositionY();
         int boxBottom = boxes[i]->getPositionY() + Box::BOX_HEIGHT;
 
-        if ((jackRight == boxRight && jackLeft == boxLeft) && ((jackTop <= boxBottom) && (boxBottom < jackBottom))) {
+        if ((jackRight == boxRight && jackLeft == boxLeft) && 
+            (jackTop <= boxBottom && boxBottom < jackBottom)) {
             return true;
         } else {
-            if (((boxLeft < jackLeft && jackLeft < boxRight) && (boxTop < jackTop && jackTop < boxBottom)) ||
-                ((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom))) {
+            if (((boxLeft < jackLeft && jackLeft < boxRight) && 
+                 (boxTop < jackTop && jackTop < boxBottom)) ||
+                ((jackLeft < boxLeft && boxLeft < jackRight) && 
+                 (jackTop < boxTop && boxTop < jackBottom))) {
 
                 // cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
                 // cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
