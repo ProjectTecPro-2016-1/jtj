@@ -123,7 +123,7 @@ void Box::fall(vector<Box*>grid[12]) {
                                 (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38)));
 
         y_position += speed;
-        if (y_position >= newYPosition) {
+        if (y_position >= newYPositionLimitBellow) {
             speed = 0;
             lyingDown = true;
 
