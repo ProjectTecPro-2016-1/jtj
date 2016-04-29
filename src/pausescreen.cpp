@@ -1,5 +1,6 @@
 #include "pausescreen.h"
 #include "sdlutil.h"
+#include <cassert>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ using namespace std;
 // Parameters:
 //		SDL_Surface *surface;		Is the surface that the image will load.
 // Return: void  
+// -------------------------------------------------------------  
 void PauseScreen::drawSelf(SDL_Surface *surface) {
     SDLUtil::applySurface(0, 0, this->pauseScreen, surface);
     return;
@@ -17,12 +19,12 @@ void PauseScreen::drawSelf(SDL_Surface *surface) {
 // -------------------------------------------------------------  
 // Function: PauseScreen()  
 // Description: Load the image of Pause on game.
-// -------------------------------------------------------------  
 // Parameters:
 //		string filename;		Name of "pause" image file that will be showed on screen.
 // Return: void  
 // -------------------------------------------------------------  
 PauseScreen::PauseScreen(string filename) {
+    assert(filename != "" && "Fail to load image because image filename is empty.");
     this->pauseScreen = SDLUtil::loadImage(filename);
 }
 

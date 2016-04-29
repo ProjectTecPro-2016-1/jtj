@@ -1,5 +1,6 @@
 #include "optionsscreen.h"
 #include "sdlutil.h"
+#include <cassert>
 
 using namespace std;
 
@@ -11,8 +12,7 @@ using namespace std;
 // Attributes: nothing
 // Return: void  
 // -------------------------------------------------------------  
-void OptionsScreen::drawSelf(SDL_Surface *surface)
-{
+void OptionsScreen::drawSelf(SDL_Surface *surface) {
 	SDLUtil::applySurface(0, 0, this->optionsScreen, surface);
 	SDLUtil::applySurface(20, 100, this->helpMessage, surface);
 	return ;
@@ -25,8 +25,9 @@ void OptionsScreen::drawSelf(SDL_Surface *surface)
 //		string filename;		Name of image file that will be showed on screen.
 // Return: void  
 // -------------------------------------------------------------  
-OptionsScreen::OptionsScreen(string filename)
-{
+OptionsScreen::OptionsScreen(string filename) {
+	assert(filename != "" && "Fail to load image because image filename is empty.");
+	
 	this->optionsScreen = SDLUtil::loadImage(filename.c_str());
 	this-> helpMessage = SDLUtil::loadImage("resources/helpTextImage.png");
 }
@@ -36,8 +37,7 @@ OptionsScreen::OptionsScreen(string filename)
 // Description: Destructor of class that clean the screen of options and screen of help.
 // Return: void  
 // -------------------------------------------------------------  
-OptionsScreen::~OptionsScreen()
-{
+OptionsScreen::~OptionsScreen() {
 	if (this->optionsScreen != NULL) {
 		SDL_FreeSurface(this->optionsScreen);
 	} else {
