@@ -119,16 +119,15 @@ void Box::fall(vector<Box*>grid[12]) {
             // Nothing to do
         }
 
-        int newYPosition = ((int)(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
+        int newYPositionLimitBellow = ((int)(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
                                 (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size()*38)));
 
         y_position += speed;
-        if (y_position >= newYPosition) {
+        if (y_position >= newYPositionLimitBellow) {
             speed = 0;
             lyingDown = true;
 
-            y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - 38 * 2 -
-                        (grid[(x_position - Level::LEVEL_X_OFFSET)/38].size() * 38);
+            y_position = newYPositionLimitBellow;
 
             grid[(x_position - Level::LEVEL_X_OFFSET)/38].push_back(this);
             //grid[(x_position - Level::LEVEL_X_OFFSET)/38]++;
