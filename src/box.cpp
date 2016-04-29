@@ -1,7 +1,6 @@
 #include "box.h"
 #include "level.h"
 #include "sdlutil.h"
-#include <cassert>
 
 using namespace std;
 
@@ -14,8 +13,6 @@ using namespace std;
 // Return: void
 // -------------------------------------------------------------
 void Box::drawSelf(SDL_Surface * surface) {
-    assert(surface != NULL && "Can't draw box on screen");
-
     if (used == true) {
         SDLUtil::applySurface(this->x_position, this->y_position, this->box, surface);
     } else {
@@ -31,8 +28,6 @@ void Box::drawSelf(SDL_Surface * surface) {
 // Return: void
 // -------------------------------------------------------------
 Box::Box(string filename) {
-    assert(filename != NULL && "Can't load Box' image");
-
     this->box = SDLUtil::loadImage(filename);
     x_position = 0;
     y_position = 0;
