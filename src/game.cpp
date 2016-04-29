@@ -243,6 +243,12 @@ int PlaySound(soundPointer sound) {
     return 0;
 }
 
+// -------------------------------------------------------------
+// Function: init()
+// Description: Function that initialize atributtes on game and calls other function to     
+//              initalize graphic properties.
+// Return: void
+// -------------------------------------------------------------
 void Game::init() {
     initGUI();
     loadCommonResources();
@@ -262,6 +268,12 @@ void Game::init() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: loop()
+// Description: On game operation generate a cycle. To keeps control of execution inside a 
+//              function on game.
+// Return: void
+// -------------------------------------------------------------
 void Game::loop() {
     while (isGameFinished() == false) {
         initializingScreen();
@@ -288,6 +300,12 @@ void Game::loop() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: shutdown()
+// Description: Clean graphic and audio components, ending the 
+//              execution of the game.
+// Return: void
+// -------------------------------------------------------------
 void Game::shutdown() {
     SDL_LockAudio();
     free(initScreenSound.samples);
@@ -300,6 +318,12 @@ void Game::shutdown() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: initGUI()
+// Description: Needed to center the startup oh the graphical interface
+//              of policy controlled by SDL.
+// Return: void
+// -------------------------------------------------------------
 void Game::initGUI() {
     int result_SDL_Init = 0;
     result_SDL_Init = SDL_Init(SDL_INIT_EVERYTHING);
@@ -318,6 +342,12 @@ void Game::initGUI() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: closeGUI()
+// Description: Needed to center the completion of audio and image
+//              plugins from SDL libraries. 
+// Return: void
+// -------------------------------------------------------------
 void Game::closeGUI() {
     SDL_CloseAudio();
     TTF_Quit();
@@ -325,6 +355,17 @@ void Game::closeGUI() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: wonGameScreen()
+// Description: Load and show on screen a image of won game.
+//              Only runs when the game ends with victory.
+// Attributes:
+//      bool playButton;        Contains the information if the button to start a new
+//                              game was clicked or not.
+//      bool quitButton;        Contains the information if the button to exit was 
+//                              clicked or not.
+// Return: void
+// -------------------------------------------------------------
 void Game::wonGameScreen() {
     if (this->gameWon == true) {
 
@@ -408,6 +449,18 @@ void Game::wonGameScreen() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: showOptionsScreen()
+// Description: Load and show a image and Screen Options of game along
+//              with the buttons that are part of the same.
+// Attributes:
+//      bool muteButton;        Information about button of audio enable or
+//                              disable it was clicked or not.
+//      bool loadButton;        Information about button to load a game it was clicked or not.
+//      bool backButton;        Information about button that returns to previous screen it was
+//                              clicked or not.
+// Return: void
+// -------------------------------------------------------------
 void Game::showOptionsScreen() {
 
     optionsScreen = new OptionsScreen("resources/backgroundoptionsscreen.png");
@@ -491,6 +544,11 @@ void Game::showOptionsScreen() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: gameOvering()
+// Description: When Jack dies or game is finished this function is called.
+// Return: void
+// -------------------------------------------------------------
 void Game::gameOvering() {
     gameOverScreenDraw();
     jack->popMove(3);
@@ -500,6 +558,12 @@ void Game::gameOvering() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: gameOverScreenDraw()
+// Description: From gameOvering function it is intended to present
+//              the GameOver screen to the user.
+// Return: void
+// -------------------------------------------------------------
 void Game::gameOverScreenDraw() {
     gameOverScreen = new GameOverScreen("resources/backgroundgameover.png");
 
@@ -515,6 +579,18 @@ void Game::gameOverScreenDraw() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: gameOverScreenLoop()
+// Description: On GameOver screen generates a loop to wait an action of the player. 
+// Attributes:
+//      bool playButton;        Contains information about Start Game Button it was clicked or 
+//                              not.
+//      bool quitButton;        Contains information about Exit Game Button it was clicked or 
+//                              not.
+//      bool optionsButton;     Contains information about Options Game Button it was clicked or
+//                              not.
+// Return: void
+// -------------------------------------------------------------
 void Game::gameOverScreenLoop() {
     bool playButton = false;
     bool quitButton = false;
@@ -570,6 +646,11 @@ void Game::gameOverScreenLoop() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: pausingLevel()
+// Description: This function is called when Pause Game Button is clicked on game execution.
+// Return: void
+// -------------------------------------------------------------
 void Game::pausingLevel() {
     pauseScreenDraw();
     jack->popMove(3);
@@ -579,6 +660,11 @@ void Game::pausingLevel() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: pauseScreenDraw()
+// Description: From pausingLevel function and it is intended to shows Pause Screen to the user.
+// Return: void
+// -------------------------------------------------------------
 void Game::pauseScreenDraw() {
     pauseScreen = new PauseScreen("resources/backgroundpausescreen.png");
 
@@ -594,6 +680,18 @@ void Game::pauseScreenDraw() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: pauseScreenLoop()
+// Description: Genarates on Pause Screen a loop while waiting an action of the player. 
+// Attributes: 
+//      bool playButton;        Contains information about Return Game Button it was clicked or 
+//                              not.
+//      bool quitButton;        Contains information about Exit Game Button it was clicked or 
+//                              not.
+//      bool optionsButton;     Contains information about Options Game Button
+//                              it was clicked or not.
+// Return: void
+// -------------------------------------------------------------
 void Game::pauseScreenLoop() {
     bool playButton = false;
     bool quitButton = false;
@@ -676,8 +774,12 @@ void Game::pauseScreenLoop() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: initializingScreen()
+// Description: Initialize the process of show on Initial Screen, alomg with startup of audios.
+// Return: void
+// -------------------------------------------------------------
 void Game::initializingScreen() {
-    // Clear the list of playing sounds.
     ClearPlayingSounds();
 
     // SDL's audio is initially paused. Start it.
@@ -693,6 +795,12 @@ void Game::initializingScreen() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: initScreenDraw()
+// Description: From initializingScreen function and it is intended to shows
+//              Init Screen to user.
+// Return: void
+// -------------------------------------------------------------
 void Game::initScreenDraw() {
     initScreen = new InitScreen("resources/backgroundinitscreen.png");
 
@@ -708,6 +816,18 @@ void Game::initScreenDraw() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: initScreenLoop()
+// Description: Generates on Init Screen a loop while waiting an action from user.
+// Attributes:
+//      bool playButton;        Contains information about Start New Game Button it was cliked 
+//                              or not.
+//      bool quitButton;        Contains information about End Game Button it was clicked or 
+//                              not.
+//      bool optionsButton;     Contains information about Options Menu Button it was clicked or
+//                              not.
+// Return: void
+// -------------------------------------------------------------
 void Game::initScreenLoop() {
     bool playButton = false;
     bool quitButton = false;
@@ -787,6 +907,11 @@ void Game::initScreenLoop() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: loadCommonResources()
+// Description: Initialize common resources for game, like audio and sound.
+// Return: void
+// -------------------------------------------------------------
 void Game::loadCommonResources() {
     score = new ScoreScreen();
 
@@ -841,21 +966,70 @@ void Game::loadCommonResources() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: releaseCommonResources()
+// Description: Common resoucers are cleaned and released by this function.
+// Return: void
+// Observations:
+//      Funtion not implemented
+// -------------------------------------------------------------
 void Game::releaseCommonResources() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: loadProfile()
+// Description: Load a profile that stores data for a specific user.
+// Return: void
+// Observations:
+//      Funtion not implemented
+// -------------------------------------------------------------
 void Game::loadProfile() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: saveProfile()
+// Description: A user profile is saved to be used in another time.
+// Return: void
+// Observations:
+//      Funtion not implemented
+// -------------------------------------------------------------
 void Game::saveProfile() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: loadLevel()
+// Description: All informations about user level is loaded, like each enemy image, Jack image, 
+//              during execution quantity of boxes that will fall, audios and score. 
+// Attributes:
+//      string level_1_file;        Background filename from level 1.
+//      string level_2_file;        Background filename from level 2.
+//      string level_3_file;        Background filename from level 3.
+//      string level_1_spec;        Filename that contains specifications about level 1.
+//      string level_2_spec;        Filename that contains specifications about level 2.
+//      string level_3_spec;        Filename that contains specifications about level 3.
+//      string currentLevelFile;    Image filename about actual level.
+//      string currentLevelSpec;    Filename that contains specifications about acutal level.
+//      ifstream levelFile;         Controls file of level specifications.
+//      string numberOfLevel;       It contains the number of level read in levelFile .
+//      string numberOfBoxes;       Read on levelFile, contains the number of boxes that 
+//                                  level will  have.
+//      string numberOfEnemies;     Read on levelFile, contains the number of enemies that
+//                                  level will have.
+//      string maxLines;            Read on levelFile, contains the necessary number of lines 
+//                                  filled with boxes pass the level.
+//      int nrBoxes;                Contais a integer number stemmed from numberOfBoxes 
+//                                  variable.
+//      int nrEnemies;              Contais a integer value stemmed from numberOfEnemies 
+//                                  varible.
+// Return: void
+// -------------------------------------------------------------
 void Game::loadLevel() {
 
     ClearPlayingSounds();
+
     string level_1_file = "resources/level_1.png";
     string level_2_file = "resources/level_2.png";
     string level_3_file = "resources/level_3.png";
@@ -952,6 +1126,11 @@ void Game::loadLevel() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: releaseLevel()
+// Description: Actual level is deleted freeing up memory to the next level to load.
+// Return: void
+// -------------------------------------------------------------
 void Game::releaseLevel() {
     if (level) {
         delete level;
@@ -961,11 +1140,21 @@ void Game::releaseLevel() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: updateTimeStep()
+// Description: Run so a level ends, initializing a new time of game.
+// Return: void
+// -------------------------------------------------------------
 void Game::updateTimeStep() {
     frameTime.start();
     return;
 }
 
+// -------------------------------------------------------------
+// Function: update()
+// Description: Updates atributtes of control on game during the game loop.
+// Return: void
+// -------------------------------------------------------------
 void Game::update() {
     if (linesDeleted >= maxLevelLines) {
         this->gameWon = true;
@@ -1012,6 +1201,12 @@ void Game::update() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: draw()
+// Description: Focuses the creation and printing of background images from ScoreScreen
+//              and LevelScreen.
+// Return: void
+// -------------------------------------------------------------
 void Game::draw() {
     if (checkIfSkip() == 0) {
 
@@ -1032,6 +1227,11 @@ void Game::draw() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: runAI()
+// Description: Generates the movement of enemies and locations where they will drop boxes.
+// Return: void
+// -------------------------------------------------------------
 void Game::runAI() {
     for (unsigned int i = 0; i < level->enemies.size(); i++) {
         level->enemies[i]->throwBox(level->boxes);
@@ -1040,6 +1240,24 @@ void Game::runAI() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: runPhysics()
+// Description: Collisions, falls, movements from boxes and players, the physics from actions
+//              are executed on here.
+// Attributes:
+//      int xinit;      Saves the X position where you begin drawing level.(minimum left)
+//      int xrange;     Saves the X position where you end drawing level.(maximum right)
+//      int jackposx;                   Keeps Jacks postition on X.
+//      int jackposy;                   Keeps Jacks position on Y.
+//      int boxMobileBeforeJack;        Saves the first box position before Jack.
+//      int boxMobileAfterJack;         Saves the first box position after Jack.
+//      int quantidadeDeCaixas;         Contains information about quantity of boxes on base line.
+//      Box * boxToDelete;              Controls which boxes will be deleted when tha base line 
+//                                      was complete with 12 boxes. 
+//      Box * boxTransition;            Controls the box will be moved to the left.
+//      Box * boxTransitionRight;       Controls the box will be moved to the right.
+// Return: void
+// -------------------------------------------------------------
 void Game::runPhysics() {
 
     // cout << "Checando colisão" << endl;
@@ -1249,14 +1467,36 @@ void Game::runPhysics() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: recieveNetworkData()
+// Description:
+// Return: void
+// Observations:
+//      Funtion not implemented
+// -------------------------------------------------------------
 void Game::recieveNetworkData() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: sendNetworkData()
+// Description:
+// Return: void
+// Observations:
+//      Funtion not implemented
+// -------------------------------------------------------------
 void Game::sendNetworkData() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: handleEventMouseButtonUp()
+// Description: Performs the action of the click of a mouse button. After pressing the button, 
+//              release the button.  
+// Parameters:
+//      SDL_Event & event;      Contains information about some action on mouse made by user.
+// Return: void
+// -------------------------------------------------------------
 void Game::handleEventMouseButtonUp(SDL_Event & event) {
     switch (event.button.button) {
         case SDL_BUTTON_LEFT:
@@ -1270,7 +1510,13 @@ void Game::handleEventMouseButtonUp(SDL_Event & event) {
     return;
 }
 
-
+// -------------------------------------------------------------
+// Function: handleEventMouseButtonDown()
+// Description: Performs the click action of some button on mouse. Button pressed.
+// Parameters:
+//      SDL_Event & event;      Contains information about some action on mouse made by user.
+// Return: void
+// -------------------------------------------------------------
 void Game::handleEventMouseButtonDown(SDL_Event & event) {
     switch (event.button.button) {
         case SDL_BUTTON_LEFT:
@@ -1287,6 +1533,13 @@ void Game::handleEventMouseButtonDown(SDL_Event & event) {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: handleEventKeyDown()
+// Description: Performs the action of click in any key on the keyboard. Button pressed.
+// Parameters:
+//      SDL_Event & event;      Contains information about some action made by user.
+// Return: void
+// -------------------------------------------------------------
 void Game::handleEventKeyDown(SDL_Event & event) {
     switch (event.key.keysym.sym) {
         case (SDLK_ESCAPE):
@@ -1338,6 +1591,14 @@ void Game::handleEventKeyDown(SDL_Event & event) {
     }
 }
 
+// -------------------------------------------------------------
+// Function: handleEventKeyUp()
+// Description: Performs the action of click in any key on the keyboard. After pressing the button, 
+//              release the button.  
+// Parameters:
+//      SDL_Event & event;      Contains information about some action made by user.
+// Return: void
+// -------------------------------------------------------------
 void Game::handleEventKeyUp(SDL_Event & event) {
     switch (event.key.keysym.sym) {
         case (SDLK_a):
@@ -1356,6 +1617,14 @@ void Game::handleEventKeyUp(SDL_Event & event) {
     }
 }
 
+// -------------------------------------------------------------
+// Function: handleEventType()
+// Description: Identifies which type of action is made by user and sends to the specific
+//              function that will treat.
+// Parameters:
+//      SDL_Event & event;      Contains information about some action made by user.
+// Return: void
+// -------------------------------------------------------------
 void Game::handleEventType(SDL_Event & event) {
     switch (event.type) {
         case SDL_QUIT:
@@ -1384,6 +1653,12 @@ void Game::handleEventType(SDL_Event & event) {
     }
 }
 
+// -------------------------------------------------------------
+// Function: handleEvents()
+// Description: Identifies and call handleEventType function to treat an action made by user
+//              on mouse or keyboard.
+// Return: void
+// -------------------------------------------------------------
 void Game::handleEvents() {
     while (SDL_PollEvent (&event)) {
         handleEventType(event);
@@ -1391,6 +1666,11 @@ void Game::handleEvents() {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: checkIfSkip()
+// Description: Checks if frame was loaded, if not wait the frame load.
+// Return: int
+// -------------------------------------------------------------
 int Game::checkIfSkip() {
     if (frameTime.get_ticks() < FRAME_MILISECOND) {
         frameTime.waitDiff(FRAME_MILISECOND);
@@ -1401,6 +1681,23 @@ int Game::checkIfSkip() {
     }
 }
 
+// -------------------------------------------------------------
+// Function: checkColision()
+// Description: It performs checks whether or not collision between Jack and the boxes.
+// Parameters:
+//      Jack * jack;                Used to acess informations, it is a pointer to Jack.
+//      std::vector<Box*> boxes;    Pointer to existing boxes during the game.
+// Attributes:
+//      int jackRight;              Position and limit x from right side of Jack.
+//      int jackLeft;               Position and limit x from left side of Jack .
+//      int jackTop;                Position and limit y from upper side of Jack.
+//      int jackBottom;             Position and limit y from lower side of Jack.
+//      int boxRight;               Position and limit x from right side of box to be checked.
+//      int boxLeft;                Position and limit x from left side of box to be checked.
+//      int boxTop;                 Position and limit y from upper side of box to be checked.
+//      int boxBottom;              Position and limit y from lower side of box to be checked.
+// Return: bool
+// -------------------------------------------------------------
 bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
 
     for (unsigned int i = 0; i < boxes.size(); ++i) {
@@ -1419,28 +1716,37 @@ bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
         if ((jackRight == boxRight && jackLeft == boxLeft) && ((jackTop <= boxBottom) && (boxBottom < jackBottom))) {
             return true;
         } else {
-            // Nothing to do
+            if (((boxLeft < jackLeft && jackLeft < boxRight) && (boxTop < jackTop && jackTop < boxBottom)) ||
+                ((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom))) {
+
+                // cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
+                // cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
+
+                return true;
+            } else {
+                // Nothing to do
+            }
         }
 
-        if (((boxLeft < jackLeft && jackLeft < boxRight) && (boxTop < jackTop && jackTop < boxBottom)) ||
-            ((jackLeft < boxLeft && boxLeft < jackRight) && (jackTop < boxTop && boxTop < jackBottom))) {
-
-            // cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
-            // cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
-
-            return true;
-        } else {
-            // Nothing to do
-        }
     }
 
     return false;
 }
 
+// -------------------------------------------------------------
+// Function: isGameFinished()
+// Description: Check if player ordered the game closing.
+// Return: bool
+// -------------------------------------------------------------
 bool Game::isGameFinished() {
     return this->quitGame;
 }
 
+// -------------------------------------------------------------
+// Function: isLevelFinished()
+// Description: Check if player end the actual level.
+// Return: bool
+// -------------------------------------------------------------
 bool Game::isLevelFinished() {
     return this->quitLevel;
 }
