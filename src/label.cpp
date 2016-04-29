@@ -1,3 +1,4 @@
+#include <cassert>
 #include "label.h"
 #include "sdlutil.h"
 #include "level.h"
@@ -12,6 +13,9 @@
 // Return: void  
 // -------------------------------------------------------------
 Label::Label(std::string filename, int xPosition, int yPosition) {
+	assert(filename != "" && "Impossible to loadImage, because the image filename of label is empty");
+	assert(xPosition > 0 && "xPosition needs to be a positive value");
+	assert(yPosition > 0 && "yPosition needs to be a positive value");	
 	this->label = SDLUtil::loadImage(filename);
 	this->xPosition = xPosition;
 	this->yPosition = yPosition;
