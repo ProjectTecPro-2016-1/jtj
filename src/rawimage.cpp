@@ -5,77 +5,77 @@
 
 using namespace std;
 
-// -------------------------------------------------------------  
-// Function: RawImage()  
+// -------------------------------------------------------------
+// Function: RawImage()
 // Description: Image class builder where the initialization of the class variable happen.
-// Return: void  
+// Return: void
 // -------------------------------------------------------------
 RawImage::RawImage() {
-	_pixels = NULL;
+    _pixels = NULL;
 }
 
-// -------------------------------------------------------------  
-// Function: ~RawImage()  
+// -------------------------------------------------------------
+// Function: ~RawImage()
 // Description: Image class destructor where the image files free themselves.
-// Return: void  
+// Return: void
 // -------------------------------------------------------------
 RawImage::~RawImage() {
-    	if (_pixels != NULL) {
-		SDL_FreeSurface(_pixels);
-	} else {
-        	// Nothing to do
-    	}
+    if (_pixels != NULL) {
+        SDL_FreeSurface(_pixels);
+    } else {
+       // Nothing to do
+    }
 }
 
-// -------------------------------------------------------------  
-// Function: load()  
+// -------------------------------------------------------------
+// Function: load()
 // Description: Load the images on surface if its not empty.
 // Parameters:
 // 		const string &name;			File name.
-// Return: void  
+// Return: void
 // -------------------------------------------------------------
 void RawImage::load(const string& name) {
-    	SDL_Surface * image = IMG_Load(name.c_str());
+    SDL_Surface * image = IMG_Load(name.c_str());
 
-    	if (image != NULL) {
-        	_pixels = SDL_DisplayFormatAlpha(image);
-        	SDL_FreeSurface(image);
-    	} else {
-        	// Nothing to do
-    	}
+    if (image != NULL) {
+        _pixels = SDL_DisplayFormatAlpha(image);
+        SDL_FreeSurface(image);
+    } else {
+       // Nothing to do
+    }
 }
 
-// -------------------------------------------------------------  
-// Function: width()  
+// -------------------------------------------------------------
+// Function: width()
 // Description: Keep image width.
 // Return: int
 // -------------------------------------------------------------
 int RawImage::width() const {
-    	if (_pixels != NULL) {
-        	return _pixels->w;
-    	} else {
-        	return 0;
-    	}
+    if (_pixels != NULL) {
+        return _pixels->w;
+    } else {
+        return 0;
+    }
 }
 
-// -------------------------------------------------------------  
-// Function: height()  
+// -------------------------------------------------------------
+// Function: height()
 // Description: Keep image height.
 // Return: int
 // -------------------------------------------------------------
 int RawImage::height() const {
-    	if (_pixels != NULL) {
-        	return _pixels->h;
-    	} else {
-        	return 0;
-    	}
+    if (_pixels != NULL) {
+        return _pixels->h;
+    } else {
+        return 0;
+    }
 }
 
-// -------------------------------------------------------------  
-// Function: pixels()  
+// -------------------------------------------------------------
+// Function: pixels()
 // Description: Return surface.
-// Return: SDL_Surface *	
+// Return: SDL_Surface *
 // -------------------------------------------------------------
 SDL_Surface * RawImage::pixels() const {
-    	return _pixels;
+    return _pixels;
 }
