@@ -136,7 +136,7 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
 int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer sound) {
     SDL_AudioCVT cvt;
     SDL_AudioSpec loaded;
-    Uint8 * newBuffer;
+//  Uint8 * newBuffer;
 
     // Load the WAV file in its original sample format.
     if (SDL_LoadWAV(filename, &loaded, &sound->samples, &sound->length) != NULL) {
@@ -155,7 +155,7 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
             // Fortunately SDL_BuildAudioCVT supplied the necessary information. 
             cvt.len = sound->length;
 
-            newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
+            Uint8 * newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
             if (newBuffer != NULL) {
                 // Copy the sound samples into the new buffer.
                 memcpy(newBuffer, sound->samples, sound->length);
@@ -501,6 +501,7 @@ void Game::showOptionsScreen() {
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
                     case SDLK_q:
+                        // Nothing to do
                     case SDLK_ESCAPE:
                         backButton = true;
                         break;
@@ -1044,6 +1045,7 @@ void Game::loadLevel() {
     string level_3_spec = "resources/level_3";
     string currentLevelFile;
     string currentLevelSpec;
+    
     if (this->actualLevel > 3) {
         this->actualLevel = 1;
     } else {
@@ -1180,7 +1182,8 @@ void Game::update() {
         // Nothing to do
     }
 
-    if (score->getScorePoints() > 99999) {
+    int max_score = 99999;
+    if (score->getScorePoints() > max_score) {
         gameOver = true;
     } else {
         // Nothing to do
