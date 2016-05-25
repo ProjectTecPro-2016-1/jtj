@@ -1176,7 +1176,8 @@ void Game::update() {
         // Nothing to do
     }
 
-    if (score->getLine() < 0) {
+    int minLines = 0;
+    if (score->getLine() < minLines) {
         gameOver = true;
     } else {
         // Nothing to do
@@ -1269,7 +1270,6 @@ void Game::runAI() {
 // -------------------------------------------------------------
 void Game::runPhysics() {
 
-    // cout << "Checando colisão" << endl;
     bool checkColisionExist = false;
     checkColisionExist = checkColision(jack, level->boxes);
     if (checkColisionExist == true) {
@@ -1277,11 +1277,8 @@ void Game::runPhysics() {
     } else {
         // Nothing to do
     }
-    // cout << "Colisão checada." << endl;
 
-    // cout << "Jogador (" << jack->getXPosition() << "," << jack->getYPosition() << ")" << endl;
     // Notice that when the game restarts, another box is pushed into the array
-    // cout << "Derrubando caixas" << endl;
     for (unsigned int i = 0; i < level->boxes.size(); i++) {
         if (level->boxes[i]->used == true) {
             level->boxes[i]->fall(level->grid);
@@ -1290,18 +1287,15 @@ void Game::runPhysics() {
         }
     }
 
+    int boxMobileBeforeJack = -1;
+    
     int xInitialLevel = Level::LEVEL_X_OFFSET;
     int xRangeLevel = Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET;
-
-    // int yinit=Level::LEVEL_Y_OFFSET;
-    // int yfinal=Level::LEVEL_HEIGHT-Level::LEVEL_Y_OFFSET;
     
     int jackPositionX = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / 38;
     int jackPositionY = (jack->getYPosition() - Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT + 19) / 38;
 
     // Looking for the first box before Jack
-    // cout << "Procurando pela caixa móvel antes do Jack" << endl;
-    int boxMobileBeforeJack = -1;
     for (int i = jackPositionX; i >= 0; i--) {
         if ((level->grid[i].size() + jackPositionY) >= 12) {
             xInitialLevel = Level::LEVEL_X_OFFSET + (i + 1) * 38;
@@ -1324,15 +1318,13 @@ void Game::runPhysics() {
         }
     }
 
-
-    // cout << "Procurando pela caixa móvel depois do Jack" << endl;
     // Looking for the first box after Jack
     int boxMobileAfterJack = -1;
     for (int i = jackPositionX; i < 12; i++) {
         if ((level->grid[i].size() + jackPositionY) >= 12) {
             xRangeLevel = Level::LEVEL_X_OFFSET + (i) * 38 - xInitialLevel;
             if ((level->grid[i].size() + jackPositionY) == 12) {
-                if (i<11){
+                if (i < 11){
                     if (level->grid[i+1].size() >= level->grid[i].size()) {
                        break;
                     } else {
@@ -1351,7 +1343,6 @@ void Game::runPhysics() {
     }
 
     for (int i = 0; i < 12; ++i) {
-        // cout << i << " " << level->grid[i] << endl;
         if (level->grid[i].size() > 7) {
             this->quitGame = true;
         } else {
@@ -1411,9 +1402,7 @@ void Game::runPhysics() {
     }
 
     if (boxMobileBeforeJack != -1) {
-        // cout << "Primeira caixa móvel antes de jack: " << boxMobileBeforeJack << endl;
         if (jack->getXPosition() == (((boxMobileBeforeJack + 1) * Box::BOX_WIDTH) + Level::LEVEL_X_OFFSET)) {
-            // cout << "Colidiu com uma caixa a esquerda!!! forca: " << jack->strength << endl;
             if (jack->strength < 10){
                 jack->strength++;
             } else {
@@ -1429,7 +1418,6 @@ void Game::runPhysics() {
             } else {
                 // Nothing to do
             }
-            // level->grid[boxMobileBeforeJack-1].push_back(boxTransition);
         } else {
             // Nothing to do
         }
@@ -1438,9 +1426,7 @@ void Game::runPhysics() {
     }
 
     if (boxMobileAfterJack != -1) {
-        // cout << "Primeira caixa móvel depois de jack: " << boxMobileAfterJack << endl;
         if ((jack->getXPosition() + Jack::JACK_WIDTH) == (xRangeLevel + xInitialLevel)) {
-            // cout << "Colidiu com uma caixa a direta!!!" << endl;
             if (jack->strength < 10){
                 jack->strength++;
             } else {
@@ -1467,11 +1453,8 @@ void Game::runPhysics() {
     } else {
         // Nothing to do
     }
-    // cout << "Limite a direita do jack: " << xRangeLevel+xInitialLevel << endl;
-    // cout << "Limite a esquerda do jack: " << xInitialLevel << endl;
+    
     jack->move(xInitialLevel, xRangeLevel, Level::LEVEL_Y_OFFSET, Level::LEVEL_HEIGHT);
-
-    // cout << "Jack moveu" << endl;
     jack->jump(level);
     return;
 }
@@ -1710,9 +1693,7 @@ int Game::checkIfSkip() {
 bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
 
     for (unsigned int i = 0; i < boxes.size(); ++i) {
-        // cout << "Box " << i << "(" << boxes[i]->getPositionX() << "," << boxes[i]->getPositionY() << ")\t";
-        // cout << "(" << boxes[i]->getPositionX() + 38 << "," << boxes[i]->getPositionY() + 38 << ")" << endl;
-
+        
         int jackRight = jack->getXPosition() + Box::BOX_WIDTH;
         int jackLeft = jack->getXPosition();
         int jackTop = jack->getYPosition();
@@ -1730,16 +1711,11 @@ bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
                  (boxTop < jackTop && jackTop < boxBottom)) ||
                 ((jackLeft < boxLeft && boxLeft < jackRight) && 
                  (jackTop < boxTop && boxTop < jackBottom))) {
-
-                // cout << "Jack: ("<< jackLeft <<", " << jackRight << ") e ("<< jackTop <<", " << jackBottom << endl;
-                // cout << "Box: ("<< boxLeft <<", " << boxRight << ") e ("<< boxTop <<", " << boxBottom << endl;
-
                 return true;
             } else {
                 // Nothing to do
             }
         }
-
     }
 
     return false;
