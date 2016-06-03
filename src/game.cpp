@@ -75,7 +75,7 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
     if (userData == NULL) {
 
     } else {
-
+        // Nothing to do.
     }
 
     // Clear the audio buffer so we can mix samples into it.
@@ -127,14 +127,14 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
 //      SDL_AudioSpec * spec;       
 //      soundPointer sound;         Pointer to control the sound in play at moment.
 //  Atributes:  
-//      SDL_AudioCVT cvt;           Audio format conversion structure.
+//      SDL_AudioCVT convert;       Audio format conversion structure.
 //      SDL_AudioSpec loaded;       Format of the loaded data.
 //      Uint8 * newBuffer;          New buffer to keep a sound.
 // Return: void
 // Observation: Returns 0 on success and 1 on failure. 
 // -------------------------------------------------------------
 int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer sound) {
-    SDL_AudioCVT cvt;
+    SDL_AudioCVT convert;
     SDL_AudioSpec loaded;
 //  Uint8 * newBuffer;
 
@@ -144,7 +144,7 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
         // This structure contains the data SDL needs to quickly
         // convert between sample formats. 
         int result_SDL_BuildAudioCVT = 0;
-        result_SDL_BuildAudioCVT = SDL_BuildAudioCVT(&cvt, loaded.format, loaded.channels, 
+        result_SDL_BuildAudioCVT = SDL_BuildAudioCVT(&convert, loaded.format, loaded.channels, 
                                                      loaded.freq, spec->format, spec->channels, 
                                                      spec->freq);
 
@@ -153,43 +153,43 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
             // (for instance, converting 8-bit mono to 16-bit stereo),
             // we need to allocate a new buffer for the converted data.
             // Fortunately SDL_BuildAudioCVT supplied the necessary information. 
-            cvt.len = sound->length;
+            convert.len = sound->length;
 
-            Uint8 * newBuffer = (Uint8 *) malloc(cvt.len * cvt.len_mult);
+            Uint8 * newBuffer = (Uint8 *) malloc(convert.len * convert.len_mult);
             if (newBuffer != NULL) {
                 // Copy the sound samples into the new buffer.
                 memcpy(newBuffer, sound->samples, sound->length);
 
                 // Perform the conversion on the new buffer.
-                cvt.buf = newBuffer;
+                convert.buf = newBuffer;
 
                 int result_SDL_ConvertAudio = 0;
-                result_SDL_ConvertAudio = SDL_ConvertAudio(&cvt);
+                result_SDL_ConvertAudio = SDL_ConvertAudio(&convert);
                 
                 if (result_SDL_ConvertAudio >= 0) {
                     // Swap the converted data for the original.
                     SDL_FreeWAV(sound->samples);
                     sound->samples = newBuffer;
-                    sound->length = sound->length * cvt.len_mult;
+                    sound->length = sound->length * convert.len_mult;
 
-                    cout << filename << " was loaded and converted successfully." << endl;
+                    clog << filename << " was loaded and converted successfully." << endl;
                 } else {
-                    cout << "Audio conversion error: " << SDL_GetError() << endl;
+                    clog << "Audio conversion error: " << SDL_GetError() << endl;
                     free(newBuffer);
                     SDL_FreeWAV(sound->samples);
                     return 1;
                 }
             } else {
-                cout << "Memory allocation failed." << endl;
+                clog << "Memory allocation failed." << endl;
                 SDL_FreeWAV(sound->samples);
                 return 1;
             }
         } else {
-            cout << "Unable to convert sound: " << SDL_GetError() << endl;
+            clog << "Unable to convert sound: " << SDL_GetError() << endl;
             return 1;
         }
     } else {
-        cout << "Unable to load sound: " << SDL_GetError() << endl;
+        clog << "Unable to load sound: " << SDL_GetError() << endl;
         return 1;
     }
 
