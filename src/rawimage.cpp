@@ -1,4 +1,4 @@
-#include "rawimage.h"
+#include "rawimage.hpp"
 #include <SDL/SDL_image.h>
 
 //TODO: THROW EXCEPTIONS ON LOAD METHOD

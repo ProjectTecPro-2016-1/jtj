@@ -1,7 +1,7 @@
 #ifndef PAUSESCREEN_H
 #define PAUSESCREEN_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <string>
 
 class PauseScreen : public GameObject {
