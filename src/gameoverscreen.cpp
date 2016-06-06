@@ -1,5 +1,5 @@
-#include "gameoverscreen.h"
-#include "sdlutil.h"
+#include "gameoverscreen.hpp"
+#include "sdlutil.hpp"
 #include <cassert>
 
 using namespace std;

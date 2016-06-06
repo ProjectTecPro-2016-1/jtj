@@ -1,7 +1,7 @@
 #ifndef INITSCREEN_H
 #define INITSCREEN_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <string>
 
 class InitScreen : public GameObject {

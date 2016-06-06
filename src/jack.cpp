@@ -1,6 +1,6 @@
-#include "jack.h"
-#include "level.h"
-#include "sdlutil.h"
+#include "jack.hpp"
+#include "level.hpp"
+#include "sdlutil.hpp"
 
 using namespace std;
 

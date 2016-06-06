@@ -1,7 +1,7 @@
 #include <cassert>
-#include "label.h"
-#include "sdlutil.h"
-#include "level.h"
+#include "label.hpp"
+#include "sdlutil.hpp"
+#include "level.hpp"
 
 // -------------------------------------------------------------
 // Function: Label()

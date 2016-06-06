@@ -1,8 +1,8 @@
 #ifndef JACK_H
 #define JACK_H
 
-#include "gameobject.h"
-#include "level.h"
+#include "gameobject.hpp"
+#include "level.hpp"
 #include <string>
 
 class Jack : public GameObject {

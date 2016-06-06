@@ -1,7 +1,7 @@
 #ifndef LABEL_H
 #define LABEL_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <string>
 
 class Label : public GameObject {
