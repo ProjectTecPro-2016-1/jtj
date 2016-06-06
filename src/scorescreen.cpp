@@ -1,5 +1,5 @@
-#include "scorescreen.h"
-#include "sdlutil.h"
+#include "scorescreen.hpp"
+#include "sdlutil.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "SDL/SDL_ttf.h"
@@ -20,7 +20,7 @@ ScoreScreen::ScoreScreen() {
     this->scoreTextColor.g = 255;
     this->scoreTextColor.b = 255;
     this->scoreFont = TTF_OpenFont ("resources/HanaleiRegular.ttf", 40);
-    assert(this->scoreFont != NULL && "It is not possible open ScoreFont");
+    //assert(this->scoreFont != NULL && "It is not possible open ScoreFont");
 
 	this->scorePoints = 0;
     sprintf(this->scoreString, "Score: %5d", this->scorePoints);
