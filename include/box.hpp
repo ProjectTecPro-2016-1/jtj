@@ -1,7 +1,7 @@
 #ifndef BOX_H
 #define BOX_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <string>
 
 class Box : public GameObject {

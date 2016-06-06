@@ -8,11 +8,11 @@
 #include <cstdlib>
 #include <stdio.h>
 #include "SDL/SDL_ttf.h"
-#include "sdlutil.h"
-#include "game.h"
-#include "enemy.h"
-#include "box.h"
-#include "scorescreen.h"
+#include "sdlutil.hpp"
+#include "game.hpp"
+#include "enemy.hpp"
+#include "box.hpp"
+#include "scorescreen.hpp"
 
 #define MAX_PLAYING_SOUNDS 10
 // The higher this is, the louder each currently playing sound will be.

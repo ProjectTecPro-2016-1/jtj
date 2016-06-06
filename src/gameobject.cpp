@@ -1,4 +1,4 @@
-#include "gameobject.h"
+#include "gameobject.hpp"
 
 // -------------------------------------------------------------
 // Function: ~GameObject()

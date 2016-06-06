@@ -3,19 +3,19 @@
 
 #include <string>
 #include <stdlib.h>
-#include <sdlutil.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "SDL/SDL_ttf.h"
-#include "level.h"
-#include "timer.h"
-#include "jack.h"
-#include "label.h"
-#include "initscreen.h"
-#include "pausescreen.h"
-#include "gameoverscreen.h"
-#include "scorescreen.h"
-#include "optionsscreen.h"
+#include "sdlutil.hpp"
+#include "level.hpp"
+#include "timer.hpp"
+#include "jack.hpp"
+#include "label.hpp"
+#include "initscreen.hpp"
+#include "pausescreen.hpp"
+#include "gameoverscreen.hpp"
+#include "scorescreen.hpp"
+#include "optionsscreen.hpp"
 
 class Game {
     public:

@@ -1,6 +1,6 @@
-#include "enemy.h"
-#include "level.h"
-#include "sdlutil.h"
+#include "enemy.hpp"
+#include "level.hpp"
+#include "sdlutil.hpp"
 #include <cstdlib>
 #include <ctime>
 

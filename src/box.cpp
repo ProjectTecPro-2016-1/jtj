@@ -1,6 +1,6 @@
-#include "box.h"
-#include "level.h"
-#include "sdlutil.h"
+#include "box.hpp"
+#include "level.hpp"
+#include "sdlutil.hpp"
 
 using namespace std;
 
