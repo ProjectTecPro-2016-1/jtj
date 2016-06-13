@@ -56,8 +56,9 @@ clean:
 	@echo Cleaning...
 	@rm -rf obj/ bin/ *~
 
-testBox: test/TestBox.cpp
+testBox: $(SRC_DIR_TEST)/TestBox.cpp
 	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
 	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
 	@echo --- Done, $(BIN_DIR_TEST)/$@ created
 
