@@ -42,3 +42,5 @@ screenshot.bmp
 #Folders created when compiling game
 bin/
 obj/
+test/bin/
+test/xml/
