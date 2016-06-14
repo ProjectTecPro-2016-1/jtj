@@ -1,4 +1,4 @@
-#include "sdlutil.h"
+#include "sdlutil.hpp"
 #include <string>
 #include <SDL/SDL_image.h>
 #include <cassert>

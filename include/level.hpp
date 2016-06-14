@@ -1,9 +1,9 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "gameobject.h"
-#include "box.h"
-#include "enemy.h"
+#include "gameobject.hpp"
+#include "box.hpp"
+#include "enemy.hpp"
 #include <string>
 #include <vector>
 

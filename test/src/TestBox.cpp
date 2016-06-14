@@ -14,63 +14,55 @@
 #include <cppunit/XmlOutputter.h>
 #include <netinet/in.h>
 
-#include "CBasicMath.hpp"
+#include "box.hpp"
 
 using namespace CppUnit;
 using namespace std;
 
 //-----------------------------------------------------------------------------
 
-class TestBasicMath : public CppUnit::TestFixture
-{
-    CPPUNIT_TEST_SUITE(TestBasicMath);
-    CPPUNIT_TEST(testAddition);
-    CPPUNIT_TEST(testMultiply);
+class TestBox : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TestBox);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
-public:
-    void setUp(void);
-    void tearDown(void);
+    public:
+        void setUp(void);
+        void tearDown(void);
 
-protected:
-    void testAddition(void);
-    void testMultiply(void);
+    protected:
+        void testConstructor(void);
+        void testDestructor(void);
 
-private:
-
-    CBasicMath *mTestObj;
+    private:
+        Box * mTestObj;
 };
 
 //-----------------------------------------------------------------------------
 
-void
-TestBasicMath::testAddition(void)
-{
-    CPPUNIT_ASSERT(5 == mTestObj->Addition(2,3));
+void TestBox::testConstructor(void) {
+    CPPUNIT_ASSERT(0 == mTestObj->getPositionX());
+    CPPUNIT_ASSERT(0 == mTestObj->getPositionY());
 }
 
-void
-TestBasicMath::testMultiply(void)
-{
-    CPPUNIT_ASSERT(6 == mTestObj->Multiply(2,3));
+void TestBox::testDestructor(void) {
+    CPPUNIT_ASSERT(mTestObj->box == NULL);
 }
 
-void TestBasicMath::setUp(void)
-{
-    mTestObj = new CBasicMath();
+void TestBox::setUp(void) {
+    mTestObj = new Box("../resources/box.png");
 }
 
-void TestBasicMath::tearDown(void)
-{
+void TestBox::tearDown(void) {
     delete mTestObj;
 }
 
 //-----------------------------------------------------------------------------
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TestBasicMath );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestBox );
 
-int main(int argc, char* argv[])
-{
+int main() {
     // informs test-listener about testresults
     CPPUNIT_NS::TestResult testresult;
 
@@ -92,7 +84,7 @@ int main(int argc, char* argv[])
     compileroutputter.write ();
 
     // Output XML for Jenkins CPPunit plugin
-    ofstream xmlFileOut("cppTestBasicMathResults.xml");
+    ofstream xmlFileOut("test/xml/testBox.xml");
     XmlOutputter xmlOut(&collectedresults, xmlFileOut);
     xmlOut.write();
 

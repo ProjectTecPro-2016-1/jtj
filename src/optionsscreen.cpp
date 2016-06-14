@@ -1,5 +1,5 @@
-#include "optionsscreen.h"
-#include "sdlutil.h"
+#include "optionsscreen.hpp"
+#include "sdlutil.hpp"
 #include <cassert>
 
 using namespace std;

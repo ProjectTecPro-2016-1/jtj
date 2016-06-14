@@ -1,11 +1,11 @@
 #ifndef OPTIONSSCREEN_H
 #define OPTIONSSCREEN_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "SDL/SDL_ttf.h"
-#include "sdlutil.h"
+#include "sdlutil.hpp"
 #include <string>
 
 class OptionsScreen : public GameObject {

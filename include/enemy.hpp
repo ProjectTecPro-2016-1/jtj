@@ -1,8 +1,8 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "gameobject.h"
-#include "box.h"
+#include "gameobject.hpp"
+#include "box.hpp"
 #include <string>
 #include <vector>
 

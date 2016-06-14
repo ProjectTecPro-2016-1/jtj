@@ -1,6 +1,6 @@
 #include <cassert>
-#include "level.h"
-#include "sdlutil.h"
+#include "level.hpp"
+#include "sdlutil.hpp"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #ifndef RESOURCESMANAGER_H
 #define RESOURCESMANAGER_H
 
-#include "rawimage.h"
+#include "rawimage.hpp"
 #include <vector>
 
 class ResourcesManager {

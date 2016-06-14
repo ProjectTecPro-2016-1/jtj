@@ -1,7 +1,7 @@
 #ifndef RAWIMAGE_H
 #define RAWIMAGE_H
 
-#include "resource.h"
+#include "resource.hpp"
 #include <SDL/SDL.h>
 
 using namespace std;

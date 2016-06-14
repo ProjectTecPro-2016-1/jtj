@@ -1,11 +1,11 @@
 #ifndef BOX_H
 #define BOX_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <string>
 
 class Box : public GameObject {
-    SDL_Surface *box;       // Pointer for box graphic elements.
+    
     void drawSelf(SDL_Surface * surface);
     float speed;                            // Keep the actual speed of the box.
     static const int ACCELERATION = 1;      // Used for increments the box speed after the creation
@@ -14,7 +14,8 @@ class Box : public GameObject {
                                             // box can achieve.
 
     public:
-		bool lyingDown;                         // Contain information if the box is falling or not.
+		SDL_Surface * box;                      // Pointer for box graphic elements.
+        bool lyingDown;                         // Contain information if the box is falling or not.
 		static const int BOX_WIDTH = 38;        // All boxes pixel width.
 		static const int BOX_HEIGHT = 38;       // All boxes pixel height.
         int x_position;                         // Keep the actual position of the box on axis X.

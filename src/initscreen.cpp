@@ -1,5 +1,5 @@
-#include "initscreen.h"
-#include "sdlutil.h"
+#include "initscreen.hpp"
+#include "sdlutil.hpp"
 #include <cassert>
 
 using namespace std;

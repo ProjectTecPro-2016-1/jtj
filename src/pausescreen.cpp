@@ -1,5 +1,5 @@
-#include "pausescreen.h"
-#include "sdlutil.h"
+#include "pausescreen.hpp"
+#include "sdlutil.hpp"
 #include <cassert>
 
 using namespace std;

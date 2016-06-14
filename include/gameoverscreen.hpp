@@ -1,7 +1,7 @@
 #ifndef GAMEOVERSCREEN_H
 #define GAMEOVERSCREEN_H
 
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <string>
 
 class GameOverScreen : public GameObject {
