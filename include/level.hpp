@@ -8,10 +8,10 @@
 #include <vector>
 
 class Level : public GameObject {
-    SDL_Surface * level;        // Pointer for level graphic elements.
     void drawSelf(SDL_Surface * surface);
     //this stack shall handle the colision logic.
     public:
+    SDL_Surface * level;        // Pointer for level graphic elements.
         vector<Enemy*> enemies;     // Vector that contains info about enemies.
 		vector<Box*> boxes;         // Vector that contains info about boxes.
 		vector<Box*> grid[12];      // Vector that contains the platform where the box falls.
