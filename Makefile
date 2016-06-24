@@ -30,8 +30,12 @@ OBJ = ${addprefix $(OBJ_DIR)/, ${notdir ${SRC:.cpp=.o}}}
 
 # Needs for tests
 SRCM = src/box.cpp
+SRCM = src/enemy.cpp
+SRCM = src/game.cpp
+SRCM = src/initscreen.cpp
+SRCM = src/label.cpp
+SRCM = src/optionsscreen.cpp
 OBJM = $(SRCM:.cpp=.o)
-
 
 .PHONY: all clean depend
 
@@ -62,5 +66,34 @@ testBox: $(SRC_DIR_TEST)/TestBox.cpp
 	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
 	@echo --- Done, $(BIN_DIR_TEST)/$@ created
 
+testEnemy: $(SRC_DIR_TEST)/TestEnemy.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testGame: $(SRC_DIR_TEST)/TestGame.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testInitScreen: $(SRC_DIR_TEST)/TestInitScreen.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testLabel: $(SRC_DIR_TEST)/TestLabel.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testOptionsScreen: $(SRC_DIR_TEST)/TestOptionsScreen.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
 
 -include $(OBJ:.o=.d)
