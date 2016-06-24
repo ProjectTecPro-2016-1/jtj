@@ -9,12 +9,11 @@
 #include <string>
 
 class OptionsScreen : public GameObject {
-    SDL_Surface * helpMessage;			// Surface for "Help" that will be applie on screen.
-	SDL_Surface * optionsScreen;		// Surface for "Options" that will be applie on screen.
-	
 	void drawSelf(SDL_Surface *surface);
 	
 public:
+    SDL_Surface * helpMessage;			// Surface for "Help" that will be applie on screen.
+	SDL_Surface * optionsScreen;		// Surface for "Options" that will be applie on screen.
 	
 	OptionsScreen(std::string filename);
 	~OptionsScreen();
