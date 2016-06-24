@@ -39,6 +39,10 @@ SRCM = src/jack.cpp
 SRCM = src/label.cpp
 SRCM = src/level.cpp
 SRCM = src/optionsscreen.cpp
+SRCM = src/pausescreen.cpp
+SRCM = src/rawimage.cpp
+SRCM = src/scorescreen.cpp
+SRCM = src/timer.cpp
 OBJM = $(SRCM:.cpp=.o)
 
 .PHONY: all clean depend
@@ -120,6 +124,30 @@ testLevel: $(SRC_DIR_TEST)/TestLevel.cpp
 	@echo --- Done, $(BIN_DIR_TEST)/$@ created
 
 testOptionsScreen: $(SRC_DIR_TEST)/TestOptionsScreen.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testPauseScreen: $(SRC_DIR_TEST)/TestPauseScreen.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testRawImage: $(SRC_DIR_TEST)/TestRawImage.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testScoreScreen: $(SRC_DIR_TEST)/TestScoreScreen.cpp
+	@echo Compiling $@
+	@mkdir -p $(BIN_DIR_TEST)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)
+	@echo --- Done, $(BIN_DIR_TEST)/$@ created
+
+testTimer: $(SRC_DIR_TEST)/TestTimer.cpp
 	@echo Compiling $@
 	@mkdir -p $(BIN_DIR_TEST)
 	@$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR_TEST)/$@ $< lib/libjtj.a -lcppunit $(LIBS)

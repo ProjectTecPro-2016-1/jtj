@@ -23,8 +23,12 @@ using namespace std;
 
 class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestEnemy);
-    //CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testDestructor);
+    CPPUNIT_TEST(testGetXPosition);
+    CPPUNIT_TEST(testGetYPosition);
+    CPPUNIT_TEST(testGetMovesLeft);
+    CPPUNIT_TEST(testGetMoveDirection);
+    CPPUNIT_TEST(testMoveFirstIf);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,22 +36,49 @@ class TestEnemy : public CppUnit::TestFixture {
         void tearDown(void);
 
     protected:
-       //void testConstructor(void);
        void testDestructor(void);
-
+       void testGetXPosition(void);
+       void testGetYPosition(void);
+       void testGetMovesLeft(void);
+       void testGetMoveDirection(void);
+       void testMoveFirstIf(void);
     private:
         Enemy * mTestObj;
 };
 
 //-----------------------------------------------------------------------------
-/*
-void TestEnemy::testConstructor(void) {
-    mTestObj->Enemy();
-}*/
-
 void TestEnemy::testDestructor(void) {
     mTestObj->~Enemy();
     CPPUNIT_ASSERT(mTestObj->enemy == NULL);
+}
+
+void TestEnemy::testGetXPosition(void) {
+    mTestObj->setXPosition(5);
+    CPPUNIT_ASSERT(5 == mTestObj->getXPosition());
+}
+
+void TestEnemy::testGetYPosition(void) {
+    mTestObj->setYPosition(2);
+    CPPUNIT_ASSERT(2 == mTestObj->getYPosition());
+}
+
+void TestEnemy::testGetMovesLeft(void) {
+    mTestObj->setMovesLeft(2);
+    CPPUNIT_ASSERT(2 == mTestObj->getMovesLeft());
+}
+
+void TestEnemy::testGetMoveDirection(void) {
+    mTestObj->setMoveDirection(2);
+    CPPUNIT_ASSERT(2 == mTestObj->getMoveDirection());
+}
+
+void TestEnemy::testMoveFirstIf(void) {
+    mTestObj->setXPosition(54);
+    mTestObj->setMovesLeft(10);
+    mTestObj->setMoveDirection(4);
+    mTestObj->move();
+    CPPUNIT_ASSERT(56 == mTestObj->getXPosition());
+    CPPUNIT_ASSERT(8 == mTestObj->getMovesLeft());
 }
 
 void TestEnemy::setUp(void) {

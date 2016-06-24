@@ -17,36 +17,36 @@ using namespace std;
 // -------------------------------------------------------------
 void Enemy::drawSelf(SDL_Surface * surface) {
     //SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface);
-    if (moveDirection%2 == 0 && movesLeft > 0) {
-        frame ++;
+    if (getMoveDirection() % 2 == 0 && getMovesLeft() > 0) {
+        setFrame(getFrame() + 1);
 
-        if (frame > 3) {
-            frame = 1;
+        if (getFrame() > 3) {
+            setFrame(1); 
         } else {
             // Nothing to do
         }
-    } else if (moveDirection%2 == 1 && movesLeft > 0) {
-        frame++;
+    } else if (getMoveDirection() % 2 == 1 && getMovesLeft() > 0) {
+        setFrame(getFrame() + 1);
 
-        if (frame < 4) {
-            frame = 4;
+        if (getFrame() < 4) {
+            setFrame(4);
         } else {
             // Nothing to do
         }
 
-        if (frame > 6) {
-            frame = 4;
+        if (getFrame() > 6) {
+            setFrame(4);
         } else {
             // Nothing to do
         }
-    } else if (movesLeft == 0 && moveDirection > 30 && moveDirection < 40) {
-        frame = 7;
+    } else if (getMovesLeft() == 0 && getMoveDirection() > 30 && getMoveDirection() < 40) {
+        setFrame(7);
     } else {
-        frame = 0;
+        setFrame(0);
     }
 
-    SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface,
-                         &spriteClips[frame]);
+    SDLUtil::applySurface(getXPosition(), getYPosition(), this->enemy, surface,
+                         &spriteClips[getFrame()]);
     return;
 }
 
@@ -106,13 +106,13 @@ void Enemy::setSpriteClips() {
 // -------------------------------------------------------------
 Enemy::Enemy(string filename) {
     this->enemy = SDLUtil::loadImage(filename);
-    this->x_position = Level::LEVEL_X_OFFSET + 38;
-    this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET -
-                        Enemy::ENEMY_HEIGHT - 38 * 8 - 1;
-    movesLeft = 0;
-    moveDirection = 0;
+    setXPosition(Level::LEVEL_X_OFFSET + 38);
+    setYPosition(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET -
+                        Enemy::ENEMY_HEIGHT - 38 * 8 - 1);
+    setMovesLeft(0);
+    setMoveDirection(0);
     srand((unsigned)time(0));
-    frame = 0;
+    setFrame(0);
 }
 
 // -------------------------------------------------------------
@@ -134,42 +134,42 @@ Enemy::~Enemy() {
 // Return: void
 // -------------------------------------------------------------
 void Enemy::move() {
-    if (movesLeft > 0 && moveDirection%2 == 0) {
-        x_position += 2;
-        movesLeft -= 2;
-    } else if(movesLeft > 0 && moveDirection % 2 == 1) {
-        x_position -= 2;
-        movesLeft -= 2;
+    if (getMovesLeft() > 0 && getMoveDirection() % 2 == 0) {
+        setXPosition(getXPosition() + 2);
+        setMovesLeft(getMovesLeft() - 2);
+    } else if(getMovesLeft() > 0 && getMoveDirection() % 2 == 1) {
+        setXPosition(getXPosition() - 2);
+        setMovesLeft(getMovesLeft() - 2);
     } else {
         // Nothing to do
     }
 
-    if (x_position <= Level::LEVEL_X_OFFSET) {
-        x_position += 2;
-        movesLeft = 36;
-        moveDirection = 2;
+    if (getXPosition() <= Level::LEVEL_X_OFFSET) {
+        setXPosition(getXPosition() + 2);
+        setMovesLeft(36);
+        setMoveDirection(2);
     } else {
         // Nothing to do
     }
 
-    if (x_position >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
-        x_position -= 2;
-        movesLeft = 36;
-        moveDirection = 1;
+    if (getXPosition() >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
+        setXPosition(getXPosition() - 2);
+        setMovesLeft(36);
+        setMoveDirection(1);
     } else {
         // Nothing to do
     }
 
 
-    if (movesLeft <= 0) {
+    if (getMovesLeft() <= 0) {
         //delay
-        if (moveDirection > 0) {
-            moveDirection--;
+        if (getMoveDirection() > 0) {
+            setMoveDirection(getMoveDirection() - 1);
             // descomentar em caso de erro return;
         } else {
             //gen  movesLeft and moveDirection
-            movesLeft = (rand() % 6) * 38;
-            moveDirection = (rand() % 120);
+            setMovesLeft((rand() % 6) * 38);
+            setMoveDirection(rand() % 120);
         }
     } else {
         // Nothing to do
@@ -186,12 +186,12 @@ void Enemy::move() {
 // Return: void
 // -------------------------------------------------------------
 void Enemy::throwBox(vector<Box*> boxes) {
-    if ((x_position-Level::LEVEL_X_OFFSET) % 38 == 0) {
-        if (movesLeft == 0 && moveDirection == 30) {
+    if ((getXPosition() - Level::LEVEL_X_OFFSET) % 38 == 0) {
+        if (getMovesLeft() == 0 && getMoveDirection() == 30) {
             for (unsigned int i = 0; i < boxes.size(); i++) {
                 if (boxes.at(i)->used == false) {
                     boxes.at(i)->used = true;
-                    boxes.at(i)->setPosition(x_position, y_position - Enemy::ENEMY_HEIGHT +
+                    boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
                                             Box::BOX_HEIGHT);
                     break;// descomentar em caso de erro return;
                 } else {
@@ -207,3 +207,44 @@ void Enemy::throwBox(vector<Box*> boxes) {
 
     return;
 }
+
+void Enemy::setXPosition(int xPosition) {
+    this->xPosition =  xPosition;
+}
+
+int Enemy::getXPosition() {
+    return this->xPosition;
+}
+
+void Enemy::setYPosition(int yPosition) {
+    this->yPosition =  yPosition;
+}
+
+int Enemy::getYPosition() {
+    return this->yPosition;
+}
+
+void Enemy::setMovesLeft(int movesLeft) {
+    this->movesLeft =  movesLeft;
+}
+
+int Enemy::getMovesLeft() {
+    return this->movesLeft;
+}
+
+void Enemy::setMoveDirection(int moveDirection) {
+    this->moveDirection =  moveDirection;
+}
+
+int Enemy::getMoveDirection() {
+    return this->moveDirection;
+}
+
+void Enemy::setFrame(int frame) {
+    this->frame =  frame;
+}
+
+int Enemy::getFrame() {
+    return this->frame;
+}
+        
