@@ -5,11 +5,12 @@
 #include <string>
 
 class Label : public GameObject {
-	SDL_Surface * label;        // Pointer for label graphic elements.
-	void drawSelf(SDL_Surface * surface);
-	int xPosition;      // Where the label is localizated in axis X.
-	int yPosition;      // Where the label is localizated in axis Y.
 	public:
+		SDL_Surface * label;        // Pointer for label graphic elements.
+		void drawSelf(SDL_Surface * surface);
+		int xPosition;      // Where the label is localizated in axis X.
+		int yPosition;      // Where the label is localizated in axis Y.
+		
 		static const int LABEL_WIDTH = 178;     // All label pixel width.
 		static const int LABEL_HEIGHT = 100;    // All label pixel heigth.
 
