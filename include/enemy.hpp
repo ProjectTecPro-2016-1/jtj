@@ -7,12 +7,13 @@
 #include <vector>
 
 class Enemy : public GameObject {
-    SDL_Surface * enemy;     // Pointer for enemy graphic elements.
-    void drawSelf(SDL_Surface * surface);
-
-    int frame;                      // Keeps the actual frame value.
-    SDL_Rect spriteClips[8];        // Contains the dimensions of each motion frame.
     public:
+        SDL_Surface * enemy;     // Pointer for enemy graphic elements.
+        void drawSelf(SDL_Surface * surface);
+
+        int frame;                      // Keeps the actual frame value.
+        SDL_Rect spriteClips[8];        // Contains the dimensions of each motion frame.
+        
         void setSpriteClips();
         int x_position;	                        // Axis X position where the enemy is localizated.
     	int y_position;	                        // Axis Y position where the enemy is localizated.
