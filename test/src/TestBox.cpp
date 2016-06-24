@@ -43,10 +43,12 @@ class TestBox : public CppUnit::TestFixture {
 
 void TestBox::testConstructor(void) {
     CPPUNIT_ASSERT(0 == mTestObj->getPositionX());
+    CPPUNIT_ASSERT(0 == mTestObj->getSpeed());
     CPPUNIT_ASSERT(0 == mTestObj->getPositionY());
 }
 
 void TestBox::testDestructor(void) {
+    mTestObj->~Box();
     CPPUNIT_ASSERT(mTestObj->box == NULL);
 }
 
