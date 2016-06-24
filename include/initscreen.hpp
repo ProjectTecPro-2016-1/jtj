@@ -5,11 +5,11 @@
 #include <string>
 
 class InitScreen : public GameObject {
-	void drawSelf(SDL_Surface *surface);
-    
-	SDL_Surface * initScreen;		// Keeps the image that loaded.
-	
 	public:
+		void drawSelf(SDL_Surface *surface);
+	    
+		SDL_Surface * initScreen;		// Keeps the image that loaded.
+		
 	
 		InitScreen(std::string filename);
 		~InitScreen();
