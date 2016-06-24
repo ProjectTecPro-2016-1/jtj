@@ -160,11 +160,11 @@ void Jack::jump(Level* level) {
     verticalSpeed += ACCELERATION;
 
     int maxJumpHeightLeft = 0;
-    maxJumpHeightLeft = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 - 
+    maxJumpHeightLeft = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
                              (level->grid[(x_position - Level::LEVEL_X_OFFSET) / 38].size() * 38));
-    
+
     int maxJumpHeightRight = 0;
-    maxJumpHeightRight = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 - 
+    maxJumpHeightRight = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
                               (level->grid[(x_position + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
 
     if (jumping == true) {
