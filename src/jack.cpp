@@ -13,8 +13,10 @@ using namespace std;
 // -------------------------------------------------------------
 Jack::Jack(string filename) {
     this->jack = SDLUtil::loadImage(filename);
-    this->x_position = JACK_WIDTH + Level::LEVEL_X_OFFSET;
-    this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - Jack::JACK_HEIGHT - 38;
+    //this->x_position = JACK_WIDTH + Level::LEVEL_X_OFFSET;
+    setXPosition(JACK_WIDTH + Level::LEVEL_X_OFFSET);
+    //this->y_position = Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - Jack::JACK_HEIGHT - 38;
+    setYPosition(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET - Jack::JACK_HEIGHT - 38);
     this->speed = 0;
     this->dead = false;
     verticalSpeed = 0;
@@ -124,6 +126,7 @@ void Jack::drawSelf(SDL_Surface *surface) {
     }
 
     SDLUtil::applySurface(this->x_position, this->y_position, this->jack, surface, &spriteClips[frame]);
+    //SDLUtil::applySurface(getXPosition(), getYPosition(), this->jack, surface, &spriteClips[frame]);
     return;
 }
 
@@ -138,10 +141,13 @@ void Jack::drawSelf(SDL_Surface *surface) {
 // Return: void
 // -------------------------------------------------------------
 void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
-    x_position += speed;
+    // x_position += speed;
+    setXPosition(getXPosition() + speed);
 
-    this->x_position = setLimit(x_position, xBegin, xRange - JACK_WIDTH);
-    this->y_position = setLimit(y_position, yBegin, yRange - JACK_HEIGHT - 38);
+    //x_position = setLimit(x_position, xBegin, xRange - JACK_WIDTH);
+    setXPosition(setLimit(getXPosition(), xBegin, xRange - JACK_WIDTH));
+    //this->y_position = setLimit(y_position, yBegin, yRange - JACK_HEIGHT - 38);
+    setYPosition(setLimit(getYPosition(), yBegin, yRange - JACK_HEIGHT - 38));
 
     return;
 }
@@ -156,19 +162,22 @@ void Jack::move(int xBegin, int xRange, int yBegin, int yRange) {
 // -------------------------------------------------------------
 void Jack::jump(Level* level) {
 
-    y_position += verticalSpeed;
+    //y_position += verticalSpeed;
+    setYPosition(getYPosition() + verticalSpeed);
     verticalSpeed += ACCELERATION;
 
     int maxJumpHeightLeft = 0;
     maxJumpHeightLeft = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
-                             (level->grid[(x_position - Level::LEVEL_X_OFFSET) / 38].size() * 38));
-
+                                (level->grid[(getXPosition() - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+    //                         (level->grid[(x_position - Level::LEVEL_X_OFFSET) / 38].size() * 38));
     int maxJumpHeightRight = 0;
     maxJumpHeightRight = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
-                              (level->grid[(x_position + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+                              (level->grid[(getXPosition() + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+    //                        (level->grid[(x_position + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
 
     if (jumping == true) {
-        if ((y_position >= maxJumpHeightLeft) || (y_position >= maxJumpHeightRight)) {
+        //if ((y_position >= maxJumpHeightLeft) || (y_position >= maxJumpHeightRight)) {
+        if ((getYPosition() >= maxJumpHeightLeft) || (getYPosition() >= maxJumpHeightRight)) {
             jumping = false;
             verticalSpeed = 1;
         } else {
@@ -179,12 +188,17 @@ void Jack::jump(Level* level) {
     }
 
     //these next two if's handles boxes superior colision.
-    if (y_position >= maxJumpHeightLeft) {
-        y_position = maxJumpHeightLeft;
+    //if (y_position >= maxJumpHeightLeft) {
+    if (getYPosition() >= maxJumpHeightLeft) {
+        //y_position = maxJumpHeightLeft;
+        setYPosition(maxJumpHeightLeft);
+
         verticalSpeed = 1;
         //verticalSpeed -= ACCELERATION;
-    } else if (y_position >= maxJumpHeightRight) {
-        y_position = maxJumpHeightRight;
+    //} else if (y_position >= maxJumpHeightRight) {
+    } else if (getYPosition() >= maxJumpHeightRight) {
+        //y_position = maxJumpHeightRight;
+        setYPosition(maxJumpHeightRight);
         verticalSpeed = 1;
         //verticalSpeed -= ACCELERATION;
     } else { //this avoids double jumping while falling from a box
@@ -251,23 +265,6 @@ void Jack::popMove(int v) {
     }
 }
 
-// -------------------------------------------------------------
-// Function: getXPosition()
-// Description:	Returns the current Jack's position on the X axis.
-// Return: int
-// -------------------------------------------------------------
-int Jack::getXPosition() {
-	return this->x_position;
-}
-
-// -------------------------------------------------------------
-// Function: getYPosition()
-// Description:	Returns the current Jack's position on the Y axis.
-// Return: int
-// -------------------------------------------------------------
-int Jack::getYPosition() {
-	return this->y_position;
-}
 
 // -------------------------------------------------------------
 // Function: pushBox()
@@ -329,4 +326,30 @@ void Jack::setSpriteClips() {
     spriteClips[8].y = 0;
     spriteClips[8].w = JACK_WIDTH;
     spriteClips[8].h = JACK_HEIGHT;
+}
+
+// -------------------------------------------------------------
+// Function: getXPosition()
+// Description: Returns the current Jack's position on the X axis.
+// Return: int
+// -------------------------------------------------------------
+int Jack::getXPosition() {
+    return this->x_position;
+}
+
+void Jack::setXPosition(int x_position) {
+    this->x_position =  x_position;
+}
+
+// -------------------------------------------------------------
+// Function: getYPosition()
+// Description: Returns the current Jack's position on the Y axis.
+// Return: int
+// -------------------------------------------------------------
+int Jack::getYPosition() {
+    return this->y_position;
+}
+
+void Jack::setYPosition(int y_position) {
+    this->y_position =  y_position;
 }
