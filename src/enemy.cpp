@@ -134,6 +134,7 @@ Enemy::~Enemy() {
 // Return: void
 // -------------------------------------------------------------
 void Enemy::move() {
+    // Change of position according to MovesLeft and MoveDirection
     if (getMovesLeft() > 0 && getMoveDirection() % 2 == 0) {
         setXPosition(getXPosition() + 2);
         setMovesLeft(getMovesLeft() - 2);
@@ -160,10 +161,12 @@ void Enemy::move() {
         // Nothing to do
     }
 
+    // Fifth
     if (getMovesLeft() <= 0) {
         //delay
         if (getMoveDirection() > 0) {
             setMoveDirection(getMoveDirection() - 1);
+        // Sixth
         } else {
             //gen  movesLeft and moveDirection
             setMovesLeft((rand() % 6) * 38);
