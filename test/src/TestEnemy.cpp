@@ -29,6 +29,8 @@ class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetMovesLeft);
     CPPUNIT_TEST(testGetMoveDirection);
     CPPUNIT_TEST(testMoveFirstIf);
+    CPPUNIT_TEST(testMoveSecondIf);
+    CPPUNIT_TEST(testMoveThirdIf);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -42,6 +44,8 @@ class TestEnemy : public CppUnit::TestFixture {
        void testGetMovesLeft(void);
        void testGetMoveDirection(void);
        void testMoveFirstIf(void);
+       void testMoveSecondIf(void);
+       void testMoveThirdIf(void);
     private:
         Enemy * mTestObj;
 };
@@ -77,8 +81,30 @@ void TestEnemy::testMoveFirstIf(void) {
     mTestObj->setMovesLeft(10);
     mTestObj->setMoveDirection(4);
     mTestObj->move();
+    
     CPPUNIT_ASSERT(56 == mTestObj->getXPosition());
     CPPUNIT_ASSERT(8 == mTestObj->getMovesLeft());
+}
+
+void TestEnemy::testMoveSecondIf(void) {
+    mTestObj->setXPosition(54);
+    mTestObj->setMovesLeft(10);
+    mTestObj->setMoveDirection(5);
+    mTestObj->move();
+
+    CPPUNIT_ASSERT(52 == mTestObj->getXPosition());
+    CPPUNIT_ASSERT(8 == mTestObj->getMovesLeft());
+}
+
+void TestEnemy::testMoveThirdIf(void){
+    mTestObj->setXPosition(30);
+    mTestObj->setMoveDirection(9);
+    mTestObj->setMovesLeft(0);
+    mTestObj->move();
+
+    CPPUNIT_ASSERT(32 == mTestObj->getXPosition());
+    CPPUNIT_ASSERT(36 == mTestObj->getMovesLeft());
+    CPPUNIT_ASSERT(2 == mTestObj->getMoveDirection());
 }
 
 void TestEnemy::setUp(void) {

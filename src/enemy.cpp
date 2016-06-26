@@ -160,12 +160,10 @@ void Enemy::move() {
         // Nothing to do
     }
 
-
     if (getMovesLeft() <= 0) {
         //delay
         if (getMoveDirection() > 0) {
             setMoveDirection(getMoveDirection() - 1);
-            // descomentar em caso de erro return;
         } else {
             //gen  movesLeft and moveDirection
             setMovesLeft((rand() % 6) * 38);
