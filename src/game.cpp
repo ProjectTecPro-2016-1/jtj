@@ -13,6 +13,7 @@
 #include "enemy.hpp"
 #include "box.hpp"
 #include "scorescreen.hpp"
+#include "language.hpp"
 
 #define MAX_PLAYING_SOUNDS 10
 // The higher this is, the louder each currently playing sound will be.
@@ -242,6 +243,18 @@ int PlaySound(soundPointer sound) {
     }
 
     return 0;
+}
+
+// -------------------------------------------------------------
+// Function: init()
+// Description: Function that initialize atributtes on game and calls other function to     
+//              initalize graphic properties.
+// Return: void
+// -------------------------------------------------------------
+void Game::setLanguage(string language) {
+    this->language = new Language(language);
+
+    return;
 }
 
 // -------------------------------------------------------------

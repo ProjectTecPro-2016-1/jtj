@@ -4,8 +4,15 @@
 using namespace std;
 
 
-int main() {
+int main(int argc, char *argv[]) {
     Game game;
+
+    if (argc >= 2) {
+    	game.setLanguage(argv[1]);
+    } else {
+    	game.setLanguage("english");
+    }
+
     game.init();
     game.loop();
     game.shutdown();
