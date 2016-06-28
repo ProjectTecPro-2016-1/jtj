@@ -17,8 +17,8 @@ CC = g++
 
 # Flags, includes and libs
 CFLAGS = -W -Wall -pedantic -std=c++11 -MMD -g3
-INCLUDES = -Iinclude `sdl-config --cflags`
-LIBS = `sdl-config --libs` -lpthread -lSDL_image -lSDL_ttf
+INCLUDES = -Iinclude -I/usr/include/libxml2 `sdl-config --cflags`
+LIBS = `sdl-config --libs` -lpthread -lSDL_image -lSDL_ttf -lxml2
 
 # Game info
 NAME = jtj
