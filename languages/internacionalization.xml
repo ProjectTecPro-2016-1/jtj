@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding='ISO-8859-1' standalone='yes' ?>
+<Internationalization>
+    <Languages>
+        <Quantity>3</Quantity>
+        <DescriptionLanguages>
+            <Language id="1">Portuguese</Language>
+            <Language id="2">English</Language>
+            <Language id="3">Spanish</Language>
+        </DescriptionLanguages>
+    </Languages>
+    <Images>
+        <Image id="resources/backgroundgameover.png">
+            <English>resources/backgroundgameover.png</English>
+            <Portuguese>resources/portuguese/backgroundgameover.png</Portuguese>
+            <Spanish>resources/spanish/backgroundgameover.png</Spanish>
+        </Image>
+        <Image id="resources/backgroundoptionsscreen.png">
+            <English>resources/backgroundoptionsscreen.png</English>
+            <Portuguese>resources/portuguese/backgroundoptionsscreen.png</Portuguese>
+            <Spanish>resources/spanish/backgroundoptionsscreen.png</Spanish>
+        </Image>
+        <Image id="resources/backgroundpausescreen.png">
+            <English>resources/backgroundpausescreen.png</English>
+            <Portuguese>resources/portuguese/backgroundpausescreen.png</Portuguese>
+            <Spanish>resources/spanish/backgroundpausescreen.png</Spanish>
+        </Image>
+        <Image id="resources/backgroundwonscreen.png">
+            <English>resources/backgroundwonscreen.png</English>
+            <Portuguese>resources/portuguese/backgroundwonscreen.png</Portuguese>
+            <Spanish>resources/spanish/backgroundwonscreen.png</Spanish>
+        </Image>
+        <Image id="resources/mutebutton.png">
+            <English>resources/mutebutton.png</English>
+            <Portuguese>resources/portuguese/mutebutton.png</Portuguese>
+            <Spanish>resources/spanish/mutebutton.png</Spanish>
+        </Image>
+        <Image id="resources/loadbutton.png">
+            <English>resources/loadbutton.png</English>
+            <Portuguese>resources/portuguese/loadbutton.png</Portuguese>
+            <Spanish>resources/spanish/loadbutton.png</Spanish>
+        </Image>
+        <Image id="resources/backbutton.png">
+            <English>resources/backbutton.png</English>
+            <Portuguese>resources/portuguese/backbutton.png</Portuguese>
+            <Spanish>resources/spanish/backbutton.png</Spanish>
+        </Image>
+        <Image id="resources/startbutton.png">
+            <English>resources/startbutton.png</English>
+            <Portuguese>resources/portuguese/startbutton.png</Portuguese>
+            <Spanish>resources/spanish/startbutton.png</Spanish>
+        </Image>
+        <Image id="resources/optionsbutton.png">
+            <English>resources/optionsbutton.png</English>
+            <Portuguese>resources/portuguese/optionsbutton.png</Portuguese>
+            <Spanish>resources/spanish/optionsbutton.png</Spanish>
+        </Image>
+        <Image id="resources/exitbutton.png">
+            <English>resources/exitbutton.png</English>
+            <Portuguese>resources/portuguese/exitbutton.png</Portuguese>
+            <Spanish>resources/spanish/exitbutton.png</Spanish>
+        </Image>
+    </Images>
+    <Texts>
+    </Texts>
+</Internationalization>
