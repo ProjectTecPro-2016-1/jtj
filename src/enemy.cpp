@@ -275,42 +275,102 @@ void Enemy::throwBox(vector<Box*> boxes) {
     return;
 }
 
+// -------------------------------------------------------------
+// Function: setXPosition()
+// Description: Defines the enemy position in relation to the x axis. 
+// Parameters:
+//      int xPosition;         Enemy posistion on x axis.
+// Return: void
+// -------------------------------------------------------------
 void Enemy::setXPosition(int xPosition) {
     this->xPosition =  xPosition;
 }
 
+// -------------------------------------------------------------
+// Function: getXPosition()
+// Description: Return the enemy position in relation to the x axis. 
+// Return: int xPosition;   Enemy posistion on x axis.
+// -------------------------------------------------------------
 int Enemy::getXPosition() {
     return this->xPosition;
 }
 
+// -------------------------------------------------------------
+// Function: setYPosition()
+// Description: Defines the enemy position in relation to the y axis. 
+// Parameters:
+//      int yPosition;         Enemy posistion on y axis.
+// Return: void
+// -------------------------------------------------------------
 void Enemy::setYPosition(int yPosition) {
     this->yPosition =  yPosition;
 }
 
+// -------------------------------------------------------------
+// Function: getYPosition()
+// Description: Return the enemy position in relation to the y axis. 
+// Return: int yPosition;   Enemy posistion on y axis.
+// -------------------------------------------------------------
 int Enemy::getYPosition() {
     return this->yPosition;
 }
 
+// -------------------------------------------------------------
+// Function: setMovesLeft()
+// Description: Defines the enemy left position. 
+// Parameters:
+//      int movesLeft;      Value of left position of enemy.   
+// Return: void
+// -------------------------------------------------------------
 void Enemy::setMovesLeft(int movesLeft) {
     this->movesLeft =  movesLeft;
 }
 
+// -------------------------------------------------------------
+// Function: getMovesLeft()
+// Description: Return the enemy left position. 
+// Return:  int movesLeft;      Value of left position of enemy.   
+// -------------------------------------------------------------
 int Enemy::getMovesLeft() {
     return this->movesLeft;
 }
 
+// -------------------------------------------------------------
+// Function: setMoveDirection()
+// Description: Defines the direction of enemy. 
+// Parameters:
+//      int moveDirection;      Value of direction of enemy.   
+// Return: void
+// -------------------------------------------------------------
 void Enemy::setMoveDirection(int moveDirection) {
     this->moveDirection =  moveDirection;
 }
 
+// -------------------------------------------------------------
+// Function: getMoveDirection()
+// Description: Return the enemy direction. 
+// Return:  int movesDirection;      Value of direction of enemy.   
+// -------------------------------------------------------------
 int Enemy::getMoveDirection() {
     return this->moveDirection;
 }
 
+// -------------------------------------------------------------
+// Function: setFrame()
+// Description: Defines defines which frame the enemy is.
+// Parameters:
+//      int frame;      Frame value that enemy is.  
+// Return: void
+// -------------------------------------------------------------
 void Enemy::setFrame(int frame) {
     this->frame =  frame;
 }
 
+// -------------------------------------------------------------
+// Function: getFrame()
+// Description: Return which frame the enemy is.
+// Return:  int frame;      Frame value that enemy is.  
+// -------------------------------------------------------------
 int Enemy::getFrame() {
     return this->frame;
 }
