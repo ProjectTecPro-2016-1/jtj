@@ -195,6 +195,62 @@ Enemy::~Enemy() {
 }
 
 // -------------------------------------------------------------
+// Function: FirstMove()
+// Description: Make a movement according to the value of 
+//              MovesLeft and MoveDirection of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::FirstMove() {
+    setXPosition(getXPosition() + 2);
+    setMovesLeft(getMovesLeft() - 2);
+}
+
+// -------------------------------------------------------------
+// Function: SecondMove()
+// Description: Make a movement according to the value of 
+//              MovesLeft and MoveDirection of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::SecondMove() {
+    setXPosition(getXPosition() - 2);
+    setMovesLeft(getMovesLeft() - 2);
+}
+
+// -------------------------------------------------------------
+// Function: ThirdMove()
+// Description: Make a movement according to the position of 
+//              enemy on x axis.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::ThirdMove() {
+    setXPosition(getXPosition() + 2);
+    setMovesLeft(36);
+    setMoveDirection(2);
+}
+
+// -------------------------------------------------------------
+// Function: FourthMove()
+// Description: Make another movement according to value of
+//              position of enemy on x axis.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::FourthMove() {
+    setXPosition(getXPosition() - 2);
+    setMovesLeft(36);
+    setMoveDirection(1);
+}
+
+// -------------------------------------------------------------
+// Function: FifthMove()
+// Description: Make a movement according to value of
+//              MovesLeft of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::FifthMove() {
+    setMoveDirection(getMoveDirection() - 1);
+}
+
+// -------------------------------------------------------------
 // Function: move()
 // Description: Moves the enemy horizontally according to level dimensions.
 // Return: void
@@ -202,37 +258,29 @@ Enemy::~Enemy() {
 void Enemy::move() {
     // Change of position according to MovesLeft and MoveDirection
     if (getMovesLeft() > 0 && getMoveDirection() % 2 == 0) {
-        setXPosition(getXPosition() + 2);
-        setMovesLeft(getMovesLeft() - 2);
+        FirstMove();
     } else if(getMovesLeft() > 0 && getMoveDirection() % 2 == 1) {
-        setXPosition(getXPosition() - 2);
-        setMovesLeft(getMovesLeft() - 2);
+        SecondMove();    
     } else {
         // Nothing to do
     }
 
     if (getXPosition() <= Level::LEVEL_X_OFFSET) {
-        setXPosition(getXPosition() + 2);
-        setMovesLeft(36);
-        setMoveDirection(2);
+        ThirdMove();
     } else {
         // Nothing to do
     }
 
     if (getXPosition() >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
-        setXPosition(getXPosition() - 2);
-        setMovesLeft(36);
-        setMoveDirection(1);
+        FourthMove();
     } else {
         // Nothing to do
     }
 
-    // Fifth
     if (getMovesLeft() <= 0) {
         //delay
         if (getMoveDirection() > 0) {
-            setMoveDirection(getMoveDirection() - 1);
-        // Sixth
+            FifthMove();
         } else {
             //gen  movesLeft and moveDirection
             setMovesLeft((rand() % 6) * 38);

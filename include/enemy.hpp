@@ -30,6 +30,12 @@ class Enemy : public GameObject {
         void setFrame(int frame);
         int getFrame();
 
+        void FirstMove();
+        void SecondMove();
+        void ThirdMove();
+        void FourthMove();
+        void FifthMove();
+        
         SDL_Surface * enemy;     // Pointer for enemy graphic elements.
         void drawSelf(SDL_Surface * surface);
 
