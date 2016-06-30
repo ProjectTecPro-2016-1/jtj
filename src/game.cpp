@@ -13,35 +13,36 @@
 #include "enemy.hpp"
 #include "box.hpp"
 #include "scorescreen.hpp"
+#include "language.hpp"
 
 #define MAX_PLAYING_SOUNDS 10
 // The higher this is, the louder each currently playing sound will be.
-// However, high values may cause distortion if too many sounds are playing. 
+// However, high values may cause distortion if too many sounds are playing.
 // Experiment with this.
 #define VOLUME_PER_SOUND SDL_MIX_MAXVOLUME / 2
 
 using namespace std;
 
-// -------------------------------------------------------------  
+// -------------------------------------------------------------
 //  Struct: soundStruct -> soundT, * soundPointer
 //  Description: Structure for loaded sounds.
-//  Atributes:  
+//  Atributes:
 //      Uint8 * samples;        Raw PCM sample data.
 //      Uint32 length;          Size of sound data in bytes.
-// -------------------------------------------------------------  
+// -------------------------------------------------------------
 typedef struct soundStruct {
     Uint8 * samples;
     Uint32 length;
 } soundT, * soundPointer;
 
-// -------------------------------------------------------------  
-//  Struct: playingStruct -> playingT, * playingPointer  
-//  Description: Structure for a currently playing sound.  
-//  Atributes:  
+// -------------------------------------------------------------
+//  Struct: playingStruct -> playingT, * playingPointer
+//  Description: Structure for a currently playing sound.
+//  Atributes:
 //      int active;                 1 if this sound should be played.
 //      soundPointer sound;         Sound data to play.
-//      Uint32 position;            Current position in the sound buffer. 
-// -------------------------------------------------------------  
+//      Uint32 position;            Current position in the sound buffer.
+// -------------------------------------------------------------
 typedef struct playingStruct {
     int active;
     soundPointer sound;
@@ -63,7 +64,7 @@ soundT level_3Sound;
 //      void * userData;
 //      Uint8 * audio;          Sound that playing.
 //      int length;             Length of sound playing.
-// Atributes:  
+// Atributes:
 //      Uint8 * soundBuffer;    Buffer of new sound.
 //      Uint32 soundLength;     Length of new sound.
 // Return: void
@@ -120,18 +121,18 @@ void AudioCallback(void * userData, Uint8 * audio, int length) {
 
 // -------------------------------------------------------------
 // Function: LoadAndConvertSound()
-// Description: This function loads a sound with SDL_LoadWAV and converts it to the specified 
-//              sample format. 
+// Description: This function loads a sound with SDL_LoadWAV and converts it to the specified
+//              sample format.
 // Parameters:
 //      char * filename;            Filename of the sound that will be load.
-//      SDL_AudioSpec * spec;       
+//      SDL_AudioSpec * spec;
 //      soundPointer sound;         Pointer to control the sound in play at moment.
-//  Atributes:  
+//  Atributes:
 //      SDL_AudioCVT convert;       Audio format conversion structure.
 //      SDL_AudioSpec loaded;       Format of the loaded data.
 //      Uint8 * newBuffer;          New buffer to keep a sound.
 // Return: void
-// Observation: Returns 0 on success and 1 on failure. 
+// Observation: Returns 0 on success and 1 on failure.
 // -------------------------------------------------------------
 int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer sound) {
     SDL_AudioCVT convert;
@@ -142,17 +143,17 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
     if (SDL_LoadWAV(filename, &loaded, &sound->samples, &sound->length) != NULL) {
         // Build a conversion structure for converting the samples.
         // This structure contains the data SDL needs to quickly
-        // convert between sample formats. 
+        // convert between sample formats.
         int result_SDL_BuildAudioCVT = 0;
-        result_SDL_BuildAudioCVT = SDL_BuildAudioCVT(&convert, loaded.format, loaded.channels, 
-                                                     loaded.freq, spec->format, spec->channels, 
+        result_SDL_BuildAudioCVT = SDL_BuildAudioCVT(&convert, loaded.format, loaded.channels,
+                                                     loaded.freq, spec->format, spec->channels,
                                                      spec->freq);
 
         if (result_SDL_BuildAudioCVT >= 0) {
             // Since converting PCM samples can result in more data
             // (for instance, converting 8-bit mono to 16-bit stereo),
             // we need to allocate a new buffer for the converted data.
-            // Fortunately SDL_BuildAudioCVT supplied the necessary information. 
+            // Fortunately SDL_BuildAudioCVT supplied the necessary information.
             convert.len = sound->length;
 
             Uint8 * newBuffer = (Uint8 *) malloc(convert.len * convert.len_mult);
@@ -165,7 +166,7 @@ int LoadAndConvertSound(char * filename, SDL_AudioSpec * spec, soundPointer soun
 
                 int result_SDL_ConvertAudio = 0;
                 result_SDL_ConvertAudio = SDL_ConvertAudio(&convert);
-                
+
                 if (result_SDL_ConvertAudio >= 0) {
                     // Swap the converted data for the original.
                     SDL_FreeWAV(sound->samples);
@@ -209,8 +210,8 @@ void ClearPlayingSounds() {
 
 // -------------------------------------------------------------
 // Function: LoadAndConvertSound()
-// Description: Adds a sound to the list of currently playing sounds. AudioCallback will start 
-//              mixing this sound into the stream the next time it is called 
+// Description: Adds a sound to the list of currently playing sounds. AudioCallback will start
+//              mixing this sound into the stream the next time it is called
 //              (probably in a fraction of a second).
 // Parameters:
 //      soundPointer sound;     Sound that will play in some level.
@@ -230,7 +231,7 @@ int PlaySound(soundPointer sound) {
 
     if (i != MAX_PLAYING_SOUNDS) {
         // The 'playing' structures are accessed by the audio callback,
-        // so we should obtain a lock before we access them. 
+        // so we should obtain a lock before we access them.
         SDL_LockAudio();
         playing[i].active = 1;
         playing[i].sound = sound;
@@ -246,7 +247,19 @@ int PlaySound(soundPointer sound) {
 
 // -------------------------------------------------------------
 // Function: init()
-// Description: Function that initialize atributtes on game and calls other function to     
+// Description: Function that initialize atributtes on game and calls other function to
+//              initalize graphic properties.
+// Return: void
+// -------------------------------------------------------------
+void Game::setLanguage(string language) {
+    this->language = new Language(language);
+
+    return;
+}
+
+// -------------------------------------------------------------
+// Function: init()
+// Description: Function that initialize atributtes on game and calls other function to
 //              initalize graphic properties.
 // Return: void
 // -------------------------------------------------------------
@@ -271,7 +284,7 @@ void Game::init() {
 
 // -------------------------------------------------------------
 // Function: loop()
-// Description: On game operation generate a cycle. To keeps control of execution inside a 
+// Description: On game operation generate a cycle. To keeps control of execution inside a
 //              function on game.
 // Return: void
 // -------------------------------------------------------------
@@ -303,7 +316,7 @@ void Game::loop() {
 
 // -------------------------------------------------------------
 // Function: shutdown()
-// Description: Clean graphic and audio components, ending the 
+// Description: Clean graphic and audio components, ending the
 //              execution of the game.
 // Return: void
 // -------------------------------------------------------------
@@ -337,18 +350,18 @@ void Game::initGUI() {
     SDL_WM_SetCaption("Jack, The Janitor", NULL);
     SDL_WM_SetIcon(IMG_Load("resources/Logo_WareHouse_64x64.png"), NULL);
 
-    this->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, 
+    this->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
                                     SDL_HWSURFACE | SDL_DOUBLEBUF);
-    assert(this->screen != NULL && 
+    assert(this->screen != NULL &&
            "Problem to set a video mode. Can't show the screen of the game.");
-        
+
     return;
 }
 
 // -------------------------------------------------------------
 // Function: closeGUI()
 // Description: Needed to center the completion of audio and image
-//              plugins from SDL libraries. 
+//              plugins from SDL libraries.
 // Return: void
 // -------------------------------------------------------------
 void Game::closeGUI() {
@@ -365,7 +378,7 @@ void Game::closeGUI() {
 // Attributes:
 //      bool playButton;        Contains the information if the button to start a new
 //                              game was clicked or not.
-//      bool quitButton;        Contains the information if the button to exit was 
+//      bool quitButton;        Contains the information if the button to exit was
 //                              clicked or not.
 // Return: void
 // -------------------------------------------------------------
@@ -430,7 +443,7 @@ void Game::wonGameScreen() {
 
             int result_SDL_Flip = 0;
             result_SDL_Flip = SDL_Flip(this->screen);
-            assert(result_SDL_Flip >= 0 && 
+            assert(result_SDL_Flip >= 0 &&
                    "Fail to call SDL_Flip for game won screen, and impossible to continue the game.");
 
             if (quitButton) {
@@ -440,7 +453,7 @@ void Game::wonGameScreen() {
                 // Nothing to do
             }
         }
-        
+
         int result_SDL_FillRect = 0;
         result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
         assert(result_SDL_FillRect >= 0 && "Problem to show a rect of game won screen.");
@@ -520,7 +533,7 @@ void Game::showOptionsScreen() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && 
+        assert(result_SDL_Flip >= 0 &&
                "Fail to call SDL_Flip for option screen, and impossible to continue the game.");
 
         if (muteButton == true) {
@@ -587,11 +600,11 @@ void Game::gameOverScreenDraw() {
 
 // -------------------------------------------------------------
 // Function: gameOverScreenLoop()
-// Description: On GameOver screen generates a loop to wait an action of the player. 
+// Description: On GameOver screen generates a loop to wait an action of the player.
 // Attributes:
-//      bool playButton;        Contains information about Start Game Button it was clicked or 
+//      bool playButton;        Contains information about Start Game Button it was clicked or
 //                              not.
-//      bool quitButton;        Contains information about Exit Game Button it was clicked or 
+//      bool quitButton;        Contains information about Exit Game Button it was clicked or
 //                              not.
 //      bool optionsButton;     Contains information about Options Game Button it was clicked or
 //                              not.
@@ -640,12 +653,12 @@ void Game::gameOverScreenLoop() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && 
+        assert(result_SDL_Flip >= 0 &&
                "Fail to call SDL_Flip for gameover screen, and impossible to continue the game.");
 
     } while (playButton == false && optionsButton == false && quitButton == false);
 
-    
+
     int result_SDL_FillRect = 0;
     result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     assert(result_SDL_FillRect >= 0 && "Problem to show a rect of option screen.");
@@ -689,11 +702,11 @@ void Game::pauseScreenDraw() {
 
 // -------------------------------------------------------------
 // Function: pauseScreenLoop()
-// Description: Genarates on Pause Screen a loop while waiting an action of the player. 
-// Attributes: 
-//      bool playButton;        Contains information about Return Game Button it was clicked or 
+// Description: Genarates on Pause Screen a loop while waiting an action of the player.
+// Attributes:
+//      bool playButton;        Contains information about Return Game Button it was clicked or
 //                              not.
-//      bool quitButton;        Contains information about Exit Game Button it was clicked or 
+//      bool quitButton;        Contains information about Exit Game Button it was clicked or
 //                              not.
 //      bool optionsButton;     Contains information about Options Game Button
 //                              it was clicked or not.
@@ -750,7 +763,7 @@ void Game::pauseScreenLoop() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && 
+        assert(result_SDL_Flip >= 0 &&
                "Fail to call SDL_Flip for pause screen, and impossible to continue the game.");
 
         if (playButton == true) {
@@ -794,7 +807,7 @@ void Game::initializingScreen() {
     SDL_PauseAudio(0);
 
     PlaySound(&initScreenSound);
-    
+
     initScreenDraw();
     initScreenLoop();
 
@@ -828,9 +841,9 @@ void Game::initScreenDraw() {
 // Function: initScreenLoop()
 // Description: Generates on Init Screen a loop while waiting an action from user.
 // Attributes:
-//      bool playButton;        Contains information about Start New Game Button it was cliked 
+//      bool playButton;        Contains information about Start New Game Button it was cliked
 //                              or not.
-//      bool quitButton;        Contains information about End Game Button it was clicked or 
+//      bool quitButton;        Contains information about End Game Button it was clicked or
 //                              not.
 //      bool optionsButton;     Contains information about Options Menu Button it was clicked or
 //                              not.
@@ -889,7 +902,7 @@ void Game::initScreenLoop() {
 
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
-        assert(result_SDL_Flip >= 0 && 
+        assert(result_SDL_Flip >= 0 &&
                "Fail to call SDL_Flip for initial screen, and impossible to continue the game.");
 
         if (quitButton) {
@@ -926,7 +939,7 @@ void Game::loadCommonResources() {
 
     // Open the audio device. The sound driver will try to give us
     // the requested format, but it might not succeed. The 'obtained'
-    // structure will be filled in with the actual format data. 
+    // structure will be filled in with the actual format data.
     desired.freq = 44100;               // desired output sample rate
     desired.format = AUDIO_S16;         // request signed 16-bit samples
     desired.samples = 4096;             // this is more or less discretionary
@@ -941,18 +954,18 @@ void Game::loadCommonResources() {
         char level_1SoundName[26] = "resources/level_1.wav";
         char level_2SoundName[26] = "resources/level_2.wav";
         char level_3SoundName[26] = "resources/level_3.wav";
-        
+
         int result_LoadAndConverSoundInitScreen = 0;
-        result_LoadAndConverSoundInitScreen = LoadAndConvertSound(initScreenSoundName, &obtained, 
+        result_LoadAndConverSoundInitScreen = LoadAndConvertSound(initScreenSoundName, &obtained,
                                                                   &initScreenSound);
         int result_LoadAndConverSoundLevel1 = 0;
-        result_LoadAndConverSoundLevel1 = LoadAndConvertSound(level_1SoundName, &obtained, 
+        result_LoadAndConverSoundLevel1 = LoadAndConvertSound(level_1SoundName, &obtained,
                                                               &level_1Sound);
         int result_LoadAndConverSoundLevel2 = 0;
-        result_LoadAndConverSoundLevel2 = LoadAndConvertSound(level_2SoundName, &obtained, 
+        result_LoadAndConverSoundLevel2 = LoadAndConvertSound(level_2SoundName, &obtained,
                                                               &level_2Sound);
         int result_LoadAndConverSoundLevel3 = 0;
-        result_LoadAndConverSoundLevel3 = LoadAndConvertSound(level_3SoundName, &obtained, 
+        result_LoadAndConverSoundLevel3 = LoadAndConvertSound(level_3SoundName, &obtained,
                                                               &level_3Sound);
 
         bool validateLoadAndConvertSound = true;
@@ -1010,8 +1023,8 @@ void Game::saveProfile() {
 
 // -------------------------------------------------------------
 // Function: loadLevel()
-// Description: All informations about user level is loaded, like each enemy image, Jack image, 
-//              during execution quantity of boxes that will fall, audios and score. 
+// Description: All informations about user level is loaded, like each enemy image, Jack image,
+//              during execution quantity of boxes that will fall, audios and score.
 // Attributes:
 //      string level_1_file;        Background filename from level 1.
 //      string level_2_file;        Background filename from level 2.
@@ -1023,11 +1036,11 @@ void Game::saveProfile() {
 //      string currentLevelSpec;    Filename that contains specifications about acutal level.
 //      ifstream levelFile;         Controls file of level specifications.
 //      string numberOfLevel;       It contains the number of level read in levelFile .
-//      string numberOfBoxes;       Read on levelFile, contains the number of boxes that 
+//      string numberOfBoxes;       Read on levelFile, contains the number of boxes that
 //                                  level will  have.
 //      string numberOfEnemies;     Read on levelFile, contains the number of enemies that
 //                                  level will have.
-//      string maxLines;            Read on levelFile, contains the necessary number of lines 
+//      string maxLines;            Read on levelFile, contains the necessary number of lines
 //                                  filled with boxes pass the level.
 //      int nrBoxes;                Contais a integer number stemmed from numberOfBoxes variable.
 //      int nrEnemies;              Contais a integer value stemmed from numberOfEnemies varible.
@@ -1045,7 +1058,7 @@ void Game::loadLevel() {
     string level_3_spec = "resources/level_3";
     string currentLevelFile;
     string currentLevelSpec;
-    
+
     if (this->actualLevel > 3) {
         this->actualLevel = 1;
     } else {
@@ -1090,13 +1103,13 @@ void Game::loadLevel() {
     getline(levelFile, maxLines);
     levelFile.close();
 
-    assert(numberOfLevel != "" && 
+    assert(numberOfLevel != "" &&
           "Impossible to read the number of level, can't continue the game.");
-    assert(numberOfBoxes != "" && 
+    assert(numberOfBoxes != "" &&
           "Impossible to read the number of box in level, can't continue the game.");
-    assert(numberOfEnemies != "" && 
+    assert(numberOfEnemies != "" &&
           "Impossible to read the number of enemies in the level, can't continue the game.");
-    assert(maxLines != "" && 
+    assert(maxLines != "" &&
           "Impossible to read the number of lines to completo the level, can't continue the game.");
 
     int nrBoxes = atoi(numberOfBoxes.c_str());
@@ -1226,7 +1239,7 @@ void Game::draw() {
 
         level->draw(this->screen);
         score->drawSelf(this->screen);
-        
+
         int result_SDL_Flip = 0;
         result_SDL_Flip = SDL_Flip(this->screen);
         assert(result_SDL_Flip >= 0 && "Problem to call the SDL_Flip function. Finally the game.");
@@ -1262,8 +1275,8 @@ void Game::runAI() {
 //      int boxMobileBeforeJack;        Saves the first box position before Jack.
 //      int boxMobileAfterJack;         Saves the first box position after Jack.
 //      int quantidadeDeCaixas;         Contains information about quantity of boxes on base line.
-//      Box * boxToDelete;              Controls which boxes will be deleted when tha base line 
-//                                      was complete with 12 boxes. 
+//      Box * boxToDelete;              Controls which boxes will be deleted when tha base line
+//                                      was complete with 12 boxes.
 //      Box * boxTransition;            Controls the box will be moved to the left.
 //      Box * boxTransitionRight;       Controls the box will be moved to the right.
 // Return: void
@@ -1288,10 +1301,10 @@ void Game::runPhysics() {
     }
 
     int boxMobileBeforeJack = -1;
-    
+
     int xInitialLevel = Level::LEVEL_X_OFFSET;
     int xRangeLevel = Level::LEVEL_WIDTH + Level::LEVEL_X_OFFSET;
-    
+
     int jackPositionX = (jack->getXPosition() - Level::LEVEL_X_OFFSET) / 38;
     int jackPositionY = (jack->getYPosition() - Level::LEVEL_Y_OFFSET + Jack::JACK_HEIGHT + 19) / 38;
 
@@ -1364,9 +1377,9 @@ void Game::runPhysics() {
         score->increaseScore(1000);
         score->popLine();
         linesDeleted++;
-        if (jack->jumping != true) {
-            jack->verticalSpeed = -10;
-            jack->jumping = true;
+        if (jack->getJumping() != true) {
+            jack->setVerticalSpeed(-10);
+            jack->setJumping(true);
         } else {
             // Nothing to do
         }
@@ -1403,13 +1416,13 @@ void Game::runPhysics() {
 
     if (boxMobileBeforeJack != -1) {
         if (jack->getXPosition() == (((boxMobileBeforeJack + 1) * Box::BOX_WIDTH) + Level::LEVEL_X_OFFSET)) {
-            if (jack->strength < 10){
-                jack->strength++;
+            if (jack->getStrength() < 10){
+                jack->setStrength(jack->getStrength() + 1);
             } else {
                 // Nothing to do
             }
 
-            if ((jack->strength >= 10) && (jack->speed < 0)) {
+            if ((jack->getStrength() >= 10) && (jack->getSpeed() < 0)) {
                 Box * boxTransition = level->grid[boxMobileBeforeJack].back();
                 boxTransition->x_position -= Box::BOX_WIDTH;
                 level->grid[boxMobileBeforeJack].pop_back();
@@ -1427,12 +1440,12 @@ void Game::runPhysics() {
 
     if (boxMobileAfterJack != -1) {
         if ((jack->getXPosition() + Jack::JACK_WIDTH) == (xRangeLevel + xInitialLevel)) {
-            if (jack->strength < 10){
-                jack->strength++;
+            if (jack->getStrength() < 10){
+                jack->setStrength(jack->getStrength() + 1);
             } else {
                 // Nothing to do
             }
-            if ((jack->strength >= 10) && (jack->speed > 0)) {
+            if ((jack->getStrength() >= 10) && (jack->getSpeed() > 0)) {
                 Box * boxTransitionRight = level->grid[boxMobileAfterJack].back();
                 boxTransitionRight->x_position += Box::BOX_WIDTH;
                 level->grid[boxMobileAfterJack].pop_back();
@@ -1448,12 +1461,12 @@ void Game::runPhysics() {
         // Nothing to do
     }
 
-    if (jack->speed == 0){
-            jack->strength = 0;
+    if (jack->getSpeed() == 0){
+            jack->setStrength(0);
     } else {
         // Nothing to do
     }
-    
+
     jack->move(xInitialLevel, xRangeLevel, Level::LEVEL_Y_OFFSET, Level::LEVEL_HEIGHT);
     jack->jump(level);
     return;
@@ -1483,8 +1496,8 @@ void Game::sendNetworkData() {
 
 // -------------------------------------------------------------
 // Function: handleEventMouseButtonUp()
-// Description: Performs the action of the click of a mouse button. After pressing the button, 
-//              release the button.  
+// Description: Performs the action of the click of a mouse button. After pressing the button,
+//              release the button.
 // Parameters:
 //      SDL_Event & event;      Contains information about some action on mouse made by user.
 // Return: void
@@ -1541,13 +1554,13 @@ void Game::handleEventKeyDown(SDL_Event & event) {
         case (SDLK_w):
         case (SDLK_UP):
         case (SDLK_SPACE):
-            if(jack->jumping == true) {
+            if(jack->getJumping() == true) {
                 break;
             } else {
                 // Nothing to do
             }
-            jack->verticalSpeed = -10;
-            jack->jumping = true;
+            jack->setVerticalSpeed(-10);
+            jack->setJumping(true);
             break;
 
         case (SDLK_a):
@@ -1585,8 +1598,8 @@ void Game::handleEventKeyDown(SDL_Event & event) {
 
 // -------------------------------------------------------------
 // Function: handleEventKeyUp()
-// Description: Performs the action of click in any key on the keyboard. After pressing the button, 
-//              release the button.  
+// Description: Performs the action of click in any key on the keyboard. After pressing the button,
+//              release the button.
 // Parameters:
 //      SDL_Event & event;      Contains information about some action made by user.
 // Return: void
@@ -1693,7 +1706,7 @@ int Game::checkIfSkip() {
 bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
 
     for (unsigned int i = 0; i < boxes.size(); ++i) {
-        
+
         int jackRight = jack->getXPosition() + Box::BOX_WIDTH;
         int jackLeft = jack->getXPosition();
         int jackTop = jack->getYPosition();
@@ -1703,13 +1716,13 @@ bool Game::checkColision (Jack * jack, std::vector<Box*> boxes) {
         int boxTop = boxes[i]->getPositionY();
         int boxBottom = boxes[i]->getPositionY() + Box::BOX_HEIGHT;
 
-        if ((jackRight == boxRight && jackLeft == boxLeft) && 
+        if ((jackRight == boxRight && jackLeft == boxLeft) &&
             (jackTop <= boxBottom && boxBottom < jackBottom)) {
             return true;
         } else {
-            if (((boxLeft < jackLeft && jackLeft < boxRight) && 
+            if (((boxLeft < jackLeft && jackLeft < boxRight) &&
                  (boxTop < jackTop && jackTop < boxBottom)) ||
-                ((jackLeft < boxLeft && boxLeft < jackRight) && 
+                ((jackLeft < boxLeft && boxLeft < jackRight) &&
                  (jackTop < boxTop && boxTop < jackBottom))) {
                 return true;
             } else {

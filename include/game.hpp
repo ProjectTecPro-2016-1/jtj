@@ -16,9 +16,11 @@
 #include "gameoverscreen.hpp"
 #include "scorescreen.hpp"
 #include "optionsscreen.hpp"
+#include "language.hpp"
 
 class Game {
     public:
+        void setLanguage(string language);
         void init();
         void loop();
         void shutdown();
@@ -76,6 +78,7 @@ class Game {
 
         SDL_Surface * screen;                  // Main Screen that will show graphic elements.
         SDL_Event event;                       // Keeps user action if exists.
+        Language * language;                   // Language of texts in the game.
         Jack * jack;                           // Pointer that keeps informationa bout Jack.
         Level * level;                         // Keep informations about actual level.
         Timer frameTime;                       // Controls loading and time of frames.
