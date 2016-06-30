@@ -174,7 +174,7 @@ Enemy::Enemy(string filename) {
     this->enemy = SDLUtil::loadImage(filename);
     setXPosition(Level::LEVEL_X_OFFSET + 38);
     setYPosition(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET -
-                        Enemy::ENEMY_HEIGHT - 38 * 8 - 1);
+                    Enemy::ENEMY_HEIGHT - 38 * 8 - 1);
     setMovesLeft(0);
     setMoveDirection(0);
     srand((unsigned)time(0));

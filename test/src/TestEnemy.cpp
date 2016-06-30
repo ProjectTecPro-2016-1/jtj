@@ -32,6 +32,11 @@ class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST(testMoveSecondIf);
     CPPUNIT_TEST(testMoveThirdIf);
     CPPUNIT_TEST(testMoveFourthIf);
+    CPPUNIT_TEST(testStopEnemy);
+    CPPUNIT_TEST(testStartingtRightEnemyMovement);
+    CPPUNIT_TEST(testContinuingRightEnemyMovement);
+    CPPUNIT_TEST(testFinishingRightEnemyMovement);
+    CPPUNIT_TEST(testFinishingLeftEnemyMovement);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -48,6 +53,11 @@ class TestEnemy : public CppUnit::TestFixture {
         void testMoveSecondIf(void);
         void testMoveThirdIf(void);
         void testMoveFourthIf(void);
+        void testStopEnemy(void);
+        void testStartingtRightEnemyMovement(void);
+        void testContinuingRightEnemyMovement(void);
+        void testFinishingRightEnemyMovement(void);
+        void testFinishingLeftEnemyMovement(void);
     private:
         Enemy * mTestObj;
 };
@@ -120,6 +130,71 @@ void TestEnemy::testMoveFourthIf(void){
     CPPUNIT_ASSERT(1 == mTestObj->getMoveDirection());
 }
 
+void TestEnemy::testStopEnemy(void){
+    mTestObj->spriteClips[0].x = 0;
+    mTestObj->spriteClips[0].y = 0;
+    mTestObj->spriteClips[0].h = 0;
+    mTestObj->spriteClips[0].w = 0;
+    mTestObj->setStopEnemy();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[0].x == 0);
+    CPPUNIT_ASSERT(mTestObj->spriteClips[0].y == 57);   // Value of ENEMY_HEIGHT
+    CPPUNIT_ASSERT(mTestObj->spriteClips[0].h == 57);   // Value of ENEMY_HEIGHT
+    CPPUNIT_ASSERT(mTestObj->spriteClips[0].w == 38);   // Value of ENEMY_WIDTH
+}
+
+void TestEnemy::testStartingtRightEnemyMovement(void){
+    mTestObj->spriteClips[1].x = 1;    
+    mTestObj->spriteClips[1].y = 1;    
+    mTestObj->spriteClips[1].w = 1;    
+    mTestObj->spriteClips[1].h = 1;    
+    mTestObj->setStartingtRightEnemyMovement();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[1].x == 38);    // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[1].y ==57);    // Value of ENEMY_HEIGHT
+    CPPUNIT_ASSERT(mTestObj->spriteClips[1].w == 38);    // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[1].h == 57);    // Value of ENEMY_HEIGHT
+}
+
+void TestEnemy::testContinuingRightEnemyMovement(void){
+    mTestObj->spriteClips[2].x = 2;
+    mTestObj->spriteClips[2].y = 2;
+    mTestObj->spriteClips[2].w = 2;
+    mTestObj->spriteClips[2].h = 2;
+    mTestObj->setContinuingRightEnemyMovement();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[2].x == 38*2);  // Value of ENEMY_WIDTH * 2
+    CPPUNIT_ASSERT(mTestObj->spriteClips[2].y == 57);    // Value of ENEMY_HEIGHT
+    CPPUNIT_ASSERT(mTestObj->spriteClips[2].w == 38);    // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[2].h == 57);    // Value of ENEMY_HEIGHT
+}
+
+void TestEnemy::testFinishingRightEnemyMovement(void){
+    mTestObj->spriteClips[3].x = 3;
+    mTestObj->spriteClips[3].y = 3;
+    mTestObj->spriteClips[3].w = 3;
+    mTestObj->spriteClips[3].h = 3;
+    mTestObj->setFinishingRightEnemyMovement();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[3].x == 38*3);  // Value of ENEMY_WIDTH * 3
+    CPPUNIT_ASSERT(mTestObj->spriteClips[3].y == 57);    // Value of ENEMY_HEIGHT
+    CPPUNIT_ASSERT(mTestObj->spriteClips[3].w == 38);    // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[3].h == 57);    // Value of ENEMY_HEIGHT
+}
+
+void TestEnemy::testFinishingLeftEnemyMovement(void) {
+    mTestObj->spriteClips[4].x = 4;
+    mTestObj->spriteClips[4].y = 4;
+    mTestObj->spriteClips[4].w = 4;
+    mTestObj->spriteClips[4].h = 4;     
+    mTestObj->setFinishingLeftEnemyMovement();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[4].x == 38);    // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[4].y == 0);
+    CPPUNIT_ASSERT(mTestObj->spriteClips[4].w == 38);    // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[4].h == 57);    // Value of ENEMY_HEIGHT  
+}
+
 void TestEnemy::setUp(void) {
     mTestObj = new Enemy("../resources/enemy_sprites.png");
 }
@@ -129,16 +204,6 @@ void TestEnemy::tearDown(void) {
 }
 
 /*
-mTestObj->spriteClips[0].x = 0;
-mTestObj->spriteClips[0].y = 0;
-mTestObj->spriteClips[0].h = 0;
-mTestObj->spriteClips[0].w = 0;
-mTestObj->setStpriteEnemyMovementLeft();
-
-CPPUNIT_ASSERT(mTestObj->spriteClips[0].x == 0);
-CPPUNIT_ASSERT(mTestObj->spriteClips[0].y == ENEMY_HEIGHT);
-CPPUNIT_ASSERT(mTestObj->spriteClips[0].h == ENEMY_HEIGHT);
-CPPUNIT_ASSERT(mTestObj->spriteClips[0].w == ENEMY_WIDTH);
 
 */
 
