@@ -37,6 +37,9 @@ class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST(testContinuingRightEnemyMovement);
     CPPUNIT_TEST(testFinishingRightEnemyMovement);
     CPPUNIT_TEST(testFinishingLeftEnemyMovement);
+    CPPUNIT_TEST(testContinuingLeftEnemyMovement);
+    CPPUNIT_TEST(testStartingtLeftEnemyMovement);
+    CPPUNIT_TEST(testDropBox);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -58,6 +61,9 @@ class TestEnemy : public CppUnit::TestFixture {
         void testContinuingRightEnemyMovement(void);
         void testFinishingRightEnemyMovement(void);
         void testFinishingLeftEnemyMovement(void);
+        void testContinuingLeftEnemyMovement(void);
+        void testStartingtLeftEnemyMovement(void);
+        void testDropBox(void);
     private:
         Enemy * mTestObj;
 };
@@ -195,6 +201,45 @@ void TestEnemy::testFinishingLeftEnemyMovement(void) {
     CPPUNIT_ASSERT(mTestObj->spriteClips[4].h == 57);    // Value of ENEMY_HEIGHT  
 }
 
+void TestEnemy::testContinuingLeftEnemyMovement(void) {
+    mTestObj->spriteClips[5].x = 5;
+    mTestObj->spriteClips[5].y = 5;
+    mTestObj->spriteClips[5].w = 5;
+    mTestObj->spriteClips[5].h = 5;    
+    mTestObj->setContinuingLeftEnemyMovement();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[5].x == 38*2); // Value of ENEMY_WIDTH * 2
+    CPPUNIT_ASSERT(mTestObj->spriteClips[5].y == 0);
+    CPPUNIT_ASSERT(mTestObj->spriteClips[5].w == 38);   // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[5].h == 57);   // Value of ENEMY_HEIGHT  
+}
+
+void TestEnemy::testStartingtLeftEnemyMovement(void) {
+    mTestObj->spriteClips[6].x = 6;
+    mTestObj->spriteClips[6].y = 6;
+    mTestObj->spriteClips[6].w = 6;
+    mTestObj->spriteClips[6].h = 6;
+    mTestObj->setStartingtLeftEnemyMovement();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[6].x == 38*3); // Value of ENEMY_WIDTH * 3
+    CPPUNIT_ASSERT(mTestObj->spriteClips[6].y == 0);
+    CPPUNIT_ASSERT(mTestObj->spriteClips[6].w == 38);   // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[6].h == 57);  // Value of ENEMY_HEIGHT
+}
+
+void TestEnemy::testDropBox(void) {    
+    mTestObj->spriteClips[7].x = 7; 
+    mTestObj->spriteClips[7].y = 7;  
+    mTestObj->spriteClips[7].w = 7;   
+    mTestObj->spriteClips[7].h = 7;  
+    mTestObj->setDropBox();
+
+    CPPUNIT_ASSERT(mTestObj->spriteClips[7].x == 38*4); // Value of ENEMY_WIDTH * 4
+    CPPUNIT_ASSERT(mTestObj->spriteClips[7].y == 57);   // Value of ENEMY_HEIGHT
+    CPPUNIT_ASSERT(mTestObj->spriteClips[7].w == 38);   // Value of ENEMY_WIDTH
+    CPPUNIT_ASSERT(mTestObj->spriteClips[7].h == 57);   // Value of ENEMY_HEIGHT
+}
+
 void TestEnemy::setUp(void) {
     mTestObj = new Enemy("../resources/enemy_sprites.png");
 }
@@ -202,10 +247,6 @@ void TestEnemy::setUp(void) {
 void TestEnemy::tearDown(void) {
     delete mTestObj;
 }
-
-/*
-
-*/
 
 //-----------------------------------------------------------------------------
 
