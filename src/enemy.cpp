@@ -51,6 +51,127 @@ void Enemy::drawSelf(SDL_Surface * surface) {
 }
 
 // -------------------------------------------------------------
+// Function: setSpriteClips()
+// Description: Initializes the dimensions of each picture frame and each enemy moviment.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setSpriteClips() {
+    setStopEnemy();
+    setStartingtRightEnemyMovement();
+    setContinuingRightEnemyMovement();
+    setFinishingRightEnemyMovement();
+    setFinishingLeftEnemyMovement();
+    setContinuingLeftEnemyMovement();
+    setStartingtLeftEnemyMovement();
+    setDropBox();
+}
+
+// -------------------------------------------------------------
+// Function: Enemy()
+// Description: Enemy class builder where the initializations of the variables happen.
+// Parameters:
+//		string fileName;  		Enemy landscape file name.
+// Return: void
+// -------------------------------------------------------------
+Enemy::Enemy(string filename) {
+    this->enemy = SDLUtil::loadImage(filename);
+    setXPosition(Level::LEVEL_X_OFFSET + 38);
+    setYPosition(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET -
+                    Enemy::ENEMY_HEIGHT - 38 * 8 - 1);
+    setMovesLeft(0);
+    setMoveDirection(0);
+    srand((unsigned)time(0));
+    setFrame(0);
+}
+
+// -------------------------------------------------------------
+// Function: ~Enemy()
+// Description: Enemy class destructor where the landscape image files free themselves.
+// Return: void
+// -------------------------------------------------------------
+Enemy::~Enemy() {
+    if (enemy != NULL) {
+        SDL_FreeSurface(enemy);
+    } else {
+        // Nothing to do
+    }
+}
+
+// -------------------------------------------------------------
+// Function: move()
+// Description: Moves the enemy horizontally according to level dimensions.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::move() {
+    // Change of position according to MovesLeft and MoveDirection
+    if (getMovesLeft() > 0 && getMoveDirection() % 2 == 0) {
+        FirstMove();
+    } else if(getMovesLeft() > 0 && getMoveDirection() % 2 == 1) {
+        SecondMove();    
+    } else {
+        // Nothing to do
+    }
+
+    if (getXPosition() <= Level::LEVEL_X_OFFSET) {
+        ThirdMove();
+    } else {
+        // Nothing to do
+    }
+
+    if (getXPosition() >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
+        FourthMove();
+    } else {
+        // Nothing to do
+    }
+
+    if (getMovesLeft() <= 0) {
+        //delay
+        if (getMoveDirection() > 0) {
+            FifthMove();
+        } else {
+            //gen  movesLeft and moveDirection
+            setMovesLeft((rand() % 6) * 38);
+            setMoveDirection(rand() % 120);
+        }
+    } else {
+        // Nothing to do
+    }
+
+    return;
+}
+
+// -------------------------------------------------------------
+// Function: throwBox()
+// Description: Controls the enemies freedom box when the right position is achieved.
+// Parameters:
+//		int vector<Box*> boxes;			Vector that contains boxes it´s positions.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::throwBox(vector<Box*> boxes) {
+    if ((getXPosition() - Level::LEVEL_X_OFFSET) % 38 == 0) {
+        if (getMovesLeft() == 0 && getMoveDirection() == 30) {
+            for (unsigned int i = 0; i < boxes.size(); i++) {
+                if (boxes.at(i)->used == false) {
+                    boxes.at(i)->used = true;
+                    boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
+                                            Box::BOX_HEIGHT);
+                    break;// descomentar em caso de erro return;
+                } else {
+                    // Nothing to do
+                }
+            }
+        } else {
+            // Nothing to do
+        }
+    } else {
+        // Nothing to do
+    }
+
+    return;
+}
+
+
+// -------------------------------------------------------------
 // Function: setStopEnemy()
 // Description: Initializes the dimensions of finishing movement to right of enemy.
 // Return: void
@@ -148,53 +269,6 @@ void Enemy::setDropBox() {
 }
 
 // -------------------------------------------------------------
-// Function: setSpriteClips()
-// Description: Initializes the dimensions of each picture frame and each enemy moviment.
-// Return: void
-// -------------------------------------------------------------
-void Enemy::setSpriteClips() {
-    setStopEnemy();
-    setStartingtRightEnemyMovement();
-    setContinuingRightEnemyMovement();
-    setFinishingRightEnemyMovement();
-    setFinishingLeftEnemyMovement();
-    setContinuingLeftEnemyMovement();
-    setStartingtLeftEnemyMovement();
-    setDropBox();
-}
-
-// -------------------------------------------------------------
-// Function: Enemy()
-// Description: Enemy class builder where the initializations of the variables happen.
-// Parameters:
-//		string fileName;  		Enemy landscape file name.
-// Return: void
-// -------------------------------------------------------------
-Enemy::Enemy(string filename) {
-    this->enemy = SDLUtil::loadImage(filename);
-    setXPosition(Level::LEVEL_X_OFFSET + 38);
-    setYPosition(Level::LEVEL_HEIGHT + Level::LEVEL_Y_OFFSET -
-                    Enemy::ENEMY_HEIGHT - 38 * 8 - 1);
-    setMovesLeft(0);
-    setMoveDirection(0);
-    srand((unsigned)time(0));
-    setFrame(0);
-}
-
-// -------------------------------------------------------------
-// Function: ~Enemy()
-// Description: Enemy class destructor where the landscape image files free themselves.
-// Return: void
-// -------------------------------------------------------------
-Enemy::~Enemy() {
-    if (enemy != NULL) {
-        SDL_FreeSurface(enemy);
-    } else {
-        // Nothing to do
-    }
-}
-
-// -------------------------------------------------------------
 // Function: FirstMove()
 // Description: Make a movement according to the value of 
 //              MovesLeft and MoveDirection of enemy.
@@ -248,79 +322,6 @@ void Enemy::FourthMove() {
 // -------------------------------------------------------------
 void Enemy::FifthMove() {
     setMoveDirection(getMoveDirection() - 1);
-}
-
-// -------------------------------------------------------------
-// Function: move()
-// Description: Moves the enemy horizontally according to level dimensions.
-// Return: void
-// -------------------------------------------------------------
-void Enemy::move() {
-    // Change of position according to MovesLeft and MoveDirection
-    if (getMovesLeft() > 0 && getMoveDirection() % 2 == 0) {
-        FirstMove();
-    } else if(getMovesLeft() > 0 && getMoveDirection() % 2 == 1) {
-        SecondMove();    
-    } else {
-        // Nothing to do
-    }
-
-    if (getXPosition() <= Level::LEVEL_X_OFFSET) {
-        ThirdMove();
-    } else {
-        // Nothing to do
-    }
-
-    if (getXPosition() >= Level::LEVEL_X_OFFSET + Level::LEVEL_WIDTH - 38) {
-        FourthMove();
-    } else {
-        // Nothing to do
-    }
-
-    if (getMovesLeft() <= 0) {
-        //delay
-        if (getMoveDirection() > 0) {
-            FifthMove();
-        } else {
-            //gen  movesLeft and moveDirection
-            setMovesLeft((rand() % 6) * 38);
-            setMoveDirection(rand() % 120);
-        }
-    } else {
-        // Nothing to do
-    }
-
-    return;
-}
-
-// -------------------------------------------------------------
-// Function: throwBox()
-// Description: Controls the enemies freedom box when the right position is achieved.
-// Parameters:
-//		int vector<Box*> boxes;			Vector that contains boxes it´s positions.
-// Return: void
-// -------------------------------------------------------------
-void Enemy::throwBox(vector<Box*> boxes) {
-    if ((getXPosition() - Level::LEVEL_X_OFFSET) % 38 == 0) {
-        if (getMovesLeft() == 0 && getMoveDirection() == 30) {
-            for (unsigned int i = 0; i < boxes.size(); i++) {
-                if (boxes.at(i)->used == false) {
-                    boxes.at(i)->used = true;
-                    boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
-                                            Box::BOX_HEIGHT);
-                    break;// descomentar em caso de erro return;
-                } else {
-                    // Nothing to do
-                }
-            }
-        } else {
-            // Nothing to do
-        }
-    } else {
-        // Nothing to do
-    }
-
-    return;
 }
 
 // -------------------------------------------------------------
