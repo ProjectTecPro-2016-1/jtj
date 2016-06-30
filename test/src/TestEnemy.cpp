@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <cstdlib>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestFixture.h>
 #include <cppunit/ui/text/TextTestRunner.h>
@@ -32,6 +33,8 @@ class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST(testMoveSecondIf);
     CPPUNIT_TEST(testMoveThirdIf);
     CPPUNIT_TEST(testMoveFourthIf);
+    CPPUNIT_TEST(tesMoveFifth);
+//  CPPUNIT_TEST(tesMoveFourthElse);
     CPPUNIT_TEST(testStopEnemy);
     CPPUNIT_TEST(testStartingtRightEnemyMovement);
     CPPUNIT_TEST(testContinuingRightEnemyMovement);
@@ -56,6 +59,8 @@ class TestEnemy : public CppUnit::TestFixture {
         void testMoveSecondIf(void);
         void testMoveThirdIf(void);
         void testMoveFourthIf(void);
+        void tesMoveFifth(void);
+//      void tesMoveFourthElse(void);
         void testStopEnemy(void);
         void testStartingtRightEnemyMovement(void);
         void testContinuingRightEnemyMovement(void);
@@ -131,10 +136,31 @@ void TestEnemy::testMoveFourthIf(void){
     mTestObj->setMoveDirection(0);
     mTestObj->move();
 
-    CPPUNIT_ASSERT(498 == mTestObj->getXPosition());
-    CPPUNIT_ASSERT(36 == mTestObj->getMovesLeft());
-    CPPUNIT_ASSERT(1 == mTestObj->getMoveDirection());
+    CPPUNIT_ASSERT(mTestObj->getXPosition() == 498);
+    CPPUNIT_ASSERT(mTestObj->getMovesLeft() == 36);
+    CPPUNIT_ASSERT(mTestObj->getMoveDirection() == 1);
 }
+
+void TestEnemy::tesMoveFifth(void){
+    mTestObj->setXPosition(52);
+    mTestObj->setMovesLeft(-2);
+    mTestObj->setMoveDirection(3);
+    mTestObj->move();
+
+    CPPUNIT_ASSERT(mTestObj->getMoveDirection() == 2);
+}
+
+/*
+void TestEnemy::tesMoveFourthElse(void){
+    mTestObj->setXPosition(52);
+    mTestObj->setMovesLeft(-2);
+    mTestObj->setMoveDirection(0);
+    mTestObj->move();
+
+    CPPUNIT_ASSERT(mTestObj->getMovesLeft() == (rand() % 6) * 38);
+    CPPUNIT_ASSERT(mTestObj->getMoveDirection() == rand() % 120);
+}
+*/
 
 void TestEnemy::testStopEnemy(void){
     mTestObj->spriteClips[0].x = 0;
