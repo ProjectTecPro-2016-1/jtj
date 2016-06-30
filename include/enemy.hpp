@@ -44,7 +44,18 @@ class Enemy : public GameObject {
         Enemy(std::string filename);
         ~Enemy();
         void move();
+        
         void throwBox(vector<Box*> boxes);
+        void setStopEnemy();
+        void setStartingtRightEnemyMovement();
+        void setContinuingRightEnemyMovement();
+        void setFinishingRightEnemyMovement();
+        void setFinishingLeftEnemyMovement();
+        void setContinuingLeftEnemyMovement();
+        void setStartingtLeftEnemyMovement();
+        void setDropBox();
+/*
+*/
 };
 
 #endif

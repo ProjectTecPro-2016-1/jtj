@@ -32,7 +32,6 @@ class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST(testMoveSecondIf);
     CPPUNIT_TEST(testMoveThirdIf);
     CPPUNIT_TEST(testMoveFourthIf);
-    CPPUNIT_TEST(testMoveFifthIf);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -49,7 +48,6 @@ class TestEnemy : public CppUnit::TestFixture {
         void testMoveSecondIf(void);
         void testMoveThirdIf(void);
         void testMoveFourthIf(void);
-        void testMoveFifthIf(void);
     private:
         Enemy * mTestObj;
 };
@@ -122,10 +120,6 @@ void TestEnemy::testMoveFourthIf(void){
     CPPUNIT_ASSERT(1 == mTestObj->getMoveDirection());
 }
 
-void TestEnemy::testMoveFifthIf(void){
-    
-}
-
 void TestEnemy::setUp(void) {
     mTestObj = new Enemy("../resources/enemy_sprites.png");
 }
@@ -133,6 +127,20 @@ void TestEnemy::setUp(void) {
 void TestEnemy::tearDown(void) {
     delete mTestObj;
 }
+
+/*
+mTestObj->spriteClips[0].x = 0;
+mTestObj->spriteClips[0].y = 0;
+mTestObj->spriteClips[0].h = 0;
+mTestObj->spriteClips[0].w = 0;
+mTestObj->setStpriteEnemyMovementLeft();
+
+CPPUNIT_ASSERT(mTestObj->spriteClips[0].x == 0);
+CPPUNIT_ASSERT(mTestObj->spriteClips[0].y == ENEMY_HEIGHT);
+CPPUNIT_ASSERT(mTestObj->spriteClips[0].h == ENEMY_HEIGHT);
+CPPUNIT_ASSERT(mTestObj->spriteClips[0].w == ENEMY_WIDTH);
+
+*/
 
 //-----------------------------------------------------------------------------
 

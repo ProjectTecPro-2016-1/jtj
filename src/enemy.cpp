@@ -51,50 +51,116 @@ void Enemy::drawSelf(SDL_Surface * surface) {
 }
 
 // -------------------------------------------------------------
+// Function: setStopEnemy()
+// Description: Initializes the dimensions of finishing movement to right of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setStopEnemy() {
+    spriteClips[0].x = 0;
+    spriteClips[0].y = ENEMY_HEIGHT;
+    spriteClips[0].w = ENEMY_WIDTH;
+    spriteClips[0].h = ENEMY_HEIGHT;    
+}
+
+
+// -------------------------------------------------------------
+// Function: setStartingtRightEnemyMovement()
+// Description: Initializes the dimensions of starting movement to right of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setStartingtRightEnemyMovement() {
+    spriteClips[1].x = ENEMY_WIDTH;
+    spriteClips[1].y = ENEMY_HEIGHT;
+    spriteClips[1].w = ENEMY_WIDTH;
+    spriteClips[1].h = ENEMY_HEIGHT;
+}
+
+// -------------------------------------------------------------
+// Function: setContinuingRightEnemyMovement()
+// Description: Initializes the dimensions of continuing movement to right of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setContinuingRightEnemyMovement() {
+    spriteClips[2].x = ENEMY_WIDTH*2;
+    spriteClips[2].y = ENEMY_HEIGHT;
+    spriteClips[2].w = ENEMY_WIDTH;
+    spriteClips[2].h = ENEMY_HEIGHT;    
+}
+
+// -------------------------------------------------------------
+// Function: setFinishingRightEnemyMovement()
+// Description: Initializes the dimensions of finishing movement to right of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setFinishingRightEnemyMovement() {
+    spriteClips[3].x = ENEMY_WIDTH*3;
+    spriteClips[3].y = ENEMY_HEIGHT;
+    spriteClips[3].w = ENEMY_WIDTH;
+    spriteClips[3].h = ENEMY_HEIGHT;
+}
+
+// -------------------------------------------------------------
+// Function: setFinishingtLeftEnemyMovement()
+// Description: Initializes the dimensions of finishing movement to left of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setFinishingLeftEnemyMovement() {
+    spriteClips[4].x = ENEMY_WIDTH;
+    spriteClips[4].y = 0;
+    spriteClips[4].w = ENEMY_WIDTH;
+    spriteClips[4].h = ENEMY_HEIGHT;    
+}
+
+// -------------------------------------------------------------
+// Function: setContinuingtLeftEnemyMovement()
+// Description: Initializes the dimensions of continuing movement to left of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setContinuingLeftEnemyMovement() {
+    spriteClips[5].x = ENEMY_WIDTH*2;
+    spriteClips[5].y = 0;
+    spriteClips[5].w = ENEMY_WIDTH;
+    spriteClips[5].h = ENEMY_HEIGHT;    
+}
+
+// -------------------------------------------------------------
+// Function: setStartingtLeftEnemyMovement()
+// Description: Initializes the dimensions of starting movement to left of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setStartingtLeftEnemyMovement() {
+    spriteClips[6].x = ENEMY_WIDTH*3;
+    spriteClips[6].y = 0;
+    spriteClips[6].w = ENEMY_WIDTH;
+    spriteClips[6].h = ENEMY_HEIGHT;
+}
+
+// -------------------------------------------------------------
+// Function: setDropBox()
+// Description: Initializes the dimensions of finishing movement to right of enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setDropBox() {    
+    spriteClips[7].x = ENEMY_WIDTH*4;
+    spriteClips[7].y = ENEMY_HEIGHT;
+    spriteClips[7].w = ENEMY_WIDTH;
+    spriteClips[7].h = ENEMY_HEIGHT;
+}
+
+// -------------------------------------------------------------
 // Function: setSpriteClips()
 // Description: Initializes the dimensions of each picture frame and each enemy moviment.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setSpriteClips() {
-    spriteClips[0].x = 0;
-    spriteClips[0].y = ENEMY_HEIGHT;
-    spriteClips[0].w = ENEMY_WIDTH;
-    spriteClips[0].h = ENEMY_HEIGHT;
-
-    spriteClips[1].x = ENEMY_WIDTH;
-    spriteClips[1].y = ENEMY_HEIGHT;
-    spriteClips[1].w = ENEMY_WIDTH;
-    spriteClips[1].h = ENEMY_HEIGHT;
-
-    spriteClips[2].x = ENEMY_WIDTH*2;
-    spriteClips[2].y = ENEMY_HEIGHT;
-    spriteClips[2].w = ENEMY_WIDTH;
-    spriteClips[2].h = ENEMY_HEIGHT;
-
-    spriteClips[3].x = ENEMY_WIDTH*3;
-    spriteClips[3].y = ENEMY_HEIGHT;
-    spriteClips[3].w = ENEMY_WIDTH;
-    spriteClips[3].h = ENEMY_HEIGHT;
-
-    spriteClips[4].x = ENEMY_WIDTH;
-    spriteClips[4].y = 0;
-    spriteClips[4].w = ENEMY_WIDTH;
-    spriteClips[4].h = ENEMY_HEIGHT;
-
-    spriteClips[5].x = ENEMY_WIDTH*2;
-    spriteClips[5].y = 0;
-    spriteClips[5].w = ENEMY_WIDTH;
-    spriteClips[5].h = ENEMY_HEIGHT;
-
-    spriteClips[6].x = ENEMY_WIDTH*3;
-    spriteClips[6].y = 0;
-    spriteClips[6].w = ENEMY_WIDTH;
-    spriteClips[6].h = ENEMY_HEIGHT;
-
-    spriteClips[7].x = ENEMY_WIDTH*4;
-    spriteClips[7].y = ENEMY_HEIGHT;
-    spriteClips[7].w = ENEMY_WIDTH;
-    spriteClips[7].h = ENEMY_HEIGHT;
+    setStopEnemy();
+    setStartingtRightEnemyMovement();
+    setContinuingRightEnemyMovement();
+    setFinishingRightEnemyMovement();
+    setFinishingLeftEnemyMovement();
+    setContinuingLeftEnemyMovement();
+    setStartingtLeftEnemyMovement();
+    setDropBox();
 }
 
 // -------------------------------------------------------------
