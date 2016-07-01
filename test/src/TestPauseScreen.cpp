@@ -23,7 +23,7 @@ using namespace std;
 
 class TestPauseScreen : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestPauseScreen);
-    CPPUNIT_TEST(testConstructor);
+    // CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
@@ -32,7 +32,7 @@ class TestPauseScreen : public CppUnit::TestFixture {
         void tearDown(void);
 
     protected:
-        void testConstructor(void);
+        // void testConstructor(void);
         void testDestructor(void);
 
     private:
@@ -41,9 +41,9 @@ class TestPauseScreen : public CppUnit::TestFixture {
 
 //-----------------------------------------------------------------------------
 
-void TestPauseScreen::testConstructor(void) {
-    CPPUNIT_ASSERT(NULL != mTestObj->pauseScreen);
-}
+// void TestPauseScreen::testConstructor(void) {
+//     CPPUNIT_ASSERT(NULL != mTestObj->pauseScreen);
+// }
 
 void TestPauseScreen::testDestructor(void) {
     mTestObj->~PauseScreen();
