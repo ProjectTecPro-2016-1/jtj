@@ -24,8 +24,9 @@ using namespace std;
 class TestScoreScreen : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestScoreScreen);
     CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST(testGetLine);
+    CPPUNIT_TEST(testGetScorePoints);
+    CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -34,6 +35,8 @@ class TestScoreScreen : public CppUnit::TestFixture {
 
     protected:
         void testConstructor(void);
+        void testGetLine(void);
+        void testGetScorePoints(void);
         void testDestructor(void);
 
     private:
@@ -52,12 +55,17 @@ void TestScoreScreen::testConstructor(void) {
     CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.b);
 
     CPPUNIT_ASSERT(0 == mTestObj->scorePoints);
-    CPPUNIT_ASSERT(99 == mTestObj->linesLeft);
+    CPPUNIT_ASSERT(99 == mTestObj->lineLeft);
 }
 
 void TestScoreScreen::testGetLine(void){
     mTestObj->lines(3);
     CPPUNIT_ASSERT(3 == mTestObj->getLine());
+}
+
+void TestScoreScreen::testGetScorePoints(void){
+    mTestObj->scoring(30);
+    CPPUNIT_ASSERT(30 == mTestObj->getScorePoints());
 }
 
 void TestScoreScreen::testDestructor(void) {
