@@ -14,12 +14,12 @@ using namespace std;
 // Description: Constructor that loads image,socre font and score message for the Score Screen.
 // Return: void  
 // -------------------------------------------------------------  
-ScoreScreen::ScoreScreen() {
-    this->armario = SDLUtil::loadImage("resources/armario.png");
+ScoreScreen::ScoreScreen(string filenameBackground, char const * filenameFont) {
+    this->armario = SDLUtil::loadImage(filenameBackground);
     this->scoreTextColor.r = 255;
     this->scoreTextColor.g = 255;
     this->scoreTextColor.b = 255;
-    this->scoreFont = TTF_OpenFont ("resources/HanaleiRegular.ttf", 40);
+    this->scoreFont = TTF_OpenFont (filenameFont, 40);
     //assert(this->scoreFont != NULL && "It is not possible open ScoreFont");
 
 	this->scorePoints = 0;

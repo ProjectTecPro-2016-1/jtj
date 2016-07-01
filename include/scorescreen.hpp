@@ -9,7 +9,7 @@
 class ScoreScreen {
 	public:
 		
-		ScoreScreen();
+		ScoreScreen(std::string filenameBackground, char const * filnameFont);
 		~ScoreScreen();
 		void drawSelf(SDL_Surface *surface);
 		int getLine();

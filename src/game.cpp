@@ -935,7 +935,7 @@ void Game::initScreenLoop() {
 // Return: void
 // -------------------------------------------------------------
 void Game::loadCommonResources() {
-    score = new ScoreScreen();
+    score = new ScoreScreen("resources/armario.png", "resources/HanaleiRegular.ttf");
 
     // Open the audio device. The sound driver will try to give us
     // the requested format, but it might not succeed. The 'obtained'
