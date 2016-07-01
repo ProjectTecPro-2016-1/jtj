@@ -27,16 +27,19 @@ class TestJack : public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetXPosition);
     CPPUNIT_TEST(testGetYPosition);
     CPPUNIT_TEST(testDie);
+    CPPUNIT_TEST(testIsDead);
     CPPUNIT_TEST(testSetLimitFirstIf);
     CPPUNIT_TEST(testSetLimitSecondIf);
     CPPUNIT_TEST(testSetLimitSecondIfLimitValues);
     CPPUNIT_TEST(testSetLimitElse);
     CPPUNIT_TEST(testMove);
-    CPPUNIT_TEST(testControlsMaxJumpFirstIfBigger);
-    CPPUNIT_TEST(testControlsMaxJumpFirstIfEqual);
-    CPPUNIT_TEST(testControlsMaxJumpSecondIfBigger);
-    CPPUNIT_TEST(testControlsMaxJumpSecondIfEqual);
-    CPPUNIT_TEST(testControlsMaxJumpElse);
+    CPPUNIT_TEST(testControlsMaxJump1IfBigger);
+    CPPUNIT_TEST(testControlsMaxJump1IfEqual);
+    CPPUNIT_TEST(testControlsMaxJump2FirstIfBigger);
+    CPPUNIT_TEST(testControlsMaxJump2FirstIfEqual);
+    CPPUNIT_TEST(testControlsMaxJump2SecondIfBigger);
+    CPPUNIT_TEST(testControlsMaxJump2SecondIfEqual);
+    CPPUNIT_TEST(testControlsMaxJump2Else);
     CPPUNIT_TEST(testPushMoveFirstIf);
     CPPUNIT_TEST(testPushMoveSecondIf);
     CPPUNIT_TEST(testPushMoveElse);
@@ -66,16 +69,19 @@ class TestJack : public CppUnit::TestFixture {
         void testGetXPosition(void);
         void testGetYPosition(void);
         void testDie(void);
+        void testIsDead(void);
         void testSetLimitFirstIf(void);
         void testSetLimitSecondIf(void);
         void testSetLimitSecondIfLimitValues(void);
         void testSetLimitElse(void);
         void testMove(void);
-        void testControlsMaxJumpFirstIfBigger(void);
-        void testControlsMaxJumpFirstIfEqual(void);
-        void testControlsMaxJumpSecondIfBigger(void);
-        void testControlsMaxJumpSecondIfEqual(void);
-        void testControlsMaxJumpElse(void);
+        void testControlsMaxJump1IfBigger(void);
+        void testControlsMaxJump1IfEqual(void);
+        void testControlsMaxJump2FirstIfBigger(void);
+        void testControlsMaxJump2FirstIfEqual(void);
+        void testControlsMaxJump2SecondIfBigger(void);
+        void testControlsMaxJump2SecondIfEqual(void);
+        void testControlsMaxJump2Else(void);
         void testPushMoveFirstIf(void);
         void testPushMoveSecondIf(void);
         void testPushMoveElse(void);
@@ -122,9 +128,11 @@ void TestJack::testDie(void) {
     CPPUNIT_ASSERT(true == mTestObj->getDead());
 }
 
-// void TestJack::testIsDead(void) {
+void TestJack::testIsDead(void) {
+    mTestObj->setDead(true);
 
-// }
+    CPPUNIT_ASSERT(mTestObj->isDead() == true);
+}
 
 void TestJack::testSetLimitFirstIf(void) {
     int returnValue = mTestObj->setLimit(0, 1, -18);
@@ -152,56 +160,75 @@ void TestJack::testMove(void) {
     mTestObj->setSpeed(2);
 
     mTestObj->move(1, 1, 1, 1);
+
     CPPUNIT_ASSERT(mTestObj->getXPosition() == -36);
     CPPUNIT_ASSERT(mTestObj->getYPosition() == 1);
 }
 
-// void TestJack::jump(void){
+void TestJack::testControlsMaxJump1IfBigger(void){
+    mTestObj->setJumping(true);
+    mTestObj->setYPosition(10);
+    mTestObj->setVerticalSpeed(2);
 
-//}
+    mTestObj->controlsMaxJump1(9, 9);
 
-void TestJack::testControlsMaxJumpFirstIfBigger(void) {
+    CPPUNIT_ASSERT(mTestObj->getJumping() == false);
+    CPPUNIT_ASSERT(mTestObj->getVerticalSpeed() == 1);
+}
+
+void TestJack::testControlsMaxJump1IfEqual(void){
+    mTestObj->setJumping(true);
+    mTestObj->setYPosition(10);
+    mTestObj->setVerticalSpeed(2);
+
+    mTestObj->controlsMaxJump1(10, 9);
+
+    CPPUNIT_ASSERT(mTestObj->getJumping() == false);
+    CPPUNIT_ASSERT(mTestObj->getVerticalSpeed() == 1);
+}
+
+void TestJack::testControlsMaxJump2FirstIfBigger(void) {
     mTestObj->setYPosition(100);
     mTestObj->setVerticalSpeed(100);
 
-    mTestObj->controlsMaxJump(9, 11);
+    mTestObj->controlsMaxJump2(9, 11);
     CPPUNIT_ASSERT(mTestObj->getYPosition() == 9);
     CPPUNIT_ASSERT(mTestObj->getVerticalSpeed() == 1);
 }
 
-void TestJack::testControlsMaxJumpFirstIfEqual(void) {
+void TestJack::testControlsMaxJump2FirstIfEqual(void) {
     mTestObj->setYPosition(100);
     mTestObj->setVerticalSpeed(100);
 
-    mTestObj->controlsMaxJump(10, 11);
+    mTestObj->controlsMaxJump2(10, 11);
     CPPUNIT_ASSERT(mTestObj->getYPosition() == 10);
     CPPUNIT_ASSERT(mTestObj->getVerticalSpeed() == 1);
 }
 
-void TestJack::testControlsMaxJumpSecondIfBigger(void) {
+void TestJack::testControlsMaxJump2SecondIfBigger(void) {
     mTestObj->setYPosition(100);
     mTestObj->setVerticalSpeed(100);
 
-    mTestObj->controlsMaxJump(11, 9);
+    mTestObj->controlsMaxJump2(11, 9);
     CPPUNIT_ASSERT(mTestObj->getYPosition() == 11);
     CPPUNIT_ASSERT(mTestObj->getVerticalSpeed() == 1);
 }
 
-void TestJack::testControlsMaxJumpSecondIfEqual(void) {
+void TestJack::testControlsMaxJump2SecondIfEqual(void) {
     mTestObj->setYPosition(100);
     mTestObj->setVerticalSpeed(100);
 
-    mTestObj->controlsMaxJump(11, 10);
+    mTestObj->controlsMaxJump2(11, 10);
     CPPUNIT_ASSERT(mTestObj->getYPosition() == 11);
     CPPUNIT_ASSERT(mTestObj->getVerticalSpeed() == 1);
 }
 
-void TestJack::testControlsMaxJumpElse(void) {
+void TestJack::testControlsMaxJump2Else(void) {
     mTestObj->setYPosition(100);
     mTestObj->setVerticalSpeed(100);
     mTestObj->setJumping(false);
 
-    mTestObj->controlsMaxJump(101, 101);
+    mTestObj->controlsMaxJump2(101, 101);
     CPPUNIT_ASSERT(mTestObj->getJumping() == true);
 }
 
@@ -240,34 +267,34 @@ void TestJack::testPushMoveElse(void) {
 }
 
 void TestJack::testPopMoveFirstIf(void) {
-    mTestObj->setLastButOneMove(0);
+    mTestObj->setLastButOneMove(10);
     mTestObj->setSpeed(0);
     mTestObj->setLastMove(1);
 
-    mTestObj->popMove(99);
+    mTestObj->popMove(10);
 
     CPPUNIT_ASSERT(mTestObj->getLastButOneMove() == 0);
-    CPPUNIT_ASSERT(mTestObj->getSpeed() == 0);
+    CPPUNIT_ASSERT(mTestObj->getSpeed() == 1);
 }
 
 void TestJack::testPopMoveSecondIf_if(void) {
     mTestObj->setLastButOneMove(1);
     mTestObj->setSpeed(0);
-    mTestObj->setLastMove(0);
+    mTestObj->setLastMove(99);
 
     mTestObj->popMove(99);
 
-    // CPPUNIT_ASSERT(mTestObj->getSpeed() == 1);
-    // CPPUNIT_ASSERT(mTestObj->getLastMove() == 1);
-    //CPPUNIT_ASSERT(mTestObj->getLastButOneMove() == 0);
+    CPPUNIT_ASSERT(mTestObj->getSpeed() == 1);
+    CPPUNIT_ASSERT(mTestObj->getLastMove() == 1);
+    CPPUNIT_ASSERT(mTestObj->getLastButOneMove() == 0);
 }
 
 void TestJack::testPopMoveSecondIf_else(void) {
     mTestObj->setLastButOneMove(0);
-    mTestObj->setSpeed(0);
-    mTestObj->setLastMove(0);
+    mTestObj->setSpeed(20);
+    mTestObj->setLastMove(10);
 
-    mTestObj->popMove(99);
+    mTestObj->popMove(10);
 
     CPPUNIT_ASSERT(mTestObj->getSpeed() == 0);
     CPPUNIT_ASSERT(mTestObj->getLastMove() == 0);
