@@ -25,6 +25,7 @@ class TestScoreScreen : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestScoreScreen);
     CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testDestructor);
+    CPPUNIT_TEST(testGetLine);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -46,18 +47,22 @@ void TestScoreScreen::testConstructor(void) {
     CPPUNIT_ASSERT(NULL != mTestObj->scoreFont);
     CPPUNIT_ASSERT(NULL != mTestObj->scoreMessage);
     
-    CPPUNIT_ASSERT(225 = mTestObj->scoreTextColor.r);
-    CPPUNIT_ASSERT(225 = mTestObj->scoreTextColor.g);
-    CPPUNIT_ASSERT(225 = mTestObj->scoreTextColor.b);
+    CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.r);
+    CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.g);
+    CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.b);
 
-    CPPUNIT_ASSERT(0 = mTestObj->scorePoints);
-    CPPUNIT_ASSERT(99 = mTestObj->linesLeft);
+    CPPUNIT_ASSERT(0 == mTestObj->scorePoints);
+    CPPUNIT_ASSERT(99 == mTestObj->linesLeft);
 }
 
-
+void TestScoreScreen::testGetLine(void){
+    mTestObj->lines(3);
+    CPPUNIT_ASSERT(3 == mTestObj->getLine());
+}
 
 void TestScoreScreen::testDestructor(void) {
     mTestObj->~ScoreScreen();
+    
     CPPUNIT_ASSERT(mTestObj->scoreFont == NULL);
     CPPUNIT_ASSERT(mTestObj->armario == NULL);
     CPPUNIT_ASSERT(mTestObj->scoreMessage == NULL);
