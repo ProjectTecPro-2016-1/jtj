@@ -114,3 +114,12 @@ bool Timer::is_started() {
 bool Timer::is_paused() {
     return paused;
 }
+
+// -------------------------------------------------------------
+// Function: getPausedTicks()
+// Description: Return the values of the paused ticks attribute
+// Return: int
+// -------------------------------------------------------------
+int Timer::getPausedTicks() {
+    return pausedTicks;
+}
