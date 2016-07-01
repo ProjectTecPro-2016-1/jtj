@@ -23,7 +23,7 @@ using namespace std;
 
 class TestScoreScreen : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestScoreScreen);
-    CPPUNIT_TEST(testConstructor);
+    // CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
@@ -45,13 +45,15 @@ class TestScoreScreen : public CppUnit::TestFixture {
 //     CPPUNIT_ASSERT(NULL != mTestObj->pauseScreen);
 // }
 
-// void TestScoreScreen::testDestructor(void) {
-//     mTestObj->~PauseScreen();
-//     CPPUNIT_ASSERT(mTestObj->pauseScreen == NULL);
-// }
+void TestScoreScreen::testDestructor(void) {
+    mTestObj->~ScoreScreen();
+    CPPUNIT_ASSERT(mTestObj->scoreFont == NULL);
+    CPPUNIT_ASSERT(mTestObj->armario == NULL);
+    CPPUNIT_ASSERT(mTestObj->scoreMessage == NULL);
+}
 
 void TestScoreScreen::setUp(void) {
-    mTestObj = new ScoreScreen("../../resources/armario.png");
+    mTestObj = new ScoreScreen();
 }
 
 void TestScoreScreen::tearDown(void) {
