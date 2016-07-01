@@ -24,6 +24,7 @@ using namespace std;
 class TestTimer : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestTimer);
     CPPUNIT_TEST(testStart);
+    CPPUNIT_TEST(testStop);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,6 +33,7 @@ class TestTimer : public CppUnit::TestFixture {
 
     protected:
         void testStart(void);
+        void testStop(void);
 
     private:
         Timer * mTestObj;
@@ -45,6 +47,13 @@ void TestTimer::testStart(void){
     CPPUNIT_ASSERT(true == mTestObj->is_started());
     CPPUNIT_ASSERT(false == mTestObj->is_paused());
     CPPUNIT_ASSERT(0 == mTestObj->get_ticks());
+}
+
+void TestTimer::testStop(void){
+    mTestObj->stop();
+
+    CPPUNIT_ASSERT(false == mTestObj->is_started());
+    CPPUNIT_ASSERT(false == mTestObj->is_paused());
 }
 
 void TestTimer::setUp(void) {
