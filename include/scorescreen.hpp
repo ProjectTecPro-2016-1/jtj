@@ -24,11 +24,11 @@ class ScoreScreen {
 		SDL_Color scoreTextColor;
 		int scorePoints;	// public only for testing
 		int lineLeft; // public only for testing
+		void updateSelf();	// public only for testing
+		SDL_Surface *boxMessage;	// public only for testing
 
 	private:
 
-		void updateSelf();
-		SDL_Surface *boxMessage;
 		char scoreString[30];
 		char lineString[30];
 
