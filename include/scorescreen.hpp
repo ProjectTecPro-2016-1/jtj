@@ -18,19 +18,19 @@ class ScoreScreen {
 		void increaseScore(int value);
 		void lines(int numero);
 		void scoring(int value);
+		TTF_Font *scoreFont; 	// public only for testing
+		SDL_Surface *armario;	// public only for testing
+		SDL_Surface *scoreMessage;	// public only for testing
+		SDL_Color scoreTextColor;
+		int scorePoints;	// public only for testing
+		int lineLeft; // public only for testing
 
 	private:
 
 		void updateSelf();
-		SDL_Surface *armario;
-		TTF_Font *scoreFont;
-		SDL_Surface *scoreMessage;
 		SDL_Surface *boxMessage;
-		SDL_Color scoreTextColor;
 		char scoreString[30];
 		char lineString[30];
-		int scorePoints;
-		int lineLeft;
 
 		static const int SCORE_WIDTH = 282;
 		static const int SCORE_HEIGHT = 456;
