@@ -26,9 +26,10 @@ class TestScoreScreen : public CppUnit::TestFixture {
     CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testGetLine);
     CPPUNIT_TEST(testGetScorePoints);
-    CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST(testPopLine);
     CPPUNIT_TEST(testIncreaseScore);
+    CPPUNIT_TEST(testUpdateSelf);
+    CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -41,6 +42,7 @@ class TestScoreScreen : public CppUnit::TestFixture {
         void testGetScorePoints(void);
         void testPopLine(void);
         void testIncreaseScore(void);
+        void testUpdateSelf(void);
         void testDestructor(void);
 
     private:
@@ -64,24 +66,35 @@ void TestScoreScreen::testConstructor(void) {
 
 void TestScoreScreen::testGetLine(void){
     mTestObj->lines(3);
+    
     CPPUNIT_ASSERT(3 == mTestObj->getLine());
 }
 
 void TestScoreScreen::testGetScorePoints(void){
     mTestObj->scoring(30);
+    
     CPPUNIT_ASSERT(30 == mTestObj->getScorePoints());
 }
 
 void TestScoreScreen::testPopLine(void){
     mTestObj->lines(3);
     mTestObj->popLine();
+    
     CPPUNIT_ASSERT(2 == mTestObj->getLine());   
 }
 
 void TestScoreScreen::testIncreaseScore(void){
     mTestObj->scoring(30);
     mTestObj->increaseScore(10);
+    
     CPPUNIT_ASSERT(40 == mTestObj->getScorePoints());   
+}
+
+void TestScoreScreen::testUpdateSelf(void){
+    mTestObj->updateSelf();
+
+    CPPUNIT_ASSERT(NULL != mTestObj->scoreMessage);
+    CPPUNIT_ASSERT(NULL != mTestObj->boxMessage);
 }
 
 void TestScoreScreen::testDestructor(void) {
