@@ -41,9 +41,9 @@ class TestPauseScreen : public CppUnit::TestFixture {
 
 //-----------------------------------------------------------------------------
 
-void TestPauseScreen::testConstructor(void) {
-    CPPUNIT_ASSERT(NULL != mTestObj->pauseScreen);
-}
+// void TestPauseScreen::testConstructor(void) {
+//     CPPUNIT_ASSERT(NULL != mTestObj->pauseScreen);
+// }
 
 void TestPauseScreen::testDestructor(void) {
     mTestObj->~PauseScreen();

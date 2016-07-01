@@ -51,18 +51,18 @@ class TestScoreScreen : public CppUnit::TestFixture {
 
 //-----------------------------------------------------------------------------
 
-void TestScoreScreen::testConstructor(void) {
-    CPPUNIT_ASSERT(NULL != mTestObj->armario);
-    CPPUNIT_ASSERT(NULL != mTestObj->scoreFont);
-    CPPUNIT_ASSERT(NULL != mTestObj->scoreMessage);
+// void TestScoreScreen::testConstructor(void) {
+//     CPPUNIT_ASSERT(NULL != mTestObj->armario);
+//     CPPUNIT_ASSERT(NULL != mTestObj->scoreFont);
+//     CPPUNIT_ASSERT(NULL != mTestObj->scoreMessage);
     
-    CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.r);
-    CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.g);
-    CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.b);
+//     CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.r);
+//     CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.g);
+//     CPPUNIT_ASSERT(225 == mTestObj->scoreTextColor.b);
 
-    CPPUNIT_ASSERT(0 == mTestObj->scorePoints);
-    CPPUNIT_ASSERT(99 == mTestObj->lineLeft);
-}
+//     CPPUNIT_ASSERT(0 == mTestObj->scorePoints);
+//     CPPUNIT_ASSERT(99 == mTestObj->lineLeft);
+// }
 
 void TestScoreScreen::testGetLine(void){
     mTestObj->lines(3);
