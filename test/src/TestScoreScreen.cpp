@@ -106,7 +106,7 @@ void TestScoreScreen::testDestructor(void) {
 }
 
 void TestScoreScreen::setUp(void) {
-    mTestObj = new ScoreScreen();
+    mTestObj = new ScoreScreen("../resources/armario.png", "../resources/HanaleiRegular.ttf");
 }
 
 void TestScoreScreen::tearDown(void) {
