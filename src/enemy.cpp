@@ -17,6 +17,7 @@ using namespace std;
 // -------------------------------------------------------------
 void Enemy::drawSelf(SDL_Surface * surface) {
     //SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface);
+    // FirstFrame
     if (getMoveDirection() % 2 == 0 && getMovesLeft() > 0) {
         setFrame(getFrame() + 1);
 
@@ -25,6 +26,7 @@ void Enemy::drawSelf(SDL_Surface * surface) {
         } else {
             // Nothing to do
         }
+    // SecondFrame
     } else if (getMoveDirection() % 2 == 1 && getMovesLeft() > 0) {
         setFrame(getFrame() + 1);
 
@@ -39,8 +41,10 @@ void Enemy::drawSelf(SDL_Surface * surface) {
         } else {
             // Nothing to do
         }
+    // ThirdFrame
     } else if (getMovesLeft() == 0 && getMoveDirection() > 30 && getMoveDirection() < 40) {
         setFrame(7);
+    // FourthFrame
     } else {
         setFrame(0);
     }
@@ -103,7 +107,6 @@ Enemy::~Enemy() {
 // Return: void
 // -------------------------------------------------------------
 void Enemy::move() {
-    // Change of position according to MovesLeft and MoveDirection
     if (getMovesLeft() > 0 && getMoveDirection() % 2 == 0) {
         FirstMove();
     } else if(getMovesLeft() > 0 && getMoveDirection() % 2 == 1) {
@@ -152,9 +155,7 @@ void Enemy::throwBox(vector<Box*> boxes) {
         if (getMovesLeft() == 0 && getMoveDirection() == 30) {
             for (unsigned int i = 0; i < boxes.size(); i++) {
                 if (boxes.at(i)->used == false) {
-                    boxes.at(i)->used = true;
-                    boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
-                                            Box::BOX_HEIGHT);
+                    setBox(boxes, i);                
                     break;// descomentar em caso de erro return;
                 } else {
                     // Nothing to do
@@ -170,6 +171,11 @@ void Enemy::throwBox(vector<Box*> boxes) {
     return;
 }
 
+void Enemy::setBox(vector<Box*> boxes, int i){
+    boxes.at(i)->used = true;
+    boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
+                                            Box::BOX_HEIGHT);
+}
 
 // -------------------------------------------------------------
 // Function: setStopEnemy()
@@ -423,4 +429,3 @@ void Enemy::setFrame(int frame) {
 int Enemy::getFrame() {
     return this->frame;
 }
-        
