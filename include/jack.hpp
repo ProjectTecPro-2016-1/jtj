@@ -51,10 +51,12 @@ class Jack : public GameObject {
         void pushMove(int v);
         void popMove(int v);
 
-        void jump(Level* level);
-        //int calculatesMaxJumpHeightLeft();
-        //int calculatesMaxJumpHeightRight();
-        void controlsMaxJump(int maxJumpHeightLeft, int maxJumpHeightRight);
+        void jump(Level * level);
+        int calculatesMaxJumpHeightLeft(Level * level);
+        int calculatesMaxJumpHeightRight(Level * level);
+
+        void controlsMaxJump1(int maxJumpHeightLeft, int maxJumpHeightRight);
+        void controlsMaxJump2(int maxJumpHeightLeft, int maxJumpHeightRight);
 
         int getXPosition();
         void setXPosition(int x_position);

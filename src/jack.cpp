@@ -154,18 +154,36 @@ void Jack::drawSelf(SDL_Surface *surface) {
 //		Level * level;		Pointer to access level class.
 // Return: void
 // -------------------------------------------------------------
-void Jack::jump(Level* level) {
+void Jack::jump(Level * level) {
 
     setYPosition(getYPosition() + getVerticalSpeed());
     setVerticalSpeed(getVerticalSpeed() + ACCELERATION);
 
     int maxJumpHeightLeft = 0;
-    maxJumpHeightLeft = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
-                                          (level->grid[(getXPosition() - Level::LEVEL_X_OFFSET) / 38].size() * 38));
-    int maxJumpHeightRight = 0;
-    maxJumpHeightRight = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
-                                          (level->grid[(getXPosition() + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+    maxJumpHeightLeft = calculatesMaxJumpHeightLeft(level);
 
+    int maxJumpHeightRight = 0;
+    maxJumpHeightRight = calculatesMaxJumpHeightRight(level);
+
+    controlsMaxJump1(maxJumpHeightLeft, maxJumpHeightRight);
+    controlsMaxJump2(maxJumpHeightLeft, maxJumpHeightRight);
+
+    return;
+}
+
+
+int Jack::calculatesMaxJumpHeightLeft(Level * level) {
+    return (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
+                    (level->grid[(getXPosition() - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+}
+
+int Jack::calculatesMaxJumpHeightRight(Level * level) {
+    return (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
+                    (level->grid[(getXPosition() + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+
+}
+
+void Jack::controlsMaxJump1(int maxJumpHeightLeft, int maxJumpHeightRight) {
     if (getJumping() == true) {
         if ((getYPosition() >= maxJumpHeightLeft) || (getYPosition() >= maxJumpHeightRight)) {
             setJumping(false);
@@ -176,25 +194,17 @@ void Jack::jump(Level* level) {
     } else {
         // Nothing to do
     }
-
-    controlsMaxJump(maxJumpHeightLeft, maxJumpHeightRight);
-
-    return;
 }
 
-void Jack::controlsMaxJump(int maxJumpHeightLeft, int maxJumpHeightRight) {
+void Jack::controlsMaxJump2(int maxJumpHeightLeft, int maxJumpHeightRight) {
     //these next two if's handles boxes superior colision.
     if (getYPosition() >= maxJumpHeightLeft) {
         setYPosition(maxJumpHeightLeft);
-
         setVerticalSpeed(1);
-        //verticalSpeed -= ACCELERATION;
 
     } else if (getYPosition() >= maxJumpHeightRight) {
         setYPosition(maxJumpHeightRight);
-
         setVerticalSpeed(1);
-        //verticalSpeed -= ACCELERATION;
 
     } else { //this avoids double jumping while falling from a box
         setJumping(true);

@@ -24,6 +24,8 @@ using namespace std;
 class TestLabel : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestLabel);
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testWasClickedIf);
+    CPPUNIT_TEST(testWasClickedElse);
     CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +35,8 @@ class TestLabel : public CppUnit::TestFixture {
 
     protected:
         void testConstructor(void);
+        void testWasClickedIf(void);
+        void testWasClickedElse(void);
         void testDestructor(void);
 
     private:
@@ -42,8 +46,22 @@ class TestLabel : public CppUnit::TestFixture {
 //-----------------------------------------------------------------------------
 
 void TestLabel::testConstructor(void) {
-    CPPUNIT_ASSERT(0 > mTestObj->getPositionX());
-    CPPUNIT_ASSERT(0 > mTestObj->getPositionY());
+    CPPUNIT_ASSERT(0 < mTestObj->xPosition);
+    CPPUNIT_ASSERT(0 < mTestObj->yPosition);
+}
+
+void TestLabel::testWasClickedIf() {
+    mTestObj->xPosition = 10;
+    mTestObj->yPosition = 10;
+
+    CPPUNIT_ASSERT(true == mTestObj->wasClicked(150, 80));
+}
+
+void TestLabel::testWasClickedElse() {
+    mTestObj->xPosition = 10;
+    mTestObj->yPosition = 10;
+
+    CPPUNIT_ASSERT(false == mTestObj->wasClicked(200, 150));
 }
 
 void TestLabel::testDestructor(void) {
@@ -52,7 +70,7 @@ void TestLabel::testDestructor(void) {
 }
 
 void TestLabel::setUp(void) {
-    mTestObj = new Label("../resources/label.png");
+    mTestObj = new Label("../resources/mutebutton.png", 483, 68);
 }
 
 void TestLabel::tearDown(void) {
