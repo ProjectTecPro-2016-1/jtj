@@ -14,19 +14,19 @@
 #include <cppunit/XmlOutputter.h>
 #include <netinet/in.h>
 
-#include "label.hpp"
+#include "timer.hpp"
 
 using namespace CppUnit;
 using namespace std;
 
 //-----------------------------------------------------------------------------
 
-class TestLabel : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(TestLabel);
-    CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testWasClickedIf);
-    CPPUNIT_TEST(testWasClickedElse);
-    CPPUNIT_TEST(testDestructor);
+class TestTimer : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TestTimer);
+    CPPUNIT_TEST(testStart);
+    CPPUNIT_TEST(testStop);
+    CPPUNIT_TEST(testPause);
+    CPPUNIT_TEST(testUnpause);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -34,52 +34,59 @@ class TestLabel : public CppUnit::TestFixture {
         void tearDown(void);
 
     protected:
-        void testConstructor(void);
-        void testWasClickedIf(void);
-        void testWasClickedElse(void);
-        void testDestructor(void);
+        void testStart(void);
+        void testStop(void);
+        void testPause(void);
+        void testUnpause(void);
 
     private:
-        Label * mTestObj;
+        Timer * mTestObj;
 };
 
 //-----------------------------------------------------------------------------
 
-void TestLabel::testConstructor(void) {
-    CPPUNIT_ASSERT(0 < mTestObj->xPosition);
-    CPPUNIT_ASSERT(0 < mTestObj->yPosition);
+void TestTimer::testStart(void){
+    mTestObj->start();
+
+    CPPUNIT_ASSERT(true == mTestObj->is_started());
+    CPPUNIT_ASSERT(false == mTestObj->is_paused());
+    CPPUNIT_ASSERT(0 == mTestObj->get_ticks());
 }
 
-void TestLabel::testWasClickedIf() {
-    mTestObj->xPosition = 10;
-    mTestObj->yPosition = 10;
+void TestTimer::testStop(void){
+    mTestObj->stop();
 
-    CPPUNIT_ASSERT(true == mTestObj->wasClicked(150, 80));
+    CPPUNIT_ASSERT(false == mTestObj->is_started());
+    CPPUNIT_ASSERT(false == mTestObj->is_paused());
 }
 
-void TestLabel::testWasClickedElse() {
-    mTestObj->xPosition = 10;
-    mTestObj->yPosition = 10;
+void TestTimer::testPause(void){
+    mTestObj->start();
+    mTestObj->pause();
 
-    CPPUNIT_ASSERT(false == mTestObj->wasClicked(200, 150));
+    CPPUNIT_ASSERT(true == mTestObj->is_paused());   
 }
 
-void TestLabel::testDestructor(void) {
-    mTestObj->~Label();
-    CPPUNIT_ASSERT(mTestObj->label == NULL);
+void TestTimer::testUnpause(void){
+    mTestObj->start();
+    mTestObj->pause();
+    mTestObj->unpause();
+
+    CPPUNIT_ASSERT(false == mTestObj->is_paused());
+    CPPUNIT_ASSERT(0 == mTestObj->getPausedTicks());
 }
 
-void TestLabel::setUp(void) {
-    mTestObj = new Label("../resources/mutebutton.png", 483, 68);
+void TestTimer::setUp(void) {
+    mTestObj = new Timer();
 }
 
-void TestLabel::tearDown(void) {
+void TestTimer::tearDown(void) {
     delete mTestObj;
 }
 
 //-----------------------------------------------------------------------------
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TestLabel );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestTimer );
 
 int main() {
     // informs test-listener about testresults
@@ -103,7 +110,7 @@ int main() {
     compileroutputter.write ();
 
     // Output XML for Jenkins CPPunit plugin
-    ofstream xmlFileOut("test/xml/testLabel.xml");
+    ofstream xmlFileOut("test/xml/testTimer.xml");
     XmlOutputter xmlOut(&collectedresults, xmlFileOut);
     xmlOut.write();
 

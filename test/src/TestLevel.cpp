@@ -24,6 +24,7 @@ using namespace std;
 class TestLevel : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestLevel);
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testQuantityOfBox);
     CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +34,7 @@ class TestLevel : public CppUnit::TestFixture {
 
     protected:
         void testConstructor(void);
+        void testQuantityOfBox(void);
         void testDestructor(void);
 
     private:
@@ -42,10 +44,25 @@ class TestLevel : public CppUnit::TestFixture {
 //-----------------------------------------------------------------------------
 
 void TestLevel::testConstructor(void) {
+    // Level * mTestObj2;
+    //CPPUT_CHECK_ASSERTION_FAIL(mTestObj2 = new Level(""));
 }
 
 void TestLevel::testDestructor(void) {
     CPPUNIT_ASSERT(mTestObj->level == NULL);
+}
+
+void TestLevel::testQuantityOfBox(void) {
+    int nrBoxes = 10;
+
+    for (int i = 0; i < nrBoxes; i++) {
+        Box * box = new Box("../resources/box.png");
+        mTestObj->boxes.push_back(box);
+        mTestObj->addChild(box);
+    }
+
+    CPPUNIT_ASSERT(mTestObj->getBoxes().size() == 10);
+
 }
 
 void TestLevel::setUp(void) {

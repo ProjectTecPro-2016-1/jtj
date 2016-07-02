@@ -14,18 +14,19 @@
 #include <cppunit/XmlOutputter.h>
 #include <netinet/in.h>
 
-#include "label.hpp"
+#include "scorescreen.hpp"
 
 using namespace CppUnit;
 using namespace std;
 
 //-----------------------------------------------------------------------------
 
-class TestLabel : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(TestLabel);
-    CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testWasClickedIf);
-    CPPUNIT_TEST(testWasClickedElse);
+class TestScoreScreen : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TestScoreScreen);
+    CPPUNIT_TEST(testGetLine);
+    CPPUNIT_TEST(testGetScorePoints);
+    CPPUNIT_TEST(testPopLine);
+    CPPUNIT_TEST(testIncreaseScore);
     CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
@@ -34,52 +35,63 @@ class TestLabel : public CppUnit::TestFixture {
         void tearDown(void);
 
     protected:
-        void testConstructor(void);
-        void testWasClickedIf(void);
-        void testWasClickedElse(void);
+        void testGetLine(void);
+        void testGetScorePoints(void);
+        void testPopLine(void);
+        void testIncreaseScore(void);
         void testDestructor(void);
 
     private:
-        Label * mTestObj;
+        ScoreScreen * mTestObj;
 };
 
 //-----------------------------------------------------------------------------
 
-void TestLabel::testConstructor(void) {
-    CPPUNIT_ASSERT(0 < mTestObj->xPosition);
-    CPPUNIT_ASSERT(0 < mTestObj->yPosition);
+void TestScoreScreen::testGetLine(void){
+    mTestObj->lines(3);
+    
+    CPPUNIT_ASSERT(3 == mTestObj->getLine());
 }
 
-void TestLabel::testWasClickedIf() {
-    mTestObj->xPosition = 10;
-    mTestObj->yPosition = 10;
-
-    CPPUNIT_ASSERT(true == mTestObj->wasClicked(150, 80));
+void TestScoreScreen::testGetScorePoints(void){
+    mTestObj->scoring(30);
+    
+    CPPUNIT_ASSERT(30 == mTestObj->getScorePoints());
 }
 
-void TestLabel::testWasClickedElse() {
-    mTestObj->xPosition = 10;
-    mTestObj->yPosition = 10;
-
-    CPPUNIT_ASSERT(false == mTestObj->wasClicked(200, 150));
+void TestScoreScreen::testPopLine(void){
+    mTestObj->lines(3);
+    mTestObj->popLine();
+    
+    CPPUNIT_ASSERT(2 == mTestObj->getLine());   
 }
 
-void TestLabel::testDestructor(void) {
-    mTestObj->~Label();
-    CPPUNIT_ASSERT(mTestObj->label == NULL);
+void TestScoreScreen::testIncreaseScore(void){
+    mTestObj->scoring(30);
+    mTestObj->increaseScore(10);
+    
+    CPPUNIT_ASSERT(40 == mTestObj->getScorePoints());   
 }
 
-void TestLabel::setUp(void) {
-    mTestObj = new Label("../resources/mutebutton.png", 483, 68);
+void TestScoreScreen::testDestructor(void) {
+    mTestObj->~ScoreScreen();
+    
+    CPPUNIT_ASSERT(mTestObj->scoreFont == NULL);
+    CPPUNIT_ASSERT(mTestObj->armario == NULL);
+    CPPUNIT_ASSERT(mTestObj->scoreMessage == NULL);
 }
 
-void TestLabel::tearDown(void) {
+void TestScoreScreen::setUp(void) {
+    mTestObj = new ScoreScreen("../resources/armario.png", "../resources/HanaleiRegular.ttf");
+}
+
+void TestScoreScreen::tearDown(void) {
     delete mTestObj;
 }
 
 //-----------------------------------------------------------------------------
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TestLabel );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestScoreScreen );
 
 int main() {
     // informs test-listener about testresults
@@ -103,7 +115,7 @@ int main() {
     compileroutputter.write ();
 
     // Output XML for Jenkins CPPunit plugin
-    ofstream xmlFileOut("test/xml/testLabel.xml");
+    ofstream xmlFileOut("test/xml/testScoreScreen.xml");
     XmlOutputter xmlOut(&collectedresults, xmlFileOut);
     xmlOut.write();
 

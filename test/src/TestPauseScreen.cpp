@@ -14,18 +14,16 @@
 #include <cppunit/XmlOutputter.h>
 #include <netinet/in.h>
 
-#include "label.hpp"
+#include "pausescreen.hpp"
 
 using namespace CppUnit;
 using namespace std;
 
 //-----------------------------------------------------------------------------
 
-class TestLabel : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(TestLabel);
-    CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testWasClickedIf);
-    CPPUNIT_TEST(testWasClickedElse);
+class TestPauseScreen : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TestPauseScreen);
+    // CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testDestructor);
     CPPUNIT_TEST_SUITE_END();
 
@@ -34,52 +32,35 @@ class TestLabel : public CppUnit::TestFixture {
         void tearDown(void);
 
     protected:
-        void testConstructor(void);
-        void testWasClickedIf(void);
-        void testWasClickedElse(void);
+        // void testConstructor(void);
         void testDestructor(void);
 
     private:
-        Label * mTestObj;
+        PauseScreen * mTestObj;
 };
 
 //-----------------------------------------------------------------------------
 
-void TestLabel::testConstructor(void) {
-    CPPUNIT_ASSERT(0 < mTestObj->xPosition);
-    CPPUNIT_ASSERT(0 < mTestObj->yPosition);
+// void TestPauseScreen::testConstructor(void) {
+//     CPPUNIT_ASSERT(NULL != mTestObj->pauseScreen);
+// }
+
+void TestPauseScreen::testDestructor(void) {
+    mTestObj->~PauseScreen();
+    CPPUNIT_ASSERT(mTestObj->pauseScreen == NULL);
 }
 
-void TestLabel::testWasClickedIf() {
-    mTestObj->xPosition = 10;
-    mTestObj->yPosition = 10;
-
-    CPPUNIT_ASSERT(true == mTestObj->wasClicked(150, 80));
+void TestPauseScreen::setUp(void) {
+    mTestObj = new PauseScreen("../../resources/backgroundpausescreen.png");
 }
 
-void TestLabel::testWasClickedElse() {
-    mTestObj->xPosition = 10;
-    mTestObj->yPosition = 10;
-
-    CPPUNIT_ASSERT(false == mTestObj->wasClicked(200, 150));
-}
-
-void TestLabel::testDestructor(void) {
-    mTestObj->~Label();
-    CPPUNIT_ASSERT(mTestObj->label == NULL);
-}
-
-void TestLabel::setUp(void) {
-    mTestObj = new Label("../resources/mutebutton.png", 483, 68);
-}
-
-void TestLabel::tearDown(void) {
+void TestPauseScreen::tearDown(void) {
     delete mTestObj;
 }
 
 //-----------------------------------------------------------------------------
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TestLabel );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestPauseScreen );
 
 int main() {
     // informs test-listener about testresults
@@ -103,7 +84,7 @@ int main() {
     compileroutputter.write ();
 
     // Output XML for Jenkins CPPunit plugin
-    ofstream xmlFileOut("test/xml/testLabel.xml");
+    ofstream xmlFileOut("test/xml/testPauseScreen.xml");
     XmlOutputter xmlOut(&collectedresults, xmlFileOut);
     xmlOut.write();
 

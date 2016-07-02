@@ -154,18 +154,36 @@ void Jack::drawSelf(SDL_Surface *surface) {
 //		Level * level;		Pointer to access level class.
 // Return: void
 // -------------------------------------------------------------
-void Jack::jump(Level* level) {
+void Jack::jump(Level * level) {
 
     setYPosition(getYPosition() + getVerticalSpeed());
     setVerticalSpeed(getVerticalSpeed() + ACCELERATION);
 
     int maxJumpHeightLeft = 0;
-    maxJumpHeightLeft = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
-                                          (level->grid[(getXPosition() - Level::LEVEL_X_OFFSET) / 38].size() * 38));
-    int maxJumpHeightRight = 0;
-    maxJumpHeightRight = (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
-                                          (level->grid[(getXPosition() + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+    maxJumpHeightLeft = calculatesMaxJumpHeightLeft(level);
 
+    int maxJumpHeightRight = 0;
+    maxJumpHeightRight = calculatesMaxJumpHeightRight(level);
+
+    controlsMaxJump1(maxJumpHeightLeft, maxJumpHeightRight);
+    controlsMaxJump2(maxJumpHeightLeft, maxJumpHeightRight);
+
+    return;
+}
+
+
+int Jack::calculatesMaxJumpHeightLeft(Level * level) {
+    return (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
+                    (level->grid[(getXPosition() - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+}
+
+int Jack::calculatesMaxJumpHeightRight(Level * level) {
+    return (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
+                    (level->grid[(getXPosition() + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
+
+}
+
+void Jack::controlsMaxJump1(int maxJumpHeightLeft, int maxJumpHeightRight) {
     if (getJumping() == true) {
         if ((getYPosition() >= maxJumpHeightLeft) || (getYPosition() >= maxJumpHeightRight)) {
             setJumping(false);
@@ -176,25 +194,17 @@ void Jack::jump(Level* level) {
     } else {
         // Nothing to do
     }
-
-    controlsMaxJump(maxJumpHeightLeft, maxJumpHeightRight);
-
-    return;
 }
 
-void Jack::controlsMaxJump(int maxJumpHeightLeft, int maxJumpHeightRight) {
+void Jack::controlsMaxJump2(int maxJumpHeightLeft, int maxJumpHeightRight) {
     //these next two if's handles boxes superior colision.
     if (getYPosition() >= maxJumpHeightLeft) {
         setYPosition(maxJumpHeightLeft);
-
         setVerticalSpeed(1);
-        //verticalSpeed -= ACCELERATION;
 
     } else if (getYPosition() >= maxJumpHeightRight) {
         setYPosition(maxJumpHeightRight);
-
         setVerticalSpeed(1);
-        //verticalSpeed -= ACCELERATION;
 
     } else { //this avoids double jumping while falling from a box
         setJumping(true);
@@ -390,6 +400,7 @@ void Jack::setYPosition(int y_position) {
     this->y_position =  y_position;
 }
 
+
 // -------------------------------------------------------------
 // Function: getSpeed()
 // Description: Return the Jack's speed.
@@ -401,66 +412,151 @@ int Jack::getSpeed() {
 
 // -------------------------------------------------------------
 // Function: setSpeed()
-// Description: Return the Jack's speed.
+// Description: Return Jack's speed.
+// Parameters:
+//      int speed;
 // Return: void
 // -------------------------------------------------------------
 void Jack::setSpeed(int speed) {
     this->speed =  speed;
 }
 
+// -------------------------------------------------------------
+// Function: getDead()
+// Description: Return dead Jack.
+// Return: bool
+// -------------------------------------------------------------
 bool Jack::getDead() {
     return this->dead;
 }
 
+// -------------------------------------------------------------
+// Function: setDead()
+// Description: Return dead Jack.
+// Parameters:
+//      bool dead;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setDead(bool dead) {
     this->dead = dead;
 }
 
+// -------------------------------------------------------------
+// Function: getVerticalSpeed()
+// Description: Return vertical speed of Jack.
+// Return: void
+// -------------------------------------------------------------
 int Jack::getVerticalSpeed() {
     return this->verticalSpeed;
 }
 
+// -------------------------------------------------------------
+// Function: setVerticalSpeed()
+// Description: Return vertical speed of Jack.
+// Parameters:
+//      int verticalSpeed;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setVerticalSpeed(int verticalSpeed) {
     this->verticalSpeed = verticalSpeed;
 }
 
+// -------------------------------------------------------------
+// Function: getJumping()
+// Description: Return Jack jumping.
+// Return: void
+// -------------------------------------------------------------
 bool Jack::getJumping() {
     return this->jumping;
 }
 
+// -------------------------------------------------------------
+// Function: setJumping()
+// Description: Return Jack jumping.
+// Parameters:
+//      bool jumping;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setJumping(bool jumping) {
     this->jumping = jumping;
 }
 
+// -------------------------------------------------------------
+// Function: getLastMove()
+// Description: Return Jack's last move.
+// Return: void
+// -------------------------------------------------------------
 int Jack::getLastMove() {
     return this->lastMove;
 }
 
+// -------------------------------------------------------------
+// Function: setLastMove()
+// Description: Return Jack's last move.
+// Parameters:
+//      int lastMove;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setLastMove(int lastMove) {
     this->lastMove = lastMove;
 }
 
+// -------------------------------------------------------------
+// Function: getLastButOneMove()
+// Description: Return Jack's last but one move.
+// Return: void
+// -------------------------------------------------------------
 int Jack::getLastButOneMove() {
     return this->lastButOneMove;
 }
 
+// -------------------------------------------------------------
+// Function: setLastButOneMove()
+// Description: Return Jack's last but one move.
+// Parameters:
+//      int lastButOneMove;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setLastButOneMove(int lastButOneMove) {
     this->lastButOneMove = lastButOneMove;
 }
 
+// -------------------------------------------------------------
+// Function: getStrength()
+// Description: Return Jack's strength.
+// Return: void
+// -------------------------------------------------------------
 int Jack::getStrength() {
     return this->strength;
 }
 
+// -------------------------------------------------------------
+// Function: setStrength()
+// Description: Return Jack's strength.
+// Parameters:
+//      int strength;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setStrength(int strength) {
     this->strength = strength;
 }
 
+// -------------------------------------------------------------
+// Function: getFrame()
+// Description: Return frame of Jack.
+// Return: void
+// -------------------------------------------------------------
 int Jack::getFrame() {
     return this->frame;
 }
 
+// -------------------------------------------------------------
+// Function: setFrame()
+// Description: Return frame of Jack.
+// Parameters:
+//      int frame;
+// Return: void
+// -------------------------------------------------------------
 void Jack::setFrame(int frame) {
     this->frame = frame;
 }
-

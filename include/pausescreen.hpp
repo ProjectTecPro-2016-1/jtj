@@ -5,11 +5,12 @@
 #include <string>
 
 class PauseScreen : public GameObject {
-    SDL_Surface * pauseScreen;						// Surface for "Pause" that will be applie on screen.
     void drawSelf(SDL_Surface *surface);
     
 	public:
 
+    	SDL_Surface * pauseScreen;						// Surface for "Pause" that will be applie on screen.
+    													// Public for testing
         PauseScreen(std::string filename);
         ~PauseScreen();
 

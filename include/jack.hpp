@@ -18,9 +18,9 @@ class Jack : public GameObject {
         int lastButOneMove;           // Stores Jack's last but one move. Used to stop Jack or make him walk again.
         int frame;                           // Variable for animation in drawSelf() method.
         int strength;                       // Stores Jack's strength to move boxes.
-        int speed;          // Stores Jack's actual horizontal speed.
-        int verticalSpeed;      // Stores Jack's actual vertical Speed.
-        bool jumping;           // Stores the information wheter Jack is jumping or not.
+        int speed;                           // Stores Jack's actual horizontal speed.
+        int verticalSpeed;               // Stores Jack's actual vertical Speed.
+        bool jumping;                     // Stores the information wheter Jack is jumping or not.
 
     public:
         SDL_Rect spriteClips[9];
@@ -51,8 +51,12 @@ class Jack : public GameObject {
         void pushMove(int v);
         void popMove(int v);
 
-        void jump(Level* level);
-        void controlsMaxJump(int maxJumpHeightLeft, int maxJumpHeightRight);
+        void jump(Level * level);
+        int calculatesMaxJumpHeightLeft(Level * level);
+        int calculatesMaxJumpHeightRight(Level * level);
+
+        void controlsMaxJump1(int maxJumpHeightLeft, int maxJumpHeightRight);
+        void controlsMaxJump2(int maxJumpHeightLeft, int maxJumpHeightRight);
 
         int getXPosition();
         void setXPosition(int x_position);
