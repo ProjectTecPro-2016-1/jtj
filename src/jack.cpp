@@ -171,18 +171,38 @@ void Jack::jump(Level * level) {
     return;
 }
 
-
+// -------------------------------------------------------------
+// Function: calculatesMaxJumpHeightLeft()
+// Description: Calculates Jack's max jump height left.
+// Parameters:
+//                      Level * level;          Pointer to access level class.
+// Return: int
+// -------------------------------------------------------------
 int Jack::calculatesMaxJumpHeightLeft(Level * level) {
     return (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
                     (level->grid[(getXPosition() - Level::LEVEL_X_OFFSET) / 38].size() * 38));
 }
 
+// -------------------------------------------------------------
+// Function: calculatesMaxJumpHeightRight()
+// Description: Calculates Jack's max jump height right.
+// Parameters:
+//                      Level * level;          Pointer to access level class.
+// Return: int
+// -------------------------------------------------------------
 int Jack::calculatesMaxJumpHeightRight(Level * level) {
     return (int)(Level::LEVEL_Y_OFFSET + Level::LEVEL_HEIGHT - 57 - 38 -
                     (level->grid[(getXPosition() + 37 - Level::LEVEL_X_OFFSET) / 38].size() * 38));
-
 }
 
+// -------------------------------------------------------------
+// Function: controlsMaxJump1()
+// Description: Controls Jack's max jump.
+// Parameters:
+//                      int maxJumpHeightLeft;
+//                      int maxJumpHeightRight;
+// Return: void
+// -------------------------------------------------------------
 void Jack::controlsMaxJump1(int maxJumpHeightLeft, int maxJumpHeightRight) {
     if (getJumping() == true) {
         if ((getYPosition() >= maxJumpHeightLeft) || (getYPosition() >= maxJumpHeightRight)) {
@@ -196,6 +216,14 @@ void Jack::controlsMaxJump1(int maxJumpHeightLeft, int maxJumpHeightRight) {
     }
 }
 
+// -------------------------------------------------------------
+// Function: controlsMaxJump2()
+// Description: Controls Jack's max jump.
+// Parameters:
+//                      int maxJumpHeightLeft;
+//                      int maxJumpHeightRight;
+// Return: void
+// -------------------------------------------------------------
 void Jack::controlsMaxJump2(int maxJumpHeightLeft, int maxJumpHeightRight) {
     //these next two if's handles boxes superior colision.
     if (getYPosition() >= maxJumpHeightLeft) {
@@ -249,8 +277,7 @@ void Jack::popMove(int v) {
 			setSpeed(getLastButOneMove());
 			setLastMove(getLastButOneMove());
 			setLastButOneMove(0);
-		}
-		else {
+		} else {
 			setLastMove(0);
 			setSpeed(0);
 			/*
@@ -278,6 +305,11 @@ void Jack::popMove(int v) {
 void Jack::pushBox() {
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsStopped()
+// Description: Sets Jack image stopped.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsStopped() {
     spriteClips[0].x = 0;
     spriteClips[0].y = JACK_HEIGHT;
@@ -285,6 +317,11 @@ void Jack::setSpriteClipsStopped() {
     spriteClips[0].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsOneRight()
+// Description: Sets Jack image to right.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsOneRight() {
     spriteClips[1].x = JACK_WIDTH;
     spriteClips[1].y = JACK_HEIGHT;
@@ -292,6 +329,11 @@ void Jack::setSpriteClipsOneRight() {
     spriteClips[1].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsSecondRight()
+// Description: Sets Jack image to right.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsSecondRight() {
     spriteClips[2].x = JACK_WIDTH*2;
     spriteClips[2].y = JACK_HEIGHT;
@@ -299,6 +341,11 @@ void Jack::setSpriteClipsSecondRight() {
     spriteClips[2].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsThirdRight()
+// Description: Sets Jack image to right.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsThirdRight() {
     spriteClips[3].x = JACK_WIDTH*3;
     spriteClips[3].y = JACK_HEIGHT;
@@ -306,6 +353,11 @@ void Jack::setSpriteClipsThirdRight() {
     spriteClips[3].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsJumpRight()
+// Description: Sets Jack image jump to right.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsJumpRight() {
     spriteClips[7].x = JACK_WIDTH*4;
     spriteClips[7].y = JACK_HEIGHT;
@@ -313,6 +365,11 @@ void Jack::setSpriteClipsJumpRight() {
     spriteClips[7].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsOneLeft()
+// Description: Sets Jack image to left.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsOneLeft() {
     spriteClips[4].x = JACK_WIDTH;
     spriteClips[4].y = 0;
@@ -320,6 +377,11 @@ void Jack::setSpriteClipsOneLeft() {
     spriteClips[4].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsSecondLeft()
+// Description: Sets Jack image to left.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsSecondLeft() {
     spriteClips[5].x = JACK_WIDTH*2;
     spriteClips[5].y = 0;
@@ -327,6 +389,11 @@ void Jack::setSpriteClipsSecondLeft() {
     spriteClips[5].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsThirdLeft()
+// Description: Sets Jack image to left.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsThirdLeft() {
     spriteClips[6].x = JACK_WIDTH*3;
     spriteClips[6].y = 0;
@@ -334,6 +401,11 @@ void Jack::setSpriteClipsThirdLeft() {
     spriteClips[6].h = JACK_HEIGHT;
 }
 
+// -------------------------------------------------------------
+// Function: setSpriteClipsJumpLeft()
+// Description: Sets Jack image jump to left.
+// Return: void
+// -------------------------------------------------------------
 void Jack::setSpriteClipsJumpLeft() {
     spriteClips[8].x = JACK_WIDTH*4;
     spriteClips[8].y = 0;
@@ -399,7 +471,6 @@ int Jack::getYPosition() {
 void Jack::setYPosition(int y_position) {
     this->y_position =  y_position;
 }
-
 
 // -------------------------------------------------------------
 // Function: getSpeed()
