@@ -36,7 +36,11 @@ class Enemy : public GameObject {
         void FourthMove();
         void FifthMove();
         
-        void setBox(vector<Box*> boxes, int i);
+
+        void setFirstFrame();
+        void setSecondFrame();
+
+        void setBox(vector<Box*> boxes);
         SDL_Surface * enemy;     // Pointer for enemy graphic elements.
         void drawSelf(SDL_Surface * surface);
 

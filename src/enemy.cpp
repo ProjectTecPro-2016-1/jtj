@@ -8,43 +8,24 @@ using namespace std;
 
 // -------------------------------------------------------------
 // Function: drawSelf()
-// Description: Selects the current motion frame and draws the enemies image in specific position
-//				on the screen according to the enemy attributes.
+// Description: Selects the current motion frame and draws the 
+//              enemies image in specific position on the screen 
+//              according to the enemy attributes.
 // Parameters:
-//		SDL_Surface * surface;  		Pointer for surface where the graphic component will be
-//                                      drawn.
+//		SDL_Surface * surface;  		Pointer for surface 
+//                                      where the graphic 
+//                                      component will 
+//                                      be drawn.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::drawSelf(SDL_Surface * surface) {
     //SDLUtil::applySurface(this->x_position, this->y_position, this->enemy, surface);
-    // FirstFrame
     if (getMoveDirection() % 2 == 0 && getMovesLeft() > 0) {
-        setFrame(getFrame() + 1);
-
-        if (getFrame() > 3) {
-            setFrame(1); 
-        } else {
-            // Nothing to do
-        }
-    // SecondFrame
+        setFirstFrame();
     } else if (getMoveDirection() % 2 == 1 && getMovesLeft() > 0) {
-        setFrame(getFrame() + 1);
-
-        if (getFrame() < 4) {
-            setFrame(4);
-        } else {
-            // Nothing to do
-        }
-
-        if (getFrame() > 6) {
-            setFrame(4);
-        } else {
-            // Nothing to do
-        }
-    // ThirdFrame
+        setSecondFrame();
     } else if (getMovesLeft() == 0 && getMoveDirection() > 30 && getMoveDirection() < 40) {
         setFrame(7);
-    // FourthFrame
     } else {
         setFrame(0);
     }
@@ -56,7 +37,8 @@ void Enemy::drawSelf(SDL_Surface * surface) {
 
 // -------------------------------------------------------------
 // Function: setSpriteClips()
-// Description: Initializes the dimensions of each picture frame and each enemy moviment.
+// Description: Initializes the dimensions of each picture frame
+//              and each enemy moviment.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setSpriteClips() {
@@ -72,7 +54,8 @@ void Enemy::setSpriteClips() {
 
 // -------------------------------------------------------------
 // Function: Enemy()
-// Description: Enemy class builder where the initializations of the variables happen.
+// Description: Enemy class builder where the initializations of 
+//              the variables happen.
 // Parameters:
 //		string fileName;  		Enemy landscape file name.
 // Return: void
@@ -90,7 +73,8 @@ Enemy::Enemy(string filename) {
 
 // -------------------------------------------------------------
 // Function: ~Enemy()
-// Description: Enemy class destructor where the landscape image files free themselves.
+// Description: Enemy class destructor where the landscape image
+//              files free themselves.
 // Return: void
 // -------------------------------------------------------------
 Enemy::~Enemy() {
@@ -103,7 +87,8 @@ Enemy::~Enemy() {
 
 // -------------------------------------------------------------
 // Function: move()
-// Description: Moves the enemy horizontally according to level dimensions.
+// Description: Moves the enemy horizontally according to level 
+//              dimensions.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::move() {
@@ -129,13 +114,7 @@ void Enemy::move() {
 
     if (getMovesLeft() <= 0) {
         //delay
-        if (getMoveDirection() > 0) {
-            FifthMove();
-        } else {
-            //gen  movesLeft and moveDirection
-            setMovesLeft((rand() % 6) * 38);
-            setMoveDirection(rand() % 120);
-        }
+        FifthMove();
     } else {
         // Nothing to do
     }
@@ -145,22 +124,17 @@ void Enemy::move() {
 
 // -------------------------------------------------------------
 // Function: throwBox()
-// Description: Controls the enemies freedom box when the right position is achieved.
+// Description: Controls the enemies freedom box when the right 
+//              position is achieved.
 // Parameters:
-//		int vector<Box*> boxes;			Vector that contains boxes it´s positions.
+//		int vector<Box*> boxes;			Vector that contains 
+//                                      boxes it´s positions.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::throwBox(vector<Box*> boxes) {
     if ((getXPosition() - Level::LEVEL_X_OFFSET) % 38 == 0) {
         if (getMovesLeft() == 0 && getMoveDirection() == 30) {
-            for (unsigned int i = 0; i < boxes.size(); i++) {
-                if (boxes.at(i)->used == false) {
-                    setBox(boxes, i);                
-                    break;// descomentar em caso de erro return;
-                } else {
-                    // Nothing to do
-                }
-            }
+            setBox(boxes);                
         } else {
             // Nothing to do
         }
@@ -171,15 +145,71 @@ void Enemy::throwBox(vector<Box*> boxes) {
     return;
 }
 
-void Enemy::setBox(vector<Box*> boxes, int i){
-    boxes.at(i)->used = true;
-    boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
-                                            Box::BOX_HEIGHT);
+// -------------------------------------------------------------
+// Function: setFirstFrame()
+// Description: Setting the enemy frame according to 
+//              MoveDirection and MovesLeft, the position of 
+//              enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setFirstFrame() {
+    setFrame(getFrame() + 1);
+    
+    if (getFrame() > 3) {
+        setFrame(1); 
+    } else {
+        // Nothing to do
+    }
+}
+
+// -------------------------------------------------------------
+// Function: setSecondFrame()
+// Description: Setting the enemy frame according to 
+//              MoveDirection and MovesLeft, the position of 
+//              enemy.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setSecondFrame() {
+    setFrame(getFrame() + 1);
+
+    if (getFrame() < 4) {
+        setFrame(4);
+    } else {
+        // Nothing to do
+    }
+
+    if (getFrame() > 6) {
+        setFrame(4);
+    } else {
+        // Nothing to do
+    }
+}
+
+// -------------------------------------------------------------
+// Function: setBox()
+// Description: Set the box position.
+// Parameters:
+//      vector<Box*> boxes         Vector of boxes.
+// Return: void
+// -------------------------------------------------------------
+void Enemy::setBox(vector<Box*> boxes){
+    for (unsigned int i = 0; i < boxes.size(); i++) {
+        if (boxes.at(i)->used == false) {
+            boxes.at(i)->used = true;
+            boxes.at(i)->setPosition(getXPosition(), getYPosition() - Enemy::ENEMY_HEIGHT +
+                                    Box::BOX_HEIGHT);
+            
+            break;// descomentar em caso de erro return;
+        } else {
+            // Nothing to do
+        }
+    }
 }
 
 // -------------------------------------------------------------
 // Function: setStopEnemy()
-// Description: Initializes the dimensions of finishing movement to right of enemy.
+// Description: Initializes the dimensions of finishing movement 
+//              to right of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setStopEnemy() {
@@ -192,7 +222,8 @@ void Enemy::setStopEnemy() {
 
 // -------------------------------------------------------------
 // Function: setStartingtRightEnemyMovement()
-// Description: Initializes the dimensions of starting movement to right of enemy.
+// Description: Initializes the dimensions of starting movement 
+//              to right of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setStartingtRightEnemyMovement() {
@@ -204,7 +235,8 @@ void Enemy::setStartingtRightEnemyMovement() {
 
 // -------------------------------------------------------------
 // Function: setContinuingRightEnemyMovement()
-// Description: Initializes the dimensions of continuing movement to right of enemy.
+// Description: Initializes the dimensions of continuing 
+//              movement to right of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setContinuingRightEnemyMovement() {
@@ -216,7 +248,8 @@ void Enemy::setContinuingRightEnemyMovement() {
 
 // -------------------------------------------------------------
 // Function: setFinishingRightEnemyMovement()
-// Description: Initializes the dimensions of finishing movement to right of enemy.
+// Description: Initializes the dimensions of finishing movement
+//              to right of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setFinishingRightEnemyMovement() {
@@ -228,7 +261,8 @@ void Enemy::setFinishingRightEnemyMovement() {
 
 // -------------------------------------------------------------
 // Function: setFinishingtLeftEnemyMovement()
-// Description: Initializes the dimensions of finishing movement to left of enemy.
+// Description: Initializes the dimensions of finishing movement
+//              to left of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setFinishingLeftEnemyMovement() {
@@ -240,7 +274,8 @@ void Enemy::setFinishingLeftEnemyMovement() {
 
 // -------------------------------------------------------------
 // Function: setContinuingtLeftEnemyMovement()
-// Description: Initializes the dimensions of continuing movement to left of enemy.
+// Description: Initializes the dimensions of continuing movement
+//              to left of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setContinuingLeftEnemyMovement() {
@@ -252,7 +287,8 @@ void Enemy::setContinuingLeftEnemyMovement() {
 
 // -------------------------------------------------------------
 // Function: setStartingtLeftEnemyMovement()
-// Description: Initializes the dimensions of starting movement to left of enemy.
+// Description: Initializes the dimensions of starting movement
+//              to left of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setStartingtLeftEnemyMovement() {
@@ -264,7 +300,8 @@ void Enemy::setStartingtLeftEnemyMovement() {
 
 // -------------------------------------------------------------
 // Function: setDropBox()
-// Description: Initializes the dimensions of finishing movement to right of enemy.
+// Description: Initializes the dimensions of finishing movement
+//              to right of enemy.
 // Return: void
 // -------------------------------------------------------------
 void Enemy::setDropBox() {    
@@ -327,12 +364,20 @@ void Enemy::FourthMove() {
 // Return: void
 // -------------------------------------------------------------
 void Enemy::FifthMove() {
-    setMoveDirection(getMoveDirection() - 1);
+    if (getMoveDirection() > 0) {
+        setMoveDirection(getMoveDirection() - 1);
+    } else {
+        //gen  movesLeft and moveDirection
+        setMovesLeft((rand() % 6) * 38);
+        setMoveDirection(rand() % 120);
+    }
+
 }
 
 // -------------------------------------------------------------
 // Function: setXPosition()
-// Description: Defines the enemy position in relation to the x axis. 
+// Description: Defines the enemy position in relation to the x 
+//              axis. 
 // Parameters:
 //      int xPosition;         Enemy posistion on x axis.
 // Return: void
@@ -343,7 +388,8 @@ void Enemy::setXPosition(int xPosition) {
 
 // -------------------------------------------------------------
 // Function: getXPosition()
-// Description: Return the enemy position in relation to the x axis. 
+// Description: Return the enemy position in relation to the x 
+//              axis. 
 // Return: int xPosition;   Enemy posistion on x axis.
 // -------------------------------------------------------------
 int Enemy::getXPosition() {
@@ -352,7 +398,8 @@ int Enemy::getXPosition() {
 
 // -------------------------------------------------------------
 // Function: setYPosition()
-// Description: Defines the enemy position in relation to the y axis. 
+// Description: Defines the enemy position in relation to the y 
+//              axis. 
 // Parameters:
 //      int yPosition;         Enemy posistion on y axis.
 // Return: void
@@ -363,7 +410,8 @@ void Enemy::setYPosition(int yPosition) {
 
 // -------------------------------------------------------------
 // Function: getYPosition()
-// Description: Return the enemy position in relation to the y axis. 
+// Description: Return the enemy position in relation to the y 
+//              axis. 
 // Return: int yPosition;   Enemy posistion on y axis.
 // -------------------------------------------------------------
 int Enemy::getYPosition() {
