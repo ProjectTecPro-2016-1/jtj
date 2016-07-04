@@ -1,8 +1,9 @@
 #include "language.hpp"
 #include <iostream>
 #include <cassert>
-#include <libxml/xmlreader.h>
-#include <libxml/xmlmemory.h>
+#include <vector>
+#include <string>
+#include <libxml/xpath.h>
 #include <libxml/parser.h>
 
 using namespace std;
@@ -15,76 +16,10 @@ using namespace std;
 // Return: void  
 // -------------------------------------------------------------
 Language::Language(string language) {
-    assert(language != "" && "Fail to select a language because this is blank.");
-
-    readXMLFile();
+    setLanguagesExist();
     setLanguage(language);
-}
-
-void Language::readXMLFile() {
-
-    // xmlDocPtr xmlDocument;
-    // xmlDocument = xmlParseFile("languages/internacionalization.xml");
-
-    // xmlNodePtr internationalizationRoot;
-    // internationalizationRoot = xmlDocGetRootElement(xmlDocument);
-    // clog << internationalizationRoot->type << " - " << internationalizationRoot->name << endl;
-
-    // xmlNodePtr languagesNode;
-    // languagesNode = internationalizationRoot->children;
-    // languagesNode = languagesNode->next;
-    // clog << languagesNode->type << " - " << languagesNode->name << endl;
-
-    // xmlNodePtr quantityLanguagesNode;
-    // quantityLanguagesNode = languagesNode->children->next;
     
-    // xmlChar * quantityLanguagesContent;
-    // quantityLanguagesContent = xmlNodeListGetString(xmlDocument, quantityLanguagesNode->xmlChildrenNode, 1);
-    // clog << quantityLanguagesNode->type << " - " << quantityLanguagesNode->name << " - " << quantityLanguagesContent << endl;
-
-    // xmlNodePtr listOfLanguagesNode = quantityLanguagesNode->next->next;
-    // for (int i = 0; i < 3; i++) {
-    //     xmlNodePtr languageNodeEspecific = listOfLanguagesNode->children->next;
-    //     xmlChar * listOfLanguagesContent;
-    //     listOfLanguagesContent = xmlNodeListGetString(xmlDocument, languageNodeEspecific->xmlChildrenNode, 1);
-    //     clog << languageNodeEspecific->type << " - " << languageNodeEspecific->name << " - " << listOfLanguagesContent << endl;
-    //     languageNodeEspecific = languageNodeEspecific->next;
-    // }
-
-
-
-    // xmlNodePtr imagesNode;
-    // imagesNode = languagesNode->next->next;
-    // clog << imagesNode->type << " - " << imagesNode->name << endl;
-
-    // xmlNodePtr textsNode;
-    // textsNode = imagesNode->next->next;
-    // clog << textsNode->type << " - " << textsNode->name << endl;
-
-
-    // while(cur != NULL) {
-    //     if(cur->type == XML_ELEMENT_NODE) {                       
-    //         xmlChar* content;   
-        
-    //         cur = cur->children;
-                
-    //         while(cur != NULL) {
-    //             if(cur->type == XML_ELEMENT_NODE) {                       
-    //                 content = xmlNodeListGetString(xmlDocument, cur->xmlChildrenNode, 1);
-    //                 printf("%s : %s\n",cur->name,content);
-    //                 xmlFree(content);
-    //                 /*free(content);*/   /* windows */
-    //                 content = NULL;
-    //             }
-
-    //             cur = cur->next;
-    //         }
-    //     }
-
-    //     cur = cur->next;
-    // }
-        
-    // xmlFreeDoc(xmlDocument); 
+    // readXMLFile();
 }
 
 // -------------------------------------------------------------  
@@ -93,7 +28,7 @@ void Language::readXMLFile() {
 // Return: void  
 // -------------------------------------------------------------  
 Language::~Language() {
-
+    this->languagesExist.clear();
 }
 
 // -------------------------------------------------------------  
@@ -103,8 +38,21 @@ Language::~Language() {
 //      string language;
 // Return: void  
 // -------------------------------------------------------------
-void Language::setLanguage(string language) {
-    this->language = language;
+void Language::setLanguage(string informedLanguage) {
+
+    this->language = "English";
+
+    if (informedLanguage.compare("") != 0) {
+        for (unsigned int i = 0; i < getLanguagesExist().size(); i++) {
+            if (getLanguagesExist().at(i).compare(informedLanguage) == 0) {
+                this->language = informedLanguage;
+            } else {
+                // Nothing to do
+            }
+        }
+    } else {
+        // Nothing to do
+    }
 }
 
 // -------------------------------------------------------------  
@@ -124,7 +72,54 @@ string Language::getLanguage() {
 // Return: string  
 // -------------------------------------------------------------
 string Language::getText(string text) {
-    return text;
+
+    string textReturn = text;
+
+    xmlDocPtr document;
+    document = openXmlDocument();
+
+    xmlChar * textSearch = (xmlChar *) "//Text";
+
+    xmlXPathObjectPtr resultSearchNode;
+    resultSearchNode = getSearchNode(document, textSearch);
+
+    if (resultSearchNode != NULL) {
+        xmlNodeSetPtr nodeset;
+        nodeset = resultSearchNode->nodesetval;
+        for (int i = 0; i < nodeset->nodeNr; i++) {
+            xmlChar * textAttribute;
+            textAttribute = xmlNodeListGetString(document, nodeset->nodeTab[i]->properties->children, 1);
+            if (textAttribute != NULL) {
+                if (text.compare((char *) textAttribute) == 0) {
+                    textReturn = searchTextReturn(document, nodeset->nodeTab[i]);
+                } else {
+                    // Nothing to do
+                }
+            } else {
+                // Nothing to do
+            }
+            xmlFree(textAttribute);
+        }
+        xmlXPathFreeObject(resultSearchNode);
+    }
+
+    closeXmlDocument(document);
+    xmlCleanupParser();
+
+    return textReturn;
+}
+
+string Language::searchTextReturn(xmlDocPtr document, xmlNodePtr currentNode) {
+    string textReturn = "";
+    xmlNodePtr currentSon = currentNode->xmlChildrenNode;
+    while (currentSon != NULL) {
+        if ((!xmlStrcmp(currentSon->name, (const xmlChar *) getLanguage().c_str()))){
+            textReturn = (char *) xmlNodeListGetString(document, currentSon->xmlChildrenNode, 1);
+            break;
+        }
+        currentSon = currentSon->next;
+    }
+    return textReturn;
 }
 
 // -------------------------------------------------------------  
@@ -135,5 +130,108 @@ string Language::getText(string text) {
 // Return: string  
 // -------------------------------------------------------------
 string Language::getLocationImage(string image) {
-    return image;
+
+    string imageReturn = image;
+
+    xmlDocPtr document;
+    document = openXmlDocument();
+
+    xmlChar * textSearch = (xmlChar *) "//Image";
+
+    xmlXPathObjectPtr resultSearchNode;
+    resultSearchNode = getSearchNode(document, textSearch);
+
+    if (resultSearchNode != NULL) {
+        xmlNodeSetPtr nodeset;
+        nodeset = resultSearchNode->nodesetval;
+        for (int i = 0; i < nodeset->nodeNr; i++) {
+            xmlChar * imageAttribute;
+            imageAttribute = xmlNodeListGetString(document, nodeset->nodeTab[i]->properties->children, 1);
+            if (imageAttribute != NULL) {
+                if (image.compare((char *) imageAttribute) == 0) {
+                    imageReturn = searchTextReturn(document, nodeset->nodeTab[i]);
+                } else {
+                    // Nothing to do
+                }
+            } else {
+                // Nothing to do
+            }
+            xmlFree(imageAttribute);
+        }
+        xmlXPathFreeObject(resultSearchNode);
+    }
+
+    closeXmlDocument(document);
+    xmlCleanupParser();
+
+    return imageReturn;
+}
+
+void Language::setLanguagesExist() {
+
+    xmlDocPtr document;
+    document = openXmlDocument();
+
+    xmlChar * textSearch = (xmlChar *) "//Languages";
+
+    xmlXPathObjectPtr resultSearchNode;
+    resultSearchNode = getSearchNode(document, textSearch);
+
+    if (resultSearchNode != NULL) {
+        xmlNodeSetPtr nodeset;
+        nodeset = resultSearchNode->nodesetval;
+        for (int i = 0; i < nodeset->nodeNr; i++) {
+            xmlChar * descriptionLanguages;
+            descriptionLanguages = xmlNodeListGetString(document, nodeset->nodeTab[i]->xmlChildrenNode, 1);
+            this->languagesExist.push_back((const char *) descriptionLanguages);
+            xmlFree(descriptionLanguages);
+        }
+        xmlXPathFreeObject(resultSearchNode);
+    }
+
+    closeXmlDocument(document);
+    xmlCleanupParser();
+}
+
+vector<string> Language::getLanguagesExist() {
+    return this->languagesExist;
+}
+
+xmlXPathObjectPtr Language::getSearchNode(xmlDocPtr document, xmlChar * nodeSearch) {
+    xmlXPathContextPtr context;
+    xmlXPathObjectPtr result;
+
+    context = xmlXPathNewContext(document);
+    if (context == NULL) {
+        printf("Error in xmlXPathNewContext\n");
+        return NULL;
+    }
+    result = xmlXPathEvalExpression(nodeSearch, context);
+    xmlXPathFreeContext(context);
+    if (result == NULL) {
+        printf("Error in xmlXPathEvalExpression\n");
+        return NULL;
+    }
+    if(xmlXPathNodeSetIsEmpty(result->nodesetval)) {
+        xmlXPathFreeObject(result);
+        printf("No result\n");
+        return NULL;
+    }
+
+    return result;
+}
+
+xmlDocPtr Language::openXmlDocument() {
+    xmlDocPtr document;
+    document = xmlParseFile("languages/internacionalization.xml");
+
+    if (document == NULL) {
+        assert(true && "Fail to open doc internacionalization.xml, is not possible to run the game.");
+    }
+
+    return document;
+}
+
+void Language::closeXmlDocument(xmlDocPtr document) {
+    xmlFreeDoc(document);
 }

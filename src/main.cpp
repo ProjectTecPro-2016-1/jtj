@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     if (argc >= 2) {
     	game.setLanguage(argv[1]);
     } else {
-    	game.setLanguage("english");
+    	game.setLanguage("");
     }
 
     game.init();

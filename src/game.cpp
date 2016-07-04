@@ -279,6 +279,8 @@ void Game::init() {
     result_SDL_FillRect = SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     assert(result_SDL_FillRect >= 0 && "Problem to show a rect of main screen.");
 
+    clog << "Language selected: " << this->language->getLanguage() << endl;
+
     return;
 }
 
@@ -389,7 +391,7 @@ void Game::wonGameScreen() {
 
         cout << "Level: " << actualLevel << endl;
 
-        wonScreen = new InitScreen("resources/backgroundwonscreen.png");
+        wonScreen = new InitScreen(this->language->getLocationImage("resources/backgroundwonscreen.png"));
 
         bool playButton = false;
         bool quitButton = false;
@@ -480,15 +482,17 @@ void Game::wonGameScreen() {
 // -------------------------------------------------------------
 void Game::showOptionsScreen() {
 
-    optionsScreen = new OptionsScreen("resources/backgroundoptionsscreen.png");
+    optionsScreen = new OptionsScreen(
+                        this->language->getLocationImage("resources/backgroundoptionsscreen.png"),
+                        this->language->getLocationImage("resources/helpTextImage.png"));
 
-    labelMute = new Label("resources/mutebutton.png", 483, 68);
+    labelMute = new Label(this->language->getLocationImage("resources/mutebutton.png"), 483, 68);
     optionsScreen->addChild(labelMute);
 
-    labelLoad = new Label("resources/loadbutton.png", 483, 191);
+    labelLoad = new Label(this->language->getLocationImage("resources/loadbutton.png"), 483, 191);
     optionsScreen->addChild(labelLoad);
 
-    labelBack = new Label("resources/backbutton.png", 483, 314);
+    labelBack = new Label(this->language->getLocationImage("resources/backbutton.png"), 483, 314);
     optionsScreen->addChild(labelBack);
 
     bool muteButton = false;
@@ -584,15 +588,15 @@ void Game::gameOvering() {
 // Return: void
 // -------------------------------------------------------------
 void Game::gameOverScreenDraw() {
-    gameOverScreen = new GameOverScreen("resources/backgroundgameover.png");
+    gameOverScreen = new GameOverScreen(this->language->getLocationImage("resources/backgroundgameover.png"));
 
-    labelPlay = new Label("resources/startbutton.png", 483, 68);
+    labelPlay = new Label(this->language->getLocationImage("resources/startbutton.png"), 483, 68);
     gameOverScreen->addChild(labelPlay);
 
-    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
+    labelOptions = new Label(this->language->getLocationImage("resources/optionsbutton.png"), 483, 191);
     gameOverScreen->addChild(labelOptions);
 
-    labelQuit = new Label("resources/exitbutton.png", 483, 314);
+    labelQuit = new Label(this->language->getLocationImage("resources/exitbutton.png"), 483, 314);
     gameOverScreen->addChild(labelQuit);
 
     return;
@@ -686,15 +690,15 @@ void Game::pausingLevel() {
 // Return: void
 // -------------------------------------------------------------
 void Game::pauseScreenDraw() {
-    pauseScreen = new PauseScreen("resources/backgroundpausescreen.png");
+    pauseScreen = new PauseScreen(this->language->getLocationImage("resources/backgroundpausescreen.png"));
 
-    labelPlay = new Label("resources/startbutton.png", 483, 68);
+    labelPlay = new Label(this->language->getLocationImage("resources/startbutton.png"), 483, 68);
     pauseScreen->addChild(labelPlay);
 
-    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
+    labelOptions = new Label(this->language->getLocationImage("resources/optionsbutton.png"), 483, 191);
     pauseScreen->addChild(labelOptions);
 
-    labelQuit = new Label("resources/exitbutton.png", 483, 314);
+    labelQuit = new Label(this->language->getLocationImage("resources/exitbutton.png"), 483, 314);
     pauseScreen->addChild(labelQuit);
 
     return;
@@ -823,15 +827,15 @@ void Game::initializingScreen() {
 // Return: void
 // -------------------------------------------------------------
 void Game::initScreenDraw() {
-    initScreen = new InitScreen("resources/backgroundinitscreen.png");
+    initScreen = new InitScreen(this->language->getLocationImage("resources/backgroundinitscreen.png"));
 
-    labelPlay = new Label("resources/startbutton.png", 483, 68);
+    labelPlay = new Label(this->language->getLocationImage("resources/startbutton.png"), 483, 68);
     initScreen->addChild(labelPlay);
 
-    labelOptions = new Label("resources/optionsbutton.png", 483, 191);
+    labelOptions = new Label(this->language->getLocationImage("resources/optionsbutton.png"), 483, 191);
     initScreen->addChild(labelOptions);
 
-    labelQuit = new Label("resources/exitbutton.png", 483, 314);
+    labelQuit = new Label(this->language->getLocationImage("resources/exitbutton.png"), 483, 314);
     initScreen->addChild(labelQuit);
 
     return;
@@ -935,7 +939,9 @@ void Game::initScreenLoop() {
 // Return: void
 // -------------------------------------------------------------
 void Game::loadCommonResources() {
-    score = new ScoreScreen("resources/armario.png", "resources/HanaleiRegular.ttf");
+    score = new ScoreScreen(this->language->getLocationImage("resources/armario.png"), 
+                            "resources/HanaleiRegular.ttf",
+                            this->language);
 
     // Open the audio device. The sound driver will try to give us
     // the requested format, but it might not succeed. The 'obtained'
@@ -1050,9 +1056,9 @@ void Game::loadLevel() {
 
     ClearPlayingSounds();
 
-    string level_1_file = "resources/level_1.png";
-    string level_2_file = "resources/level_2.png";
-    string level_3_file = "resources/level_3.png";
+    string level_1_file = this->language->getLocationImage("resources/level_1.png");
+    string level_2_file = this->language->getLocationImage("resources/level_2.png");
+    string level_3_file = this->language->getLocationImage("resources/level_3.png");
     string level_1_spec = "resources/level_1";
     string level_2_spec = "resources/level_2";
     string level_3_spec = "resources/level_3";
@@ -1115,7 +1121,7 @@ void Game::loadLevel() {
     int nrBoxes = atoi(numberOfBoxes.c_str());
 
     for (int i = 0; i < nrBoxes; i++) {
-        Box * box = new Box("resources/box.png");
+        Box * box = new Box(this->language->getLocationImage("resources/box.png"));
         level->boxes.push_back(box);
         level->addChild(box);
     }
@@ -1123,7 +1129,7 @@ void Game::loadLevel() {
     int nrEnemies = atoi(numberOfEnemies.c_str());
 
     for (int i = 0; i < nrEnemies; i++) {
-        Enemy * enemy = new Enemy("resources/enemy_sprites.png");
+        Enemy * enemy = new Enemy(this->language->getLocationImage("resources/enemy_sprites.png"));
         enemy->setSpriteClips();
         level->enemies.push_back(enemy);
         level->addChild(enemy);
@@ -1135,14 +1141,14 @@ void Game::loadLevel() {
     this->linesDeleted = 0;
     this->gameWon = false;
 
-    jack = new Jack("resources/jack_sprites.png");
+    jack = new Jack(this->language->getLocationImage("resources/jack_sprites.png"));
     jack->setSpriteClips();
     level->addChild(jack);
 
-    cout << "Level\t" << this->actualLevel << endl;
-    cout << "Number of Boxes: " << nrBoxes << endl;
-    cout << "Number of Enemies: " << nrEnemies << endl;
-    cout << "Max Leve Lines: " << maxLevelLines << endl;
+    cout << this->language->getText("Level") << "\t" << this->actualLevel << endl;
+    cout << this->language->getText("Number of Boxes:") << " " << nrBoxes << endl;
+    cout << this->language->getText("Number of Enemies:") << " " << nrEnemies << endl;
+    cout << this->language->getText("Max Leve Lines:") << " " << maxLevelLines << endl;
 
     return;
 }
