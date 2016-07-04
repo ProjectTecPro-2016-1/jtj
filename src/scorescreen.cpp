@@ -137,3 +137,39 @@ void ScoreScreen::drawSelf(SDL_Surface * surface) {
     SDLUtil::applySurface (ScoreScreen::SCORE_X_OFFSET + 20, ScoreScreen::SCORE_Y_OFFSET + 25, this->scoreMessage, surface);
     SDLUtil::applySurface (ScoreScreen::SCORE_X_OFFSET + 20, ScoreScreen::SCORE_Y_OFFSET + 75, this->boxMessage, surface);
 }
+
+// -------------------------------------------------------------  
+// Function: getBoxMessage()
+// Description: Return box message attribute
+// Return: SDL_Surface *
+// -------------------------------------------------------------  
+SDL_Surface * ScoreScreen::getBoxMessage() {
+    return this->boxMessage;
+}
+
+// -------------------------------------------------------------  
+// Function: getgetArmario()
+// Description: Return armario attribute
+// Return: SDL_Surface *
+// -------------------------------------------------------------  
+SDL_Surface * ScoreScreen::getArmario() {
+    return this->armario;
+}
+
+// -------------------------------------------------------------  
+// Function: getScoreMessage()
+// Description: Return score message attribute
+// Return: SDL_Surface *
+// -------------------------------------------------------------  
+SDL_Surface * ScoreScreen::getScoreMessage() {
+    return this->scoreMessage;
+}
+
+// -------------------------------------------------------------  
+// Function: getScoreFont()
+// Description: Return score font attribute
+// Return: SDL_Surface *
+// -------------------------------------------------------------  
+TTF_Font * ScoreScreen::getScoreFont() {
+    return this->scoreFont;
+}

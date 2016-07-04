@@ -24,7 +24,6 @@ using namespace std;
 class TestGame : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestGame);
     CPPUNIT_TEST(testInit);
-    CPPUNIT_TEST(testUpdate);   
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -33,7 +32,6 @@ class TestGame : public CppUnit::TestFixture {
 
     protected:
         void testInit(void);
-        void testUpdate(void);
 
     private:
         Game * mTestObj;
@@ -43,19 +41,12 @@ class TestGame : public CppUnit::TestFixture {
 
 void TestGame::testInit(void) {
     mTestObj->init();
-    CPPUNIT_ASSERT(false == mTestObj->getQuitGame());
+    CPPUNIT_ASSERT(false == mTestObj->isGameFinished());
     CPPUNIT_ASSERT(false ==  mTestObj->isLevelFinished());
 }
 
-void TestGame::testUpdate(void){
-    //gameOver = true;
-    //this->quitLevel = true;
-    mTestObj->update();
-    CPPUNIT_ASSERT(true ==  mTestObj->isLevelFinished());
-}
-
 void TestGame::setUp(void) {
-    mTestObj = new Game("../resources/game.png");
+    mTestObj = new Game();
 }
 
 void TestGame::tearDown(void) {
@@ -64,7 +55,7 @@ void TestGame::tearDown(void) {
 
 //-----------------------------------------------------------------------------
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TestBox );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestGame );
 
 int main() {
     // informs test-listener about testresults

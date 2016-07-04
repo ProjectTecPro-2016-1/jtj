@@ -12,24 +12,35 @@ class ScoreScreen {
 		
 		ScoreScreen(std::string filenameBackground, char const * filnameFont, Language * language);
 		~ScoreScreen();
-		void drawSelf(SDL_Surface *surface);
+		
 		int getLine();
 		int getScorePoints();
+		
 		void popLine();
 		void increaseScore(int value);
 		void lines(int numero);
+		void drawSelf(SDL_Surface *surface);
 		void scoring(int value);
-		TTF_Font *scoreFont; 	// public only for testing
-		SDL_Surface *armario;	// public only for testing
-		SDL_Surface *scoreMessage;	// public only for testing
+		
+		SDL_Surface * getBoxMessage();
+		SDL_Surface * getArmario();
+		SDL_Surface * getScoreMessage();
 		SDL_Color scoreTextColor;
-		int scorePoints;	// public only for testing
-		int lineLeft; // public only for testing
-		void updateSelf();	// public only for testing
-		SDL_Surface *boxMessage;	// public only for testing
+		
+		TTF_Font * getScoreFont();
+		
 		Language * language;
 
 	private:
+		TTF_Font *scoreFont; 	
+		SDL_Surface *armario;	
+		SDL_Surface *scoreMessage;	
+		SDL_Surface *boxMessage;	
+		
+		int lineLeft; 
+		int scorePoints;	
+		
+		void updateSelf();	// must be public for testing
 
 		char scoreString[30];
 		char lineString[30];
