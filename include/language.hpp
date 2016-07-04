@@ -8,8 +8,8 @@
 
 class Language {
     private:
-        std::string language;
-        std::vector<std::string> languagesExist;
+        std::string language;                       // Language selected in run of the game.
+        std::vector<std::string> languagesExist;    // Languages that exist in xml file.
 
     public:
         Language(std::string language);
