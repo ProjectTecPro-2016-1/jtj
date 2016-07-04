@@ -5,11 +5,12 @@
 #include <SDL/SDL_image.h>
 #include "SDL/SDL_ttf.h"
 #include <string>
+#include "language.hpp"
 
 class ScoreScreen {
 	public:
 		
-		ScoreScreen(std::string filenameBackground, char const * filnameFont);
+		ScoreScreen(std::string filenameBackground, char const * filnameFont, Language * language);
 		~ScoreScreen();
 		void drawSelf(SDL_Surface *surface);
 		int getLine();
@@ -26,6 +27,7 @@ class ScoreScreen {
 		int lineLeft; // public only for testing
 		void updateSelf();	// public only for testing
 		SDL_Surface *boxMessage;	// public only for testing
+		Language * language;
 
 	private:
 

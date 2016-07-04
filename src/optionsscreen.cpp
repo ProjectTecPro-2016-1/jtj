@@ -25,11 +25,11 @@ void OptionsScreen::drawSelf(SDL_Surface *surface) {
 //		string filename;		Name of image file that will be showed on screen.
 // Return: void  
 // -------------------------------------------------------------  
-OptionsScreen::OptionsScreen(string filename) {
+OptionsScreen::OptionsScreen(string filename, string filenameHelp) {
 	assert(filename != "" && "Fail to load image because image filename is empty.");
 	
 	this->optionsScreen = SDLUtil::loadImage(filename.c_str());
-	this-> helpMessage = SDLUtil::loadImage("resources/helpTextImage.png");
+	this-> helpMessage = SDLUtil::loadImage(filenameHelp.c_str());
 }
 
 // -------------------------------------------------------------  

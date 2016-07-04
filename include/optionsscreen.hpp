@@ -15,7 +15,7 @@ public:
     SDL_Surface * helpMessage;			// Surface for "Help" that will be applie on screen.
 	SDL_Surface * optionsScreen;		// Surface for "Options" that will be applie on screen.
 	
-	OptionsScreen(std::string filename);
+	OptionsScreen(std::string filename, std::string filenameHelp);
 	~OptionsScreen();
 
 	static const int SCREEN_WIDTH = 854;		// Size of width screen that will show the "Help" and "Options" of game.

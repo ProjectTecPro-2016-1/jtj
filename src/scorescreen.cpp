@@ -14,21 +14,22 @@ using namespace std;
 // Description: Constructor that loads image,socre font and score message for the Score Screen.
 // Return: void  
 // -------------------------------------------------------------  
-ScoreScreen::ScoreScreen(string filenameBackground, char const * filenameFont) {
+ScoreScreen::ScoreScreen(string filenameBackground, char const * filenameFont, Language * language) {
     this->armario = SDLUtil::loadImage(filenameBackground);
     this->scoreTextColor.r = 255;
     this->scoreTextColor.g = 255;
     this->scoreTextColor.b = 255;
     this->scoreFont = TTF_OpenFont (filenameFont, 40);
+    this->language = language;
     //assert(this->scoreFont != NULL && "It is not possible open ScoreFont");
 
 	this->scorePoints = 0;
-    sprintf(this->scoreString, "Score: %5d", this->scorePoints);
+    sprintf(this->scoreString, "%s %d", this->language->getText("Score:").c_str(), this->scorePoints);
     this->scoreMessage = TTF_RenderText_Solid (this->scoreFont, this->scoreString, this->scoreTextColor);
     assert(this->scoreMessage != NULL && "It is not possible render scoreMessage scoreString in solid black");
 
     this->lineLeft = 99;
-    sprintf(this->lineString, "Lines left: %d", this->lineLeft);
+    sprintf(this->lineString, "%s %d", this->language->getText("Lines left:").c_str(), this->lineLeft);
     this->scoreMessage = TTF_RenderText_Solid (this->scoreFont, this->lineString, this->scoreTextColor);
     assert(this->scoreMessage != NULL && "It is not possible render scoreMessage lineString in solid black");
 
@@ -113,11 +114,11 @@ void ScoreScreen::increaseScore(int value) {
 // Return: void  
 // -------------------------------------------------------------  
 void ScoreScreen::updateSelf() {
-    sprintf(this->scoreString, "Score: %6d", this->scorePoints);
+    sprintf(this->scoreString,  "%s %d", this->language->getText("Score:").c_str(), this->scorePoints);
     this->scoreMessage = TTF_RenderText_Solid (this->scoreFont, this->scoreString, this->scoreTextColor);
     assert(this->scoreMessage != NULL && "It is not possible render scoreMessage scoreString in solid black");
     
-    sprintf(this->lineString, "Line left: %2d", this->lineLeft);
+    sprintf(this->lineString,  "%s %d", this->language->getText("Lines left:").c_str(), this->lineLeft);
     this->boxMessage = TTF_RenderText_Solid (this->scoreFont, this->lineString, this->scoreTextColor);
     assert(this->boxMessage != NULL && "It is not possible render boxMessage lineString in solid black");
     return ;
