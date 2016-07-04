@@ -29,12 +29,11 @@ class TestEnemy : public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetYPosition);
     CPPUNIT_TEST(testGetMovesLeft);
     CPPUNIT_TEST(testGetMoveDirection);
-    CPPUNIT_TEST(testMoveFirstIf);
-    CPPUNIT_TEST(testMoveSecondIf);
-    CPPUNIT_TEST(testMoveThirdIf);
-    CPPUNIT_TEST(testMoveFourthIf);
-    CPPUNIT_TEST(tesMoveFifth);
-//  CPPUNIT_TEST(tesMoveFourthElse);
+    CPPUNIT_TEST(testFirstMove);
+    CPPUNIT_TEST(testSecondMove);
+    CPPUNIT_TEST(testThirdMove);
+    CPPUNIT_TEST(testFourthMove);
+    CPPUNIT_TEST(testFifthMove);
     CPPUNIT_TEST(testStopEnemy);
     CPPUNIT_TEST(testStartingtRightEnemyMovement);
     CPPUNIT_TEST(testContinuingRightEnemyMovement);
@@ -55,12 +54,11 @@ class TestEnemy : public CppUnit::TestFixture {
         void testGetYPosition(void);
         void testGetMovesLeft(void);
         void testGetMoveDirection(void);
-        void testMoveFirstIf(void);
-        void testMoveSecondIf(void);
-        void testMoveThirdIf(void);
-        void testMoveFourthIf(void);
-        void tesMoveFifth(void);
-//      void tesMoveFourthElse(void);
+        void testFirstMove(void);
+        void testSecondMove(void);
+        void testThirdMove(void);
+        void testFourthMove(void);
+        void testFifthMove(void);
         void testStopEnemy(void);
         void testStartingtRightEnemyMovement(void);
         void testContinuingRightEnemyMovement(void);
@@ -99,7 +97,7 @@ void TestEnemy::testGetMoveDirection(void) {
     CPPUNIT_ASSERT(2 == mTestObj->getMoveDirection());
 }
 
-void TestEnemy::testMoveFirstIf(void) {
+void TestEnemy::testFirstMove(void) {
     mTestObj->setXPosition(54);
     mTestObj->setMovesLeft(10);
     mTestObj->setMoveDirection(4);
@@ -109,7 +107,7 @@ void TestEnemy::testMoveFirstIf(void) {
     CPPUNIT_ASSERT(8 == mTestObj->getMovesLeft());
 }
 
-void TestEnemy::testMoveSecondIf(void) {
+void TestEnemy::testSecondMove(void) {
     mTestObj->setXPosition(54);
     mTestObj->setMovesLeft(10);
     mTestObj->setMoveDirection(5);
@@ -119,7 +117,7 @@ void TestEnemy::testMoveSecondIf(void) {
     CPPUNIT_ASSERT(8 == mTestObj->getMovesLeft());
 }
 
-void TestEnemy::testMoveThirdIf(void){
+void TestEnemy::testThirdMove(void){
     mTestObj->setXPosition(30);
     mTestObj->setMoveDirection(9);
     mTestObj->setMovesLeft(0);
@@ -130,7 +128,7 @@ void TestEnemy::testMoveThirdIf(void){
     CPPUNIT_ASSERT(2 == mTestObj->getMoveDirection());
 }
 
-void TestEnemy::testMoveFourthIf(void){
+void TestEnemy::testFourthMove(void){
     mTestObj->setXPosition(500);
     mTestObj->setMovesLeft(0);
     mTestObj->setMoveDirection(0);
@@ -141,7 +139,7 @@ void TestEnemy::testMoveFourthIf(void){
     CPPUNIT_ASSERT(mTestObj->getMoveDirection() == 1);
 }
 
-void TestEnemy::tesMoveFifth(void){
+void TestEnemy::testFifthMove(void){
     mTestObj->setXPosition(52);
     mTestObj->setMovesLeft(-2);
     mTestObj->setMoveDirection(3);
@@ -149,18 +147,6 @@ void TestEnemy::tesMoveFifth(void){
 
     CPPUNIT_ASSERT(mTestObj->getMoveDirection() == 2);
 }
-
-/*
-void TestEnemy::tesMoveFourthElse(void){
-    mTestObj->setXPosition(52);
-    mTestObj->setMovesLeft(-2);
-    mTestObj->setMoveDirection(0);
-    mTestObj->move();
-
-    CPPUNIT_ASSERT(mTestObj->getMovesLeft() == (rand() % 6) * 38);
-    CPPUNIT_ASSERT(mTestObj->getMoveDirection() == rand() % 120);
-}
-*/
 
 void TestEnemy::testStopEnemy(void){
     mTestObj->spriteClips[0].x = 0;
