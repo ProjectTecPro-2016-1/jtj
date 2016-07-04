@@ -28,23 +28,6 @@ GAME = $(BIN_DIR)/$(NAME)
 SRC = ${wildcard $(SRC_DIR)/*.cpp}
 OBJ = ${addprefix $(OBJ_DIR)/, ${notdir ${SRC:.cpp=.o}}}
 
-# Needs for tests
-SRCM = src/box.cpp
-SRCM = src/enemy.cpp
-SRCM = src/game.cpp
-SRCM = src/gameobject.cpp
-SRCM = src/gameoverscreen.cpp
-SRCM = src/initscreen.cpp
-SRCM = src/jack.cpp
-SRCM = src/label.cpp
-SRCM = src/level.cpp
-SRCM = src/optionsscreen.cpp
-SRCM = src/pausescreen.cpp
-SRCM = src/rawimage.cpp
-SRCM = src/scorescreen.cpp
-SRCM = src/timer.cpp
-OBJM = $(SRCM:.cpp=.o)
-
 .PHONY: all clean depend
 
 all:

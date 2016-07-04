@@ -77,18 +77,18 @@ string Language::getText(string text) {
     // Setting the return if not finding the text in xml file
     string textReturn = text;
 
-    xmlDocPtr document;
+    xmlDocPtr document = NULL;
     document = openXmlDocument();
 
     // Setting master tag organization for localizate the texts
     xmlChar * textSearch = (xmlChar *) "//Text";
 
     // Searching the master tag
-    xmlXPathObjectPtr resultSearchNode;
+    xmlXPathObjectPtr resultSearchNode = NULL;
     resultSearchNode = getSearchNode(document, textSearch);
 
     if (resultSearchNode != NULL) {
-        xmlNodeSetPtr nodeset;
+        xmlNodeSetPtr nodeset = NULL;
         nodeset = resultSearchNode->nodesetval;
         
         // Searching the text value in finding nodes of text tag 
@@ -148,18 +148,18 @@ string Language::getLocationImage(string image) {
     // Setting the return if not finding the image in xml file
     string imageReturn = image;
 
-    xmlDocPtr document;
+    xmlDocPtr document = NULL;
     document = openXmlDocument();
 
     // Setting master tag organization for localizate the images
     xmlChar * textSearch = (xmlChar *) "//Image";
 
     // Searching the master tag
-    xmlXPathObjectPtr resultSearchNode;
+    xmlXPathObjectPtr resultSearchNode = NULL;
     resultSearchNode = getSearchNode(document, textSearch);
 
     if (resultSearchNode != NULL) {
-        xmlNodeSetPtr nodeset;
+        xmlNodeSetPtr nodeset = NULL;
         nodeset = resultSearchNode->nodesetval;
 
         // Searching the location value in finding nodes of image tag 
@@ -193,24 +193,25 @@ string Language::getLocationImage(string image) {
 // -------------------------------------------------------------
 void Language::setLanguagesExist() {
 
-    xmlDocPtr document;
+    xmlDocPtr document = NULL;
     document = openXmlDocument();
 
     // Setting master tag organization for localizate the languages that are disponible
     xmlChar * textSearch = (xmlChar *) "//Languages";
 
     // Searching the master tag
-    xmlXPathObjectPtr resultSearchNode;
+    xmlXPathObjectPtr resultSearchNode = NULL;
     resultSearchNode = getSearchNode(document, textSearch);
 
     if (resultSearchNode != NULL) {
-        xmlNodeSetPtr nodeset;
+        xmlNodeSetPtr nodeset = NULL;
         nodeset = resultSearchNode->nodesetval;
 
         // Adding the languages in vector of languages exists
         for (int i = 0; i < nodeset->nodeNr; i++) {
             xmlChar * descriptionLanguages;
-            descriptionLanguages = xmlNodeListGetString(document, nodeset->nodeTab[i]->xmlChildrenNode, 1);
+            descriptionLanguages = xmlNodeListGetString(document, 
+                                                        nodeset->nodeTab[i]->xmlChildrenNode, 1);
             this->languagesExist.push_back((const char *) descriptionLanguages);
             xmlFree(descriptionLanguages);
         }
@@ -241,8 +242,8 @@ vector<string> Language::getLanguagesExist() {
 // Return: xmlXPathObjectPtr
 // -------------------------------------------------------------
 xmlXPathObjectPtr Language::getSearchNode(xmlDocPtr document, xmlChar * nodeSearch) {
-    xmlXPathContextPtr context;
-    xmlXPathObjectPtr result;
+    xmlXPathContextPtr context = NULL;
+    xmlXPathObjectPtr result = NULL;
 
     // Checking the context of the xml file
     context = xmlXPathNewContext(document);
@@ -277,7 +278,7 @@ xmlXPathObjectPtr Language::getSearchNode(xmlDocPtr document, xmlChar * nodeSear
 // Return: xmlDocPtr
 // -------------------------------------------------------------
 xmlDocPtr Language::openXmlDocument() {
-    xmlDocPtr document;
+    xmlDocPtr document = NULL;
     document = xmlParseFile("languages/internacionalization.xml");
 
     if (document == NULL) {
